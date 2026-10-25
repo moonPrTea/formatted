@@ -1,4 +1,4 @@
-const {app, BrowserWindow, dialog} = require('electron');
+const {app, BrowserWindow, dialog, ipcMain} = require('electron');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -67,9 +67,60 @@ async function run() {
       .formula,
     '=ИНДЕКС(Категории.A2:A4;2)',
   );
-  window.close();
-  await wait(() => window.isDestroyed());
-  assert.deepEqual(await recovery(), []);
+  // Hold an actual recovery rename after its .tmp file has been written.
+  // Even a clean document must drain this write before its window closes.
+  const rename = fs.rename;
+  let releaseWrite;
+  const writeGate = new Promise(resolve => {
+    releaseWrite = resolve;
+  });
+  let writeStarted = false;
+  fs.rename = async (from, to) => {
+    if (path.dirname(to) === path.join(directory, 'sheet-recovery')) {
+      writeStarted = true;
+      await writeGate;
+    }
+    return rename(from, to);
+  };
+  let finalCheckpoint = false;
+  const onCheckpoint = event => {
+    if (event.sender === window.webContents) finalCheckpoint = true;
+  };
+  ipcMain.on('sheet-checkpoint', onCheckpoint);
+  const cleanSnapshot = JSON.stringify({
+    document: saved,
+    language: 'ru',
+    sheet: 'Практика',
+    address: 'A2',
+    dirty: false,
+  });
+  void js(
+    window,
+    `window.sheetDesktop.checkpointAsync(${JSON.stringify(cleanSnapshot)})`,
+  ).catch(() => {}); // Closing the renderer may discard the IPC response.
+  try {
+    await wait(() => writeStarted);
+    assert.ok((await recovery()).some(name => name.endsWith('.tmp')));
+    window.close();
+    await wait(() => finalCheckpoint || window.isDestroyed());
+    assert.equal(
+      finalCheckpoint,
+      true,
+      'clean close requests a final checkpoint',
+    );
+    assert.equal(
+      window.isDestroyed(),
+      false,
+      'close waits for the pending write',
+    );
+    releaseWrite();
+    await wait(() => window.isDestroyed());
+    assert.deepEqual(await recovery(), []);
+  } finally {
+    releaseWrite();
+    fs.rename = rename;
+    ipcMain.removeListener('sheet-checkpoint', onCheckpoint);
+  }
   openSheets();
   window = BrowserWindow.getAllWindows()[0];
   await ready(window);

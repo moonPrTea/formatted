@@ -31,3 +31,4 @@ jobs:
             .ui-test-artifacts/**/*.png
             .ui-test-artifacts/results.json
           retention-days: 7
+          include-hidden-files: true

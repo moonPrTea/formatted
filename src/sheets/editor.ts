@@ -734,7 +734,10 @@ document.addEventListener('keydown', event => {
   }
 });
 window.addEventListener('beforeunload', event => {
-  if ((session.dirty || draft) && !checkpoint(true)) {
+  // A clean book can still have an autosave in flight after Save.
+  // Drain it too, before the renderer and the last application window go away.
+  const saved = checkpoint(true);
+  if ((session.dirty || draft) && !saved) {
     event.preventDefault();
     event.returnValue = '';
   }
