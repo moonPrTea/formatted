@@ -592,13 +592,19 @@ function configFields(config: Config, {duration = false} = {}) {
             value="basic"
             ${config.difficulty === 'basic' ? 'selected' : ''}
           >
-            Базовая
+            Light
+          </option>
+          <option
+            value="medium"
+            ${config.difficulty === 'medium' ? 'selected' : ''}
+          >
+            Medium
           </option>
           <option
             value="advanced"
             ${config.difficulty === 'advanced' ? 'selected' : ''}
           >
-            С очисткой
+            Hard
           </option>
         </select></label
       >

@@ -85,7 +85,7 @@ export function mountPackages(
         : '',
     ]
       .filter(Boolean)
-      .join(' · ');
+      .join(' — ');
     const detail = document.createElement('p');
     detail.textContent = description || 'Описание отсутствует';
     const actions = document.createElement('div');
