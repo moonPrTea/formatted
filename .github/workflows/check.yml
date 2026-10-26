@@ -1,16 +1,45 @@
 name: Check
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   check:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - run: npm ci
       - run: npm run check
+      - run: python -m unittest discover -s tests -p '*_test.py'
+      - run: npm audit --audit-level=high
+      - run: npm run package:preview
+      - if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgtk-3-0 libnss3 libasound2t64
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          xvfb-run -a node tests/packaged-smoke.cjs
+      - if: runner.os != 'Linux'
+        run: node tests/packaged-smoke.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            release/preview-*/*.tar.gz
+            release/preview-*/*.sha256
+          if-no-files-found: error
+          retention-days: 7
   ui:
     runs-on: macos-latest
     timeout-minutes: 30

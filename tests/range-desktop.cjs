@@ -151,10 +151,24 @@ async function run() {
   const drag = async (first, last, count) => {
     editor.focus();
     await wait(() => editor.isFocused());
+    await wait(() => evaluate(editor, 'document.hasFocus()'));
+    // Native focus/resize and sheet replacement must reach the compositor
+    // before CDP uses coordinates from the new grid.
+    await evaluate(
+      editor,
+      'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))',
+    );
+    await editor.webContents.capturePage();
     const from = await point(first);
-    const to = await point(last);
     await mouse('mouseMove', from);
     await mouse('mouseDown', from);
+    await wait(() =>
+      evaluate(
+        editor,
+        `document.querySelector('[data-cell="${first}"]').classList.contains('range-cell')`,
+      ),
+    );
+    const to = await point(last);
     await mouse('mouseMove', to);
     await wait(
       async () =>
@@ -164,7 +178,7 @@ async function run() {
         )) === count,
     );
     await screenshot(editor, `range-${first}-${last}`);
-    await mouse('mouseUp', to);
+    await mouse('mouseUp', await point(last));
     await restored();
   };
   const argument = index =>
@@ -363,8 +377,9 @@ async function run() {
   );
   await screenshot(editor, 'autoscroll');
   key(editor, 'Escape');
-  await mouse('mouseUp', edge);
   await restored();
+  // A CDP mouse-up can focus the editor again, independently of Escape.
+  await mouse('mouseUp', edge);
   assert.equal(await argument(0), "'Категории'.$A$2:$A$4");
   console.log(
     '5. Lost pointer capture cancels safely; edge dragging scrolls in both directions',

@@ -21,7 +21,8 @@ import {openSheets, restoreSheets} from './sheets.cjs';
 // Keep the existing profile and origin so the rename preserves progress.
 app.setPath(
   'userData',
-  path.join(app.getPath('appData'), app.isPackaged ? 'Forma' : 'forma-exam'),
+  app.commandLine.getSwitchValue('user-data-dir') ||
+    path.join(app.getPath('appData'), app.isPackaged ? 'Forma' : 'forma-exam'),
 );
 app.setName('formatted');
 
@@ -265,7 +266,7 @@ function start() {
       app.exit(1);
     });
   app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+    app.quit();
   });
 }
 export {setup, createWindow, start};
