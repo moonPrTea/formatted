@@ -24,6 +24,64 @@ export interface ProgressEntry {
   badge: string;
 }
 
+export interface Achievement {
+  name: string;
+  description: string;
+  icon: string;
+  value: number;
+  goal: number;
+}
+
+function practiceScore(session: PracticeSession): number {
+  return gradeTasks(generateDataset(session.config), session.answers).filter(
+    grade => grade.correct,
+  ).length;
+}
+
+/** Computes achievement progress from saved attempts, without changing history. */
+export function progressAchievements(progress: ProgressHistory): Achievement[] {
+  const hasIndependentQuiz = progress.quizHistory.some(
+    quiz => quiz.correct === quiz.total && quiz.hints === 0,
+  );
+  const bestPracticeScore = progress.history.reduce(
+    (best, session) => Math.max(best, practiceScore(session)),
+    0,
+  );
+  const practicedDomains = new Set(
+    progress.history.map(session => session.config.domain),
+  ).size;
+  return [
+    {
+      name: 'Первый шаг',
+      description: 'Завершить первый блиц',
+      icon: 'quiz',
+      value: Math.min(progress.quizHistory.length, 1),
+      goal: 1,
+    },
+    {
+      name: 'Без подсказок',
+      description: 'Весь блиц верно и самостоятельно',
+      icon: 'medal',
+      value: Number(hasIndependentQuiz),
+      goal: 1,
+    },
+    {
+      name: 'Точный результат',
+      description: 'Все три выборки верны в одной попытке',
+      icon: 'check',
+      value: bestPracticeScore,
+      goal: 3,
+    },
+    {
+      name: 'Новый контекст',
+      description: 'Завершить практику в трёх областях',
+      icon: 'layers',
+      value: practicedDomains,
+      goal: 3,
+    },
+  ];
+}
+
 /** Summarizes saved attempts; practice time is rounded per attempt. */
 export function summarizeProgress(progress: ProgressHistory): ProgressSummary {
   const answered = progress.quizHistory.reduce(
@@ -47,10 +105,7 @@ export function summarizeProgress(progress: ProgressHistory): ProgressSummary {
 }
 
 function practiceEntry(session: PracticeSession): ProgressEntry {
-  const correct = gradeTasks(
-    generateDataset(session.config),
-    session.answers,
-  ).filter(grade => grade.correct).length;
+  const correct = practiceScore(session);
   return {
     kind: 'practice',
     id: session.id,

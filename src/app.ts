@@ -1,5 +1,9 @@
 import {query, errorMessage, html, escapeHtml as esc} from './dom.js';
-import {recentProgress, summarizeProgress} from './core/progress.js';
+import {
+  progressAchievements,
+  recentProgress,
+  summarizeProgress,
+} from './core/progress.js';
 import {renderHistoryTable, formatProgressDate} from './progress-view.js';
 import {
   normalizationView,
@@ -1281,58 +1285,17 @@ function historyTable(limit = 100) {
 }
 
 function history() {
-  const s = summarizeProgress(state);
-  const independent = state.quizHistory.filter(
-    q => q.correct === q.total && q.hints === 0,
-  ).length;
-  const bestScore = Math.max(
-    0,
-    ...state.history.map(
-      s =>
-        gradeTasks(generateDataset(s.config), s.answers).filter(g => g.correct)
-          .length,
-    ),
-  );
-  const domainCount = new Set(state.history.map(s => s.config.domain)).size;
-  const badges: [string, string, string, number, number][] = [
-    [
-      'Первый шаг',
-      'Завершить первый блиц',
-      'quiz',
-      Math.min(state.quizHistory.length, 1),
-      1,
-    ],
-    [
-      'Без подсказок',
-      'Весь блиц верно и самостоятельно',
-      'medal',
-      Math.min(independent, 1),
-      1,
-    ],
-    [
-      'Точный результат',
-      'Все три выборки верны в одной попытке',
-      'check',
-      bestScore,
-      3,
-    ],
-    [
-      'Новый контекст',
-      'Завершить практику в трёх областях',
-      'layers',
-      domainCount,
-      3,
-    ],
-  ];
+  const summary = summarizeProgress(state);
+  const achievements = progressAchievements(state);
   return html`${heading('НЕ ТОЛЬКО ЦИФРЫ', 'Твой прогресс', 'Отмечаем практику и самостоятельность. Не выдаём активность за освоение.')}
     <div class="achievement-grid">
-      ${badges
+      ${achievements
         .map(
-          ([name, description, glyph, value, goal]) =>
+          ({name, description, icon: iconName, value, goal}) =>
             html`<article
               class="panel achievement ${value === goal ? 'earned' : ''}"
             >
-              <div class="badge-art">${icon(glyph)}</div>
+              <div class="badge-art">${icon(iconName)}</div>
               <div class="achievement-copy">
                 <div class="achievement-title">
                   <h3>${name}</h3>
@@ -1355,7 +1318,7 @@ function history() {
       <div>
         <h2>История занятий</h2>
         <p>
-          ${s.answered} ответов в завершённых блицах, ${state.exports}
+          ${summary.answered} ответов в завершённых блицах, ${state.exports}
           сохранений учебных файлов
         </p>
       </div>
