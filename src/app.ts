@@ -1,4 +1,6 @@
-import {query, errorMessage, html} from './dom.js';
+import {query, errorMessage, html, escapeHtml as esc} from './dom.js';
+import {recentProgress, summarizeProgress} from './core/progress.js';
+import {renderHistoryTable, formatProgressDate} from './progress-view.js';
 import {
   normalizationView,
   updateNormalizationFiles,
@@ -112,14 +114,7 @@ const icon = (name: string, cls = '') =>
   >
     ${icons[name] ?? icons.file}
   </svg>`;
-const esc = (value: unknown) =>
-  String(value ?? '').replace(
-    /[&<>"']/g,
-    char =>
-      ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[
-        char
-      ] ?? char,
-  );
+
 const caption = (text: string) => String(text).replace(/\.\s*$/, '');
 const active = () => state.session?.status === 'running';
 const label: Record<View, string> = {
@@ -137,13 +132,7 @@ const button = (action: string, text: string, kind = '', extra = '') =>
   html`<button class="button ${kind}" data-action="${action}" ${extra}>
     ${text}
   </button>`;
-const dateLabel = (ms: number) =>
-  new Intl.DateTimeFormat('ru', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(ms);
+
 const freshSeed = () =>
   `F-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase()}`;
 
@@ -164,20 +153,6 @@ function toast(message: string, error = false) {
   el.className = `toast visible ${error ? 'error' : ''}`;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('visible'), 6000);
-}
-
-function stats() {
-  const answered = state.quizHistory.reduce((n, q) => n + q.total, 0);
-  const correct = state.quizHistory.reduce((n, q) => n + q.correct, 0);
-  return {
-    answered,
-    correct,
-    accuracy: answered ? Math.round((correct / answered) * 100) : null,
-    minutes: state.history.reduce(
-      (n, s) => n + Math.round((s.finishedAt! - s.startedAt) / 60000),
-      0,
-    ),
-  };
 }
 
 function folder(domain: Domain) {
@@ -478,7 +453,7 @@ function heading(
 }
 
 function home() {
-  const s = stats();
+  const s = summarizeProgress(state);
   return html`${heading('ТВОЁ УЧЕБНОЕ ПРОСТРАНСТВО', 'От данных - к пониманию.', 'Новая предметная область. Та же уверенность в своих навыках.', html`<span class="date-chip">${new Intl.DateTimeFormat('ru', {day: 'numeric', month: 'long'}).format(new Date())}</span>`)}
     ${environmentView()}
     <div class="stats-row">
@@ -1248,7 +1223,7 @@ function report(session: PracticeSession, data: Dataset) {
     expired: 'Время вышло',
     interrupted: 'Попытка прервана',
   }[session.status];
-  return html`${heading('РАЗБОР ПРАКТИКИ', status, `${data.domain.name}, ${esc(session.config.seed)}, ${dateLabel(session.startedAt)}`, button('new-session', 'Новая попытка', 'primary'))}
+  return html`${heading('РАЗБОР ПРАКТИКИ', status, `${data.domain.name}, ${esc(session.config.seed)}, ${formatProgressDate(session.startedAt)}`, button('new-session', 'Новая попытка', 'primary'))}
     <div class="report-stats">
       <div class="panel">
         <span class="eyebrow">ВЫБОРКИ</span
@@ -1299,79 +1274,14 @@ function report(session: PracticeSession, data: Dataset) {
 }
 
 function historyTable(limit = 100) {
-  const rows = [
-    ...state.history.map(s => ({
-      kind: 'practice',
-      id: s.id,
-      time: s.finishedAt!,
-      name:
-        s.config.aiTheme?.title ??
-        domains.find(d => d.id === s.config.domain)?.name ??
-        '',
-      sub: s.config.seed,
-      result: `${gradeTasks(generateDataset(s.config), s.answers).filter(g => g.correct).length} / 3`,
-      badge: s.status === 'expired' ? 'Время вышло' : 'Завершено',
-    })),
-    ...state.quizHistory.map(q => ({
-      kind: 'quiz',
-      id: '',
-      time: q.time,
-      name: 'Блиц-викторина',
-      sub: q.topic,
-      result: `${q.correct} / ${q.total}`,
-      badge: 'Пройдено',
-    })),
-  ]
-    .sort((a, b) => b.time - a.time)
-    .slice(0, limit);
-  return html`<div class="panel history-panel">
-    ${
-      !rows.length
-        ? html`<div class="empty-state">
-            ${icon('chart')}
-            <h3>Здесь начнётся твоя история</h3>
-            <p>Пройди первый блиц или закончи практическую попытку</p>
-          </div>`
-        : html`<div class="table-scroll">
-            <table class="history-table">
-              <thead>
-                <tr>
-                  <th>ПОПЫТКА</th>
-                  <th>ДАТА</th>
-                  <th>РЕЗУЛЬТАТ</th>
-                  <th>СТАТУС</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rows
-                  .map(
-                    row =>
-                      html`<tr>
-                        <td>
-                          <div class="history-name">
-                            ${icon(row.kind === 'quiz' ? 'quiz' : 'database')}
-                            <div>
-                              ${row.kind === 'practice' ? html`<button class="text-button history-link" data-action="open-report" data-id="${esc(row.id)}">${esc(row.name)}</button>` : esc(row.name)}<small
-                                >${esc(row.sub)}</small
-                              >
-                            </div>
-                          </div>
-                        </td>
-                        <td>${dateLabel(row.time)}</td>
-                        <td><b>${row.result}</b></td>
-                        <td><span class="pill subtle">${row.badge}</span></td>
-                      </tr>`,
-                  )
-                  .join('')}
-              </tbody>
-            </table>
-          </div>`
-    }
-  </div>`;
+  return renderHistoryTable(recentProgress(state, limit), icon, {
+    title: 'Здесь начнётся твоя история',
+    description: 'Пройди первый блиц или закончи практическую попытку',
+  });
 }
 
 function history() {
-  const s = stats();
+  const s = summarizeProgress(state);
   const independent = state.quizHistory.filter(
     q => q.correct === q.total && q.hints === 0,
   ).length;
