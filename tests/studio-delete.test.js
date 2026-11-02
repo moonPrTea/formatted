@@ -12,7 +12,10 @@ const executable = path.resolve(
 );
 test(
   'Deleting a control removes its field, initialization and event subscription, not handler code',
-  {skip: !existsSync(executable)},
+  {
+    skip:
+      !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
+  },
   async t => {
     const service = new StudioService(executable, [
       path.resolve('build/studio-backend/Studio.Service.dll'),
@@ -64,7 +67,10 @@ test(
 
 test(
   'Deleting a container removes descendants and preserves unrelated fields in a shared declaration',
-  {skip: !existsSync(executable)},
+  {
+    skip:
+      !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
+  },
   async t => {
     const service = new StudioService(executable, [
       path.resolve('build/studio-backend/Studio.Service.dll'),

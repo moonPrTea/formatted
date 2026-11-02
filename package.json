@@ -38,7 +38,8 @@
     "prepackage": "npm run build",
     "prepackage:preview": "npm run build",
     "package:preview": "node scripts/package-preview.mjs",
-    "package": "electron-packager . formatted --out=release --icon=src/assets/forma --ignore=\"^/(tests|scripts|src|release|desktop-tools|source-package|\\.analysis|\\.git|\\.idea)(/|$)\""
+    "package": "electron-packager . formatted --out=release --icon=src/assets/forma --ignore=\"^/(tests|scripts|src|release|desktop-tools|source-package|\\.analysis|\\.git|\\.idea)(/|$)\"",
+    "studio:service": "node scripts/build-studio-service.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

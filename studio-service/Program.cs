@@ -7,6 +7,9 @@ using Microsoft.CodeAnalysis.Text;
 using System.Reflection;
 using System.Xml.Linq;
 
+Console.InputEncoding = new System.Text.UTF8Encoding(false);
+Console.OutputEncoding = new System.Text.UTF8Encoding(false);
+
 if (args is ["--run", var program])
 {
     try { await RuntimeCompiler.Run(program); }
@@ -24,7 +27,7 @@ var desktopReferences = XDocument.Load(Path.Combine(referenceFolder, "FrameworkL
     .Where(file => (string?)file.Attribute("Type") == "Managed" && ((string?)file.Attribute("Profile") ?? "").Split(';').Contains("WindowsForms"))
     .Select(file => Path.Combine(referenceFolder, (string)file.Attribute("AssemblyName")! + ".dll"));
 // Only framework APIs belong to the user's project, not Roslyn's own dependencies.
-var referenceFiles = Directory.GetFiles(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "*.dll")
+var referenceFiles = RuntimeReferences.FrameworkAssemblies()
     .Concat(desktopReferences)
     .GroupBy(Path.GetFileNameWithoutExtension, StringComparer.OrdinalIgnoreCase).Select(group => group.Last());
 var frameworkMetadata = referenceFiles.Select(file => MetadataReference.CreateFromFile(file)).ToArray();

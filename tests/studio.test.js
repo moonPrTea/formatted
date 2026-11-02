@@ -16,7 +16,11 @@ const executable = path.resolve(
 );
 test(
   'Mac runtime executes C# events, MessageBox and modal forms in a separate process',
-  {skip: !existsSync(executable), timeout: 60000},
+  {
+    skip:
+      !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
+    timeout: 60000,
+  },
   async t => {
     const backend = path.resolve('build/studio-backend/Studio.Service.dll');
     const service = new StudioService(executable, [backend]);
@@ -169,7 +173,11 @@ test(
 );
 test(
   'Control rename updates symbols across files, not unrelated strings or locals',
-  {skip: !existsSync(executable), timeout: 60000},
+  {
+    skip:
+      !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
+    timeout: 60000,
+  },
   async t => {
     const service = new StudioService(executable, [
       path.resolve('build/studio-backend/Studio.Service.dll'),
@@ -289,7 +297,11 @@ test('Studio validates its project format without accepting missing or oversized
 
 test(
   'toolbox creates type-specific WinForms defaults without changing existing controls',
-  {skip: !existsSync(executable), timeout: 60000},
+  {
+    skip:
+      !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
+    timeout: 60000,
+  },
   async t => {
     const service = new StudioService(executable, [
       path.resolve('build/studio-backend/Studio.Service.dll'),
@@ -365,7 +377,11 @@ test(
 
 test(
   'Roslyn completion and lossless designer synchronization',
-  {skip: !existsSync(executable), timeout: 60000},
+  {
+    skip:
+      !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
+    timeout: 60000,
+  },
   async t => {
     const service = new StudioService(executable, [
       path.resolve('build/studio-backend/Studio.Service.dll'),

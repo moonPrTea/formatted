@@ -13,7 +13,7 @@ internal static class RuntimeCompiler
         using var gridStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Studio.GridCompat.cs")!;
         var grid = new StreamReader(gridStream).ReadToEnd();
         var trees = sources.Append(compatibility).Append(defaults).Append(grid).Select(s => CSharpSyntaxTree.ParseText(s, cancellationToken: token));
-        var references = Directory.GetFiles(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "*.dll")
+        var references = RuntimeReferences.FrameworkAssemblies()
             .Concat(packageReferences)
             .Select(p => MetadataReference.CreateFromFile(p));
         var compilation = CSharpCompilation.Create("StudioUser", trees, references,
