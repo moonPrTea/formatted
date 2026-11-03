@@ -12,6 +12,7 @@
     <EmbeddedResource Include="GridCompat.cs.txt" LogicalName="Studio.GridCompat.cs" WithCulture="false" />
     <EmbeddedResource Include="ControlDefaults.cs" LogicalName="Studio.ControlDefaults.cs" WithCulture="false" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="5.0.0" />
+    <PackageReference Include="NuGet.Versioning" Version="7.0.0" />
     <PackageDownload Include="Microsoft.WindowsDesktop.App.Ref" Version="[10.0.0]" />
   </ItemGroup>
   <Target Name="CopyWindowsReferences" AfterTargets="Build;Publish">

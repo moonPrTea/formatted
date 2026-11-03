@@ -52,6 +52,18 @@ while (await Console.In.ReadLineAsync() is { } line)
         using var request = JsonDocument.Parse(line);
         var root = request.RootElement;
         id = root.GetProperty("id").GetInt64();
+        if (root.GetProperty("operation").GetString() == "package-version")
+        {
+            var selected = PackageInspector.ResolveVersion(root.GetProperty("range").GetString()!, root.GetProperty("versions").EnumerateArray().Select(v => v.GetString()!).ToArray());
+            await Console.Out.WriteLineAsync(JsonSerializer.Serialize(new { id, result = selected }, json));
+            continue;
+        }
+        if (root.GetProperty("operation").GetString() == "package-validate")
+        {
+            PackageInspector.ValidateReferences(root.GetProperty("references").EnumerateArray().Select(v => v.GetString()!).ToArray());
+            await Console.Out.WriteLineAsync(JsonSerializer.Serialize(new { id, result = true }, json));
+            continue;
+        }
         if (root.GetProperty("operation").GetString() == "package-install")
         {
             var installed = PackageInspector.Install(root.GetProperty("archive").GetString()!, root.GetProperty("destination").GetString()!, root.GetProperty("packageId").GetString()!, root.GetProperty("version").GetString()!);

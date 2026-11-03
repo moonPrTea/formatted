@@ -51,6 +51,8 @@ export class StudioService {
   request(
     request:
       | (StudioRequest & {references?: string[]})
+      | {operation: 'package-version'; range: string; versions: string[]}
+      | {operation: 'package-validate'; references: string[]}
       | {
           operation: 'package-install';
           archive: string;

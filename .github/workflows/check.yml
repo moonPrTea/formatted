@@ -59,7 +59,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run studio:service
-      - run: node --test tests/studio.test.js tests/studio-delete.test.js tests/studio-runtime-files.test.js
+      - run: node --test tests/studio.test.js tests/studio-delete.test.js tests/studio-runtime-files.test.js tests/studio-nuget.test.js
         env:
           STUDIO_SERVICE_REQUIRED: '1'
   ui:

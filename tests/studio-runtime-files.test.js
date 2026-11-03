@@ -41,6 +41,10 @@ test(
       files: initialProject.files,
     });
     assert.deepEqual(result.diagnostics, []);
+    assert.equal(
+      await service.request({operation: 'package-validate', references: []}),
+      true,
+    );
     const compiled = await service.request({
       operation: 'compile',
       files: initialProject.files,

@@ -3,18 +3,27 @@ using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using NuGet.Versioning;
 
 internal static class PackageInspector
 {
-    // First release intentionally accepts managed, dependency-free packages only.
-    // Never execute package install scripts, analyzers, MSBuild targets or native assets.
+    internal static string ResolveVersion(string range, string[] versions)
+    {
+        var requirement = VersionRange.Parse(range);
+        return versions.Select(v => NuGetVersion.Parse(v))
+            .Where(v => !v.IsPrerelease && requirement.Satisfies(v))
+            .OrderBy(v => v, VersionComparer.VersionRelease).FirstOrDefault()?.ToNormalizedString()
+            ?? throw new InvalidOperationException($"Нет стабильной версии для диапазона {range}.");
+    }
+
+    // Extract only managed lib assets. Never execute install scripts, analyzers or MSBuild targets.
     internal static object Install(string archive, string destination, string id, string version)
     {
         using var zip = ZipFile.OpenRead(archive);
         if (zip.Entries.Count > 5000 || zip.Entries.Sum(e => e.Length) > 100_000_000)
             throw new InvalidOperationException("Пакет слишком большой.");
-        if (zip.Entries.Any(e => e.FullName.StartsWith("build", StringComparison.OrdinalIgnoreCase) || e.FullName.StartsWith("runtimes/", StringComparison.OrdinalIgnoreCase) || e.FullName.StartsWith("analyzers/", StringComparison.OrdinalIgnoreCase)))
-            throw new InvalidOperationException("Пакеты с native assets, анализаторами или MSBuild targets пока не поддерживаются.");
+        if (zip.Entries.Any(e => e.FullName.StartsWith("runtimes/", StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException("Пакеты с платформенными runtime assets пока не поддерживаются.");
         var specEntry = zip.Entries.Single(e => !e.FullName.Contains('/') && e.FullName.EndsWith(".nuspec"));
         using var specStream = specEntry.Open();
         var spec = XDocument.Load(specStream);
@@ -30,11 +39,13 @@ internal static class PackageInspector
         var groups = dependencies?.Elements().Where(e => e.Name.LocalName == "group").ToArray() ?? [];
         var group = groups.FirstOrDefault(e => Canonical((string?)e.Attribute("targetFramework") ?? "") == target)
             ?? groups.FirstOrDefault(e => string.IsNullOrEmpty((string?)e.Attribute("targetFramework")));
-        if (dependencies?.Elements().Any(e => e.Name.LocalName == "dependency") == true ||
-            group?.Elements().Any(e => e.Name.LocalName == "dependency") == true || groups.Length > 0 && group is null)
-            throw new InvalidOperationException("В первой версии доступны пакеты без внешних зависимостей. Этот пакет требует восстановления зависимостей.");
+        if (groups.Length > 0 && group is null)
+            throw new InvalidOperationException("Нет совместимой группы зависимостей.");
+        var requirements = (group ?? dependencies)?.Elements().Where(e => e.Name.LocalName == "dependency")
+            .Select(e => new { id = (string?)e.Attribute("id") ?? "", range = (string?)e.Attribute("version") ?? "0.0.0" }).ToArray() ?? [];
+        if (requirements.Length > 20) throw new InvalidOperationException("Слишком много зависимостей пакета.");
         var entries = zip.Entries.Where(e => e.FullName.StartsWith($"lib/{target}/") && e.FullName.EndsWith(".dll") && e.FullName.Split('/').Length == 3).ToArray();
-        var framework = Directory.GetFiles(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "*.dll")
+        var framework = RuntimeReferences.FrameworkAssemblies()
             .Select(Path.GetFileNameWithoutExtension).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var binaries = new Dictionary<string, byte[]>();
@@ -52,22 +63,32 @@ internal static class PackageInspector
                 throw new InvalidOperationException("Конфликт имён сборок пакета.");
             binaries.Add(name, bytes.ToArray());
         }
-        foreach (var bytes in binaries.Values)
-        {
-            using var pe = new PEReader(new MemoryStream(bytes)); var reader = pe.GetMetadataReader();
-            foreach (var handle in reader.AssemblyReferences)
-            {
-                var name = reader.GetString(reader.GetAssemblyReference(handle).Name);
-                if (!framework.Contains(name) && !names.Contains(name)) throw new InvalidOperationException($"Пакет требует неподдерживаемую зависимость: {name}.");
-            }
-        }
         Directory.CreateDirectory(destination);
         var hashes = new Dictionary<string, string>();
         foreach (var (name, bytes) in binaries) { File.WriteAllBytes(Path.Combine(destination, name), bytes); hashes[name] = Convert.ToHexString(SHA256.HashData(bytes)); }
         // Keep the original archive (including package license/notices) alongside DLLs.
         File.Copy(archive, Path.Combine(destination, "package.nupkg"), overwrite: true);
-        var manifest = new { id, version, target, hashes };
+        var manifest = new { id, version, target, hashes, requirements };
         File.WriteAllText(Path.Combine(destination, "manifest.json"), System.Text.Json.JsonSerializer.Serialize(manifest));
         return manifest;
+    }
+
+    internal static void ValidateReferences(string[] files)
+    {
+        var available = RuntimeReferences.FrameworkAssemblies()
+            .Concat(files).Select(System.Reflection.AssemblyName.GetAssemblyName)
+            .ToDictionary(a => a.Name!, StringComparer.OrdinalIgnoreCase);
+        foreach (var file in files)
+        {
+            using var stream = File.OpenRead(file); using var pe = new PEReader(stream);
+            var reader = pe.GetMetadataReader();
+            foreach (var handle in reader.AssemblyReferences)
+            {
+                var reference = reader.GetAssemblyReference(handle);
+                var name = reader.GetString(reference.Name);
+                if (!available.TryGetValue(name, out var assembly) || assembly.Version < reference.Version)
+                    throw new InvalidOperationException($"Отсутствует совместимая сборка {name} {reference.Version}.");
+            }
+        }
     }
 }
