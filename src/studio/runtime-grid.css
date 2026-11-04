@@ -1,0 +1,71 @@
+.control[data-wf='DataGridView'] {
+  overflow: auto;
+}
+[data-wf='DataGridView'] table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  color: #000;
+  font: inherit;
+  background: white;
+}
+[data-wf='DataGridView'] table.wf-grid-fill {
+  width: 100%;
+}
+[data-wf='DataGridView'] th,
+[data-wf='DataGridView'] td {
+  height: 22px;
+  padding: 2px 5px;
+  border: solid #b8b8b8;
+  border-width: 0 1px 1px 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 40px;
+}
+[data-wf='DataGridView'] th {
+  background: #f0f0f0;
+  font-weight: normal;
+}
+[data-wf='DataGridView'] thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+[data-wf='DataGridView'] tr > th:first-child {
+  min-width: 22px;
+  width: 22px;
+}
+[data-wf='DataGridView'] .wf-selected td {
+  background: #0078d7;
+  color: white;
+}
+[data-wf='DataGridView'] td:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: -3px;
+}
+[data-wf='DataGridView'] input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 1px solid #0078d7;
+  padding: 0;
+  font: inherit;
+  color: black;
+  background: white;
+}
+[data-wf='DataGridView'] button {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  width: 100%;
+  text-align: left;
+}
+.wf-grid-error {
+  background: #fff1ee;
+  color: #9b2014;
+  padding: 6px;
+  white-space: normal;
+}

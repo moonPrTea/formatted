@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Runtime widget tests</title>
+  </head>
+  <body>
+    <div id="grid"></div>
+    <script type="module">
+      import {renderGrid} from '../build/src/studio/runtime-grid.js';
+      import {makeList, updateList} from '../build/src/studio/runtime-list.js';
+      window.widgets = {renderGrid, makeList, updateList};
+    </script>
+  </body>
+</html>
