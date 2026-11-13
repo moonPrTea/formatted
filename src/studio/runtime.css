@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+  font:
+    13px 'Segoe UI',
+    -apple-system,
+    sans-serif;
+  color: #222;
+  background: white;
+}
+#form {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.control {
+  position: absolute;
+  margin: 0;
+  font: inherit;
+}
+.control:focus-visible {
+  outline: 2px solid #407fb3;
+  outline-offset: 1px;
+}
+.control:disabled {
+  opacity: 0.55;
+}

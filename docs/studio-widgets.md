@@ -12,3 +12,7 @@ Run `node scripts/test-ui.mjs runtime-widgets-desktop.cjs` after `npm run build`
 The suite also runs in the normal macOS UI CI job. It checks these components in
 Electron's sandboxed renderer. The complete Studio window and runtime wiring
 remain separate publication steps.
+
+The snapshot renderer, sandboxed preload and form CSS are now built together.
+The tests cover draft acknowledgement, disabled forms and removed controls;
+the process/window controller remains a separate publication step.

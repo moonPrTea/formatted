@@ -130,6 +130,37 @@ async function run() {
   await evaluate(`widgets.updateList(combo, listModel, true, true)`);
   assert.equal(await evaluate('combo.querySelector("input").disabled'), true);
   assert.equal(await evaluate('combo.querySelector("button").disabled'), true);
+  await evaluate(`(async () => {
+    document.body.insertAdjacentHTML('beforeend', '<main id="form"></main>');
+    window.formRuntime = {event: value => events.push(value), onSnapshot: callback => window.snapshot = callback};
+    await import('../build/src/studio/runtime.js');
+    window.control = {id:7,type:'TextBox',name:'entry',text:'initial',enabled:true,visible:true,children:[],maxLength:100};
+    window.form = {enabled:true,backColor:'#ffffff',children:[control]};
+    snapshot({form,ack:0});
+    window.field = document.querySelector('#form input');
+    field.value = 'draft';
+    field.dispatchEvent(new Event('input'));
+    snapshot({form,ack:0});
+  })()`);
+  assert.equal(await evaluate('field.value'), 'draft');
+  await evaluate(
+    `control.text = 'confirmed'; snapshot({form,ack:1,disabled:true})`,
+  );
+  assert.equal(await evaluate('field.value'), 'confirmed');
+  assert.equal(await evaluate('field.disabled'), true);
+  await evaluate(`form.children = []; snapshot({form,ack:1})`);
+  assert.equal(
+    await evaluate('document.querySelector("#form").children.length'),
+    0,
+  );
+  for (const name of [
+    'runtime.html',
+    'runtime.css',
+    'winforms.css',
+    'runtime-grid.css',
+  ]) {
+    await fs.access(path.join(__dirname, '../build/src/studio', name));
+  }
   assert.deepEqual(errors, []);
   console.log(
     'Lists: selection, escaping, disabled state, draft preservation and acknowledgement passed',
