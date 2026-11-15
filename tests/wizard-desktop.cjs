@@ -57,6 +57,60 @@ async function run() {
     wizard.webContents.setBackgroundThrottling(false);
     await wait(() => evaluate(wizard, '!!document.querySelector("[data-argument]")'));
   };
+  await click(editor, '[data-cell="I3"]');
+  await open();
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#expression").value'),
+    '',
+  );
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#result").textContent'),
+    '',
+  );
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#result").dataset.error'),
+    'false',
+  );
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#insert").disabled'),
+    true,
+  );
+  assert.equal(
+    await evaluate(
+      wizard,
+      'document.querySelector("#function-name").textContent',
+    ),
+    'ИНДЕКС',
+  );
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector(".wizard-help").open'),
+    false,
+  );
+  assert.equal(
+    await evaluate(
+      wizard,
+      'getComputedStyle(document.querySelector("#expression")).fontFamily.includes("monospace")',
+    ),
+    false,
+  );
+  await input(wizard, '[data-argument="0"]', 'Категории.A2:A4');
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#result").textContent'),
+    '',
+  );
+  await input(wizard, '[data-argument="1"]', '3');
+  assert.match(
+    await evaluate(wizard, 'document.querySelector("#result").textContent'),
+    /40$/,
+  );
+  await input(wizard, '#expression', '=1+');
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#result").dataset.error'),
+    'true',
+  );
+  await click(wizard, '#cancel');
+  await closed();
+  await click(editor, '[data-cell="I2"]');
   await open();
   assert.equal(wizard.getParentWindow(), editor);
   assert.equal(wizard.isModal(), false);

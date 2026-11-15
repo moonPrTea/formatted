@@ -24,7 +24,7 @@ export function functionList(
       ...matches.map((item, i) => {
         const button = document.createElement('button');
         button.textContent = item[language];
-        button.title = `${item.ru} / ${item.en}`;
+        button.setAttribute('aria-description', item.en);
         button.dataset.function = item.en;
         button.setAttribute('aria-pressed', String(item.en === selected));
         button.tabIndex =

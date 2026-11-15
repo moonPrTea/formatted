@@ -14,8 +14,10 @@
   </head>
   <body>
     <main inert>
-      <h1 id="heading">Мастер функций</h1>
-      <p id="target"></p>
+      <div class="wizard-heading">
+        <h1 id="heading">Мастер функций</h1>
+        <p id="target"></p>
+      </div>
       <div class="wizard-columns">
         <section class="catalog-pane">
           <label id="search-label" for="search">Поиск функции</label>
@@ -32,7 +34,6 @@
           <div id="arguments"></div>
         </section>
       </div>
-      <p id="help"></p>
       <label id="formula-label" for="expression">Формула</label>
       <textarea
         id="expression"
@@ -40,6 +41,10 @@
         maxlength="4096"
         spellcheck="false"
       ></textarea>
+      <details class="wizard-help">
+        <summary id="help-label">Как вводить аргументы</summary>
+        <p id="help"></p>
+      </details>
     </main>
     <section id="range-panel" aria-label="Range selection">
       <span id="range-instruction"></span>

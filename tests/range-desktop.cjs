@@ -197,7 +197,7 @@ async function run() {
   await click(wizard, '[data-function="SUM"]');
   assert.match(
     await evaluate(wizard, 'document.querySelector("#support").textContent'),
-    /Только каталог/,
+    /Расчёт этой функции пока недоступен/,
   );
   assert.equal(
     await evaluate(wizard, 'document.querySelector("#insert").disabled'),
@@ -209,6 +209,21 @@ async function run() {
       'document.querySelectorAll("[data-argument]").length',
     ),
     0,
+  );
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#expression").value'),
+    '',
+  );
+  assert.equal(
+    await evaluate(wizard, 'document.querySelector("#result").textContent'),
+    '',
+  );
+  assert.equal(
+    await evaluate(
+      wizard,
+      'document.querySelector("#functions button").hasAttribute("title")',
+    ),
+    false,
   );
   await screenshot(wizard, 'unsupported');
   await evaluate(
@@ -235,7 +250,7 @@ async function run() {
   await input(wizard, '#expression', '=СУММ(A1:A2)');
   assert.match(
     await evaluate(wizard, 'document.querySelector("#support").textContent'),
-    /Только каталог/,
+    /Расчёт этой функции пока недоступен/,
   );
   await input(wizard, '#search', 'INDEX');
   await evaluate(wizard, 'document.querySelector("#functions button").focus()');

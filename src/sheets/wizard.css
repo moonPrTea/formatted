@@ -4,7 +4,7 @@ body {
 main {
   overflow: auto;
   flex: 1;
-  padding: 20px;
+  padding: 16px;
 }
 h1 {
   font-size: 18px;
@@ -17,7 +17,7 @@ p {
 }
 label {
   display: block;
-  margin: 12px 0 5px;
+  margin: 8px 0 4px;
 }
 input,
 textarea,
@@ -35,7 +35,8 @@ select {
 .wizard-columns {
   display: grid;
   grid-template-columns: minmax(160px, 0.85fr) minmax(0, 1.4fr);
-  gap: 24px;
+  gap: 16px;
+  margin: 16px 0;
 }
 .catalog-pane,
 .arguments-pane {
@@ -53,16 +54,16 @@ h2 {
   font-size: 12px;
 }
 textarea {
-  font:
-    13px/1.5 ui-monospace,
-    monospace;
+  font: inherit;
+  line-height: 1.5;
   resize: vertical;
   padding: 8px;
   border: 1px solid #cbd1d5;
   border-radius: 3px;
 }
 #functions {
-  height: 220px;
+  height: 200px;
+  padding: 4px;
   overflow: auto;
   overscroll-behavior: contain;
   border: 1px solid #cbd1d5;
@@ -73,7 +74,9 @@ textarea {
   display: block;
   text-align: left;
   width: 100%;
-  border-radius: 0;
+  border-radius: 6px;
+  min-height: 30px;
+  padding: 5px 8px;
   overflow-wrap: anywhere;
 }
 #functions [aria-pressed='true'] {
@@ -148,4 +151,28 @@ footer {
   #functions {
     height: 140px;
   }
+}
+
+.wizard-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.wizard-heading h1,
+.wizard-heading p {
+  margin: 0;
+}
+#support:empty {
+  display: none;
+}
+.wizard-help {
+  margin-top: 12px;
+  font-size: 12px;
+}
+.wizard-help summary {
+  width: fit-content;
+}
+.wizard-help #help {
+  margin: 8px 0 0;
 }

@@ -57,6 +57,15 @@ const picker = argumentPicker((index, reference) => {
 function preview() {
   insert.disabled = true;
   const result = query('#result');
+  const parsed = readFunction(expression.value, context.language);
+  if (
+    !expression.value.trim() ||
+    (parsed && (!parsed.args[0]?.trim() || !parsed.args[1]?.trim()))
+  ) {
+    result.dataset.error = 'false';
+    result.textContent = '';
+    return;
+  }
   try {
     if (!expression.value.startsWith('=')) throw new Error('=');
     book.setFormula(context.sheet, context.address, expression.value);
@@ -74,10 +83,8 @@ function preview() {
   }
 }
 function fields() {
-  query('#function-name').textContent =
-    `${functions[current][context.language][0]} / ${current}`;
-  query('#support').textContent =
-    context.language === 'ru' ? 'Вычисления доступны' : 'Calculation supported';
+  query('#function-name').textContent = functions[current][context.language][0];
+  query('#support').textContent = '';
   const definition = functions[current];
   query('#description').textContent = definition[context.language][1];
   query('#arguments').replaceChildren(
@@ -114,14 +121,13 @@ function describe(name: string) {
     current = name;
     fields();
   } else {
-    query('#function-name').textContent =
-      `${item[context.language]} / ${item.en}`;
+    query('#function-name').textContent = item[context.language];
     query('#description').textContent =
       categories[item.category][context.language === 'ru' ? 0 : 1];
     query('#support').textContent =
       context.language === 'ru'
-        ? 'Только каталог: вычисления и мастер аргументов пока не реализованы'
-        : 'Catalog only: calculation and argument editor are not implemented yet';
+        ? 'Расчёт этой функции пока недоступен'
+        : 'Calculation is not available for this function yet';
     query('#arguments').replaceChildren();
   }
   list(selected);
@@ -131,7 +137,7 @@ function choose(name: string) {
   expression.value =
     name === 'INDEX' || name === 'MATCH'
       ? buildFunction(current, drafts[current], context.language)
-      : `=${catalog.find(entry => entry.en === name)![context.language]}()`;
+      : '';
   preview();
 }
 function readSelection() {
@@ -172,14 +178,14 @@ window.addEventListener('message', event => {
   );
   query('#target').textContent = `${context.sheet}, ${context.address}`;
   query('#help').textContent = labels[7];
+  query('#help-label').textContent =
+    context.language === 'ru' ? 'Как вводить аргументы' : 'Argument syntax';
   query('#category-label').textContent =
     context.language === 'ru' ? 'Категория' : 'Category';
   list = functionList(context.language, choose);
   for (const sheet of context.sheets) book.addSheet(sheet);
   book.setCells(context.cells);
-  expression.value = context.formula.startsWith('=')
-    ? context.formula
-    : buildFunction(current, drafts[current], context.language);
+  expression.value = context.formula.startsWith('=') ? context.formula : '';
   fields();
   selected = current;
   list(selected);
