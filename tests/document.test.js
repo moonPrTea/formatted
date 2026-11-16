@@ -25,10 +25,14 @@ test('Workbook round trip retains sheet order, types, literal text and original 
     book.setCell('Товары', String.fromCharCode(65 + i) + '1', input),
   );
   book.setCell("Категории 'копия'", 'L100', 'конец');
+  book.setCell('Товары', 'A50000', '00101');
+  book.setCell('Товары', 'B50000', {formula: '=B1+1'});
   const restored = readDocument(JSON.parse(JSON.stringify(documentOf(book))));
   assert.deepEqual(documentOf(restored), documentOf(book));
   assert.equal(restored.getValue('Товары', 'F1'), 2.5);
   assert.equal(restored.getValue('Товары', 'G1').code, '#PARSE!');
+  assert.equal(restored.getValue('Товары', 'A50000'), '00101');
+  assert.equal(restored.getValue('Товары', 'B50000'), 3.5);
   const exported = documentOf(book);
   exported.cells[5].input.formula = '=0';
   assert.equal(book.getValue('Товары', 'F1'), 2.5);
@@ -40,7 +44,7 @@ test('Malformed, duplicate, invisible and oversized cells are rejected without c
     {sheets: []},
     {sheets: ['Лист', 'лист']},
     {cells: [{sheet: 'Лист', address: 'AAA1', input: 1}]},
-    {cells: [{sheet: 'Лист', address: 'A1001', input: 1}]},
+    {cells: [{sheet: 'Лист', address: 'A1048577', input: 1}]},
     {cells: [{sheet: 'Unknown', address: 'A1', input: 1}]},
     {cells: [{sheet: 'Лист', address: 'A1', input: {evil: 1}}]},
     {cells: [{sheet: 'Лист', address: 'A1', input: 'x'.repeat(32768)}]},
@@ -68,4 +72,22 @@ test('Recovery includes an uncommitted formula, language and active sheet', () =
   session.dirty = false;
   session.undo();
   assert.equal(session.dirty, true);
+});
+
+test('Recovery preserves distant selections and drafts within spreadsheet limits', () => {
+  const session = new SheetSession('Data');
+  session.write('Data', 'A1048576', '00101');
+  const state = {
+    document: documentOf(session.book),
+    language: 'ru',
+    sheet: 'Data',
+    address: 'ZZ1048576',
+    dirty: true,
+    draft: {sheet: 'Data', address: 'B50000', text: '=ИНДЕКС('},
+  };
+  assert.deepEqual(readSnapshot(state), state);
+  assert.throws(() => readSnapshot({...state, address: 'A1048577'}));
+  assert.throws(() =>
+    readSnapshot({...state, draft: {...state.draft, address: 'AAA1'}}),
+  );
 });

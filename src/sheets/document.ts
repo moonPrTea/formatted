@@ -1,5 +1,6 @@
 import {Workbook, type CellChange} from '../spreadsheet/workbook.js';
 import {limits} from '../spreadsheet/types.js';
+import {parseAddress} from '../spreadsheet/address.js';
 
 export const documentLimit = 8 * 1024 * 1024;
 export interface SheetDocument {
@@ -20,8 +21,15 @@ export interface DocumentBoot {
   snapshot?: SheetSnapshot;
   name?: string;
 }
-export const gridAddress = (value: unknown): value is string =>
-  typeof value === 'string' && /^[A-Z]{1,2}(?:[1-9]\d{0,2}|1000)$/.test(value);
+export const gridAddress = (value: unknown): value is string => {
+  if (typeof value !== 'string' || !/^[A-Z]{1,2}[1-9]\d*$/.test(value))
+    return false;
+  try {
+    return parseAddress(value).column <= 702;
+  } catch {
+    return false;
+  }
+};
 export const documentOf = (book: Workbook): SheetDocument => ({
   format: 'formatted',
   version: 1,

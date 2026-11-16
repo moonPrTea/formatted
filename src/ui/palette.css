@@ -1,0 +1,91 @@
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--background);
+  font-size: 16px;
+  --radius: 0.75rem;
+  --field-radius: 0.75rem;
+  --accent: oklch(0.56 0.2 253);
+  --accent-hover: color-mix(in oklab, var(--accent) 92%, black 8%);
+  --accent-foreground: oklch(1 0 0);
+  --focus: var(--accent);
+  --success: #238b51;
+  --danger: #e5484d;
+  --success-soft: color-mix(in srgb, var(--success) 12%, var(--surface));
+  --surface-shadow: none;
+  --field-shadow: none;
+  --field-border: transparent;
+  --bg: var(--background);
+  --sidebar: var(--background);
+  --panel: var(--surface);
+  --soft: var(--surface-secondary);
+  --hover: var(--default);
+  --line: var(--border);
+  --line-soft: var(--separator);
+  --line-strong: var(--focus);
+  --text: var(--foreground);
+  --text-secondary: var(--muted);
+  --accent-strong: var(--accent);
+  --on-accent: var(--accent-foreground);
+  --info-text: var(--foreground);
+  --positive: var(--success);
+  --positive-soft: color-mix(in srgb, var(--success) 8%, var(--surface));
+  --negative: var(--danger);
+  --negative-soft: color-mix(in srgb, var(--danger) 8%, var(--surface));
+  --cell-selection: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --cell-selection-edge: var(--accent);
+  --answer-correct: var(--success-soft);
+  --selection-text: var(--foreground);
+  --panel-padding: 24px;
+  --panel-gap: 20px;
+  --content-gap: 16px;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --background: oklch(0.98 0.001 286);
+  --foreground: oklch(0.22 0.004 286);
+  --surface: oklch(1 0 0);
+  --surface-secondary: oklch(0.96 0.002 286);
+  --overlay: var(--surface);
+  --default: oklch(0.93 0.003 286);
+  --muted: oklch(0.52 0.009 286);
+  --field-background: var(--surface-secondary);
+  --field-foreground: var(--foreground);
+  --border: oklch(0.88 0.004 286);
+  --separator: oklch(0.92 0.003 286);
+  --segment: var(--surface);
+  --backdrop: #09090b55;
+  --syntax-keyword: #a12a62;
+  --syntax-string: #8c631b;
+  --syntax-number: #7752a1;
+  --syntax-comment: #647285;
+  --syntax-identifier: #286f83;
+  --syntax-plain: var(--foreground);
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background: oklch(0.14 0.003 286);
+  --foreground: oklch(0.96 0 0);
+  --surface: oklch(0.205 0.004 286);
+  --surface-secondary: oklch(0.235 0.004 286);
+  --overlay: oklch(0.235 0.004 286);
+  --default: oklch(0.28 0.004 286);
+  --muted: oklch(0.69 0.006 286);
+  --field-background: var(--surface-secondary);
+  --field-foreground: var(--foreground);
+  --border: oklch(0.31 0.004 286);
+  --separator: oklch(0.28 0.004 286);
+  --segment: oklch(0.32 0.004 286);
+  --backdrop: #0009;
+  --syntax-keyword: oklch(0.78 0.12 290);
+  --syntax-string: oklch(0.8 0.12 100);
+  --syntax-number: oklch(0.78 0.12 230);
+  --syntax-comment: var(--muted);
+  --syntax-identifier: var(--foreground);
+  --syntax-plain: var(--foreground);
+}
+:root[data-theme-switching] *,
+:root[data-theme-switching] *::before,
+:root[data-theme-switching] *::after {
+  transition: none !important;
+  animation: none !important;
+}

@@ -1,48 +1,37 @@
-import {
-  addressName,
-  parseAddress,
-  rangeBounds,
-} from '../spreadsheet/address.js';
+import {addressName, parseAddress} from '../spreadsheet/address.js';
 
 export function gridSelection(
   grid: HTMLElement,
   initial: string,
   select: (key: string) => boolean,
   size = {rows: 100, columns: 12},
+  mounted?: Map<string, HTMLTableCellElement>,
+  reveal: (key: string) => void = () => {},
 ) {
   let anchor = initial;
   let end = initial;
   let pointer: number | null = null;
   let suppressClick = false;
-  const cells = new Map(
-    [...grid.querySelectorAll<HTMLElement>('[data-cell]')].map(cell => [
-      cell.dataset.cell!,
-      cell,
-    ]),
-  );
-  let painted = new Set<string>();
+  const cells =
+    mounted ??
+    new Map(
+      [...grid.querySelectorAll<HTMLTableCellElement>('[data-cell]')].map(
+        cell => [cell.dataset.cell!, cell],
+      ),
+    );
   const paint = () => {
-    const bounds = rangeBounds(parseAddress(anchor), parseAddress(end));
-    const next = new Set<string>();
-    for (let row = bounds.top; row < bounds.top + bounds.rows; row++) {
-      for (
-        let column = bounds.left;
-        column < bounds.left + bounds.columns;
-        column++
-      ) {
-        const key = addressName({
-          row,
-          column,
-          rowAbsolute: false,
-          columnAbsolute: false,
-        });
-        next.add(key);
-        if (!painted.has(key)) cells.get(key)?.classList.add('selected-range');
-      }
+    const a = parseAddress(anchor),
+      b = parseAddress(end);
+    for (const [key, cell] of cells) {
+      const ref = parseAddress(key);
+      cell.classList.toggle(
+        'selected-range',
+        ref.row >= Math.min(a.row, b.row) &&
+          ref.row <= Math.max(a.row, b.row) &&
+          ref.column >= Math.min(a.column, b.column) &&
+          ref.column <= Math.max(a.column, b.column),
+      );
     }
-    for (const key of painted)
-      if (!next.has(key)) cells.get(key)?.classList.remove('selected-range');
-    painted = next;
   };
   const extend = (key: string) => {
     if (end === key) return;
@@ -111,6 +100,7 @@ export function gridSelection(
         row: Math.min(size.rows, Math.max(1, ref.row + dy)),
         column: Math.min(size.columns, Math.max(1, ref.column + dx)),
       });
+      reveal(key);
       extend(key);
       grid.querySelector<HTMLElement>(`[data-cell="${key}"]`)?.scrollIntoView({
         block: 'nearest',

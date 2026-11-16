@@ -1,0 +1,8 @@
+html {
+  background: #09090b;
+  color-scheme: dark;
+}
+html[data-theme='light'] {
+  background: #fafafa;
+  color-scheme: light;
+}

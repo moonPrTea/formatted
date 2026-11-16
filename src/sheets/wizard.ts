@@ -1,3 +1,4 @@
+import '../ui/theme.js';
 import {query} from '../dom.js';
 import {Workbook, isCellError} from '../spreadsheet/index.js';
 import {argumentPicker} from './argument-picker.js';

@@ -59,6 +59,8 @@ async function run() {
       `(() => { const e = document.querySelector(${JSON.stringify(selector)}); e.focus(); e.value = ${JSON.stringify(text)}; e.dispatchEvent(new Event('input', {bubbles:true})); })()`,
     );
   const write = async (cell, text) => {
+    await input('#address', cell);
+    await key('Enter');
     await click(`[data-cell="${cell}"]`);
     await input('#formula', text);
     await key('Enter');
@@ -171,7 +173,7 @@ async function run() {
   assert.equal(await evaluate('document.activeElement.dataset.cell'), 'L100');
   await key('Right');
   await key('Down');
-  assert.equal(await evaluate('document.activeElement.dataset.cell'), 'L100');
+  assert.equal(await evaluate('document.activeElement.dataset.cell'), 'L101');
   pass('Keyboard navigation, address entry, grid bounds');
 
   await write('C2', 'Домашняя');
@@ -231,7 +233,7 @@ async function run() {
   await key('Enter');
   assert.match(
     await evaluate('document.querySelector("#status").textContent'),
-    /A1:L100/,
+    /A1:L1048576/,
   );
   await click('[data-cell="A1"]');
   assert.equal(
@@ -242,7 +244,8 @@ async function run() {
   );
   pass('Invalid addresses and multi-cell paste rejection');
 
-  await click('[data-cell="L100"]');
+  await input('#address', 'L100');
+  await key('Enter');
   await frame();
   assert.equal(
     await evaluate('document.querySelector("#grid-scroll").scrollTop > 0'),
@@ -257,6 +260,8 @@ async function run() {
   pass('Scrolling, sticky headers and single keyboard stop');
 
   window.webContents.debugger.attach('1.3');
+  await input('#address', 'A1');
+  await key('Enter');
   await window.webContents.debugger.sendCommand(
     'Emulation.setCPUThrottlingRate',
     {rate: 4},

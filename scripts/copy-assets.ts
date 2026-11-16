@@ -15,6 +15,9 @@ for (const name of [
 }
 for (const name of ['index.html', 'sheets.css', 'wizard.html', 'wizard.css'])
   await cp(`src/sheets/${name}`, `build/src/sheets/${name}`);
+for (const name of ['appearance.css', 'appearance.js'])
+  await cp(`src/public/${name}`, `build/src/${name}`);
+await cp('src/ui/palette.css', 'build/src/ui/palette.css');
 await writeFile(
   'build/desktop-tools/calc-lesson.json',
   JSON.stringify(calcLesson),

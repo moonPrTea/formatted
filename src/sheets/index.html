@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" class="dark" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,6 +7,9 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
+    <link rel="stylesheet" href="/appearance.css" />
+    <script src="/appearance.js"></script>
+    <link rel="stylesheet" href="../ui/palette.css" />
     <title>Учебная книга - formatted Sheets</title>
     <link rel="stylesheet" href="sheets.css" />
     <script type="module" src="editor.js"></script>
@@ -29,7 +32,6 @@
       <button id="file-open" data-label="open"></button>
       <button id="file-save" data-label="save"></button>
       <button id="file-save-as" data-label="saveAs"></button>
-      <span id="scope" data-label="scope"></span>
       <button id="range-fill" data-label="fill"></button>
       <button id="range-values" data-label="values"></button>
     </div>
@@ -37,7 +39,7 @@
       <input
         id="address"
         aria-label="Адрес ячейки"
-        maxlength="4"
+        maxlength="10"
         spellcheck="false"
       />
       <button
@@ -79,9 +81,9 @@
         </div>
       </form>
     </dialog>
-    <footer>
+    <footer hidden>
       <span id="recovery" role="status"></span>
-      <span id="selection"></span
+      <span id="selection" hidden></span
       ><output id="status" aria-live="polite"></output>
     </footer>
   </body>

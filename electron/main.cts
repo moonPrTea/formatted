@@ -36,6 +36,20 @@ const root = path.resolve(__dirname, '../src');
 const trusted = 'forma://app/index.html';
 
 async function setup() {
+  ipcMain.on('appearance-mode', (event, mode: unknown) => {
+    const source = event.senderFrame;
+    if (
+      (mode !== 'light' && mode !== 'dark') ||
+      source !== event.sender.mainFrame ||
+      !source?.url.startsWith('forma://app/')
+    )
+      return;
+    const paths = ['/index.html', '/sheets/index.html', '/sheets/wizard.html'];
+    if (!paths.includes(new URL(source.url).pathname)) return;
+    BrowserWindow.fromWebContents(event.sender)?.setBackgroundColor(
+      mode === 'dark' ? '#09090b' : '#fafafa',
+    );
+  });
   const ai = createOllamaClient();
   const trustedAi = (event: IpcMainInvokeEvent) => {
     if (

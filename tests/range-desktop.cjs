@@ -480,6 +480,46 @@ async function run() {
     530,
   );
   console.log('30 catalog searches, ms:', elapsed);
+  await click(wizard, '#cancel');
+  await closed();
+  await evaluate(
+    editor,
+    `(() => {
+    const address = document.querySelector('#address');
+    address.focus(); address.value = 'A50000';
+    document.querySelector('#formula-bar').requestSubmit();
+  })()`,
+  );
+  await open();
+  await picking(0);
+  await evaluate(
+    editor,
+    `document.querySelector('#grid-scroll').scrollTop = 0`,
+  );
+  await wait(() =>
+    evaluate(editor, '!!document.querySelector("[data-cell=A1]")'),
+  );
+  await evaluate(
+    editor,
+    'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))',
+  );
+  const anchor = await point('A1');
+  await mouse('mouseDown', anchor);
+  await evaluate(
+    editor,
+    `document.querySelector('#grid-scroll').scrollTop = 27 * 20000`,
+  );
+  await wait(() =>
+    evaluate(editor, '!!document.querySelector("[data-cell=A20001]")'),
+  );
+  const distant = await point('A20001');
+  await mouse('mouseMove', distant);
+  await mouse('mouseUp', distant);
+  await restored();
+  assert.equal(await argument(0), '');
+  console.log(
+    '9. Oversized ranges cancel safely after scrolling beyond mounted rows',
+  );
   assert.deepEqual(errors, []);
   console.log('Screenshots:', dir);
   app.exit(0);

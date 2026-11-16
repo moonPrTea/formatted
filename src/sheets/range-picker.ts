@@ -37,23 +37,30 @@ export function createRangePicker(grid: HTMLElement, sheet: () => string) {
   };
   const paint = () => {
     if (!anchor || !end) return;
-    const bounds = rangeBounds(parseAddress(anchor), parseAddress(end));
+    const start = parseAddress(anchor),
+      last = parseAddress(end);
     grid.querySelectorAll<HTMLElement>('[data-cell]').forEach(cell => {
       const ref = parseAddress(cell.dataset.cell!);
       cell.classList.toggle(
         'range-cell',
-        ref.row >= bounds.top &&
-          ref.row < bounds.top + bounds.rows &&
-          ref.column >= bounds.left &&
-          ref.column < bounds.left + bounds.columns,
+        ref.row >= Math.min(start.row, last.row) &&
+          ref.row <= Math.max(start.row, last.row) &&
+          ref.column >= Math.min(start.column, last.column) &&
+          ref.column <= Math.max(start.column, last.column),
       );
     });
   };
+  const rowHeaderWidth = () =>
+    parseFloat(getComputedStyle(grid).getPropertyValue('--row-header-width')) ||
+    44;
   const update = () => {
     const rect = viewport.getBoundingClientRect();
     const hit = document
       .elementFromPoint(
-        Math.max(rect.left + 46, Math.min(x, rect.right - 18)),
+        Math.max(
+          rect.left + rowHeaderWidth() + 2,
+          Math.min(x, rect.right - 18),
+        ),
         Math.max(rect.top + 29, Math.min(y, rect.bottom - 18)),
       )
       ?.closest<HTMLElement>('[data-cell]');
@@ -64,7 +71,8 @@ export function createRangePicker(grid: HTMLElement, sheet: () => string) {
   };
   const track = () => {
     const rect = viewport.getBoundingClientRect();
-    const dx = x < rect.left + 52 ? -12 : x > rect.right - 24 ? 12 : 0;
+    const dx =
+      x < rect.left + rowHeaderWidth() + 8 ? -12 : x > rect.right - 24 ? 12 : 0;
     const dy = y < rect.top + 35 ? -12 : y > rect.bottom - 24 ? 12 : 0;
     viewport.scrollBy(dx, dy);
     update();
@@ -106,7 +114,13 @@ export function createRangePicker(grid: HTMLElement, sheet: () => string) {
       y = event.clientY;
       update();
       const done = finish;
-      const reference = rangeReference(sheet(), anchor, end);
+      let reference;
+      try {
+        reference = rangeReference(sheet(), anchor, end);
+      } catch {
+        cancel();
+        return;
+      }
       suppressClick = true;
       stop();
       done(reference);
@@ -173,5 +187,6 @@ export function createRangePicker(grid: HTMLElement, sheet: () => string) {
       return stop;
     },
     clear,
+    paint,
   };
 }

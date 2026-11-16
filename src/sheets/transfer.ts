@@ -9,10 +9,11 @@ import {
   shiftExpression,
 } from '../spreadsheet/formula.js';
 import {isCellError, type CellInput} from '../spreadsheet/index.js';
+import {limits} from '../spreadsheet/types.js';
 import {SheetSession, parseInput} from './session.js';
 import {readDelimited, writeDelimited} from './delimited.js';
 
-export function rangeTransfer(session: SheetSession) {
+export function rangeTransfer(session: SheetSession, columns = 702) {
   let copied: {
     token: string;
     cells: {address: string; input: CellInput; value: CellInput}[][];
@@ -74,7 +75,10 @@ export function rangeTransfer(session: SheetSession) {
     ) {
       const rows = readDelimited(clipboard.getData('text/plain'), '\t');
       const start = parseAddress(target);
-      if (start.row + rows.length > 101 || start.column + rows[0].length > 13)
+      if (
+        start.row + rows.length - 1 > limits.rows ||
+        start.column + rows[0].length - 1 > columns
+      )
         throw new Error(
           'Вставка выходит за границы сетки / Paste exceeds grid bounds',
         );

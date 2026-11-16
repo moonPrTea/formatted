@@ -149,7 +149,7 @@ function createEditor(
     height: 800,
     minWidth: 640,
     minHeight: 480,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#09090b',
     webPreferences: {
       preload: path.join(__dirname, 'sheets-preload.cjs'),
       sandbox: true,
@@ -195,6 +195,8 @@ function createEditor(
           overrideBrowserWindowOptions: {
             parent: window,
             modal: false,
+            show: false,
+            backgroundColor: window.getBackgroundColor(),
             width: 700,
             height: 680,
             minWidth: 360,
@@ -210,6 +212,7 @@ function createEditor(
       : {action: 'deny'},
   );
   window.webContents.on('did-create-window', child => {
+    child.once('ready-to-show', () => child.show());
     shortcut(child.webContents);
     child.webContents.setWindowOpenHandler(() => ({action: 'deny'}));
     child.webContents.on('will-navigate', (event, target) => {

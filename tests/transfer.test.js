@@ -42,7 +42,10 @@ test('range paste is atomic, preserves literals and formulas, and undoes as one 
   assert.equal(session.book.getValue('Data', 'B1'), 3);
   session.undo();
   assert.equal(session.book.getStats().cells, 0);
-  assert.throws(() => transfer.paste('Data', 'L100', data, false));
+  transfer.paste('Data', 'L100', data, false);
+  assert.equal(session.book.getValue('Data', 'L101'), 'text');
+  session.undo();
+  assert.throws(() => transfer.paste('Data', 'L1048576', data, false));
   assert.equal(session.book.getStats().cells, 0);
   session.write('Data', 'A1', '=B1+$B$1');
   session.write('Data', 'B1', '2');
@@ -75,4 +78,20 @@ test('fill, clear and values maintain references and batch history through sheet
   assert.equal(session.book.getStats().cells, 0);
   session.undo();
   assert.equal(session.book.getValue('New', 'A1'), 10);
+});
+
+test('paste respects the active grid width and preserves data when a boundary is exceeded', () => {
+  const session = new SheetSession('Data');
+  const transfer = rangeTransfer(session, 12);
+  const data = clipboard();
+  data.setData('text/plain', '00101\t2\ntext\t4');
+  assert.throws(() => transfer.paste('Data', 'L5000', data, false));
+  assert.equal(session.book.getStats().cells, 0);
+  transfer.paste('Data', 'K5000', data, false);
+  assert.equal(session.book.getValue('Data', 'K5000'), '00101');
+  assert.equal(session.book.getValue('Data', 'L5001'), 4);
+  assert.throws(() => transfer.paste('Data', 'K1048576', data, false));
+  assert.equal(session.book.getStats().cells, 4);
+  session.undo();
+  assert.equal(session.book.getStats().cells, 0);
 });

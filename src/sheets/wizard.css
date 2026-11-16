@@ -13,7 +13,7 @@ h1 {
 }
 p {
   margin: 8px 0 14px;
-  color: #60686e;
+  color: var(--muted);
 }
 label {
   display: block;
@@ -27,8 +27,8 @@ select {
 select {
   font: inherit;
   color: inherit;
-  background: #fff;
-  border: 1px solid #cbd1d5;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 3px;
   padding: 5px;
 }
@@ -50,7 +50,7 @@ h2 {
 }
 #support,
 #function-count {
-  color: #60686e;
+  color: var(--muted);
   font-size: 12px;
 }
 textarea {
@@ -58,7 +58,7 @@ textarea {
   line-height: 1.5;
   resize: vertical;
   padding: 8px;
-  border: 1px solid #cbd1d5;
+  border: 1px solid var(--border);
   border-radius: 3px;
 }
 #functions {
@@ -66,7 +66,7 @@ textarea {
   padding: 4px;
   overflow: auto;
   overscroll-behavior: contain;
-  border: 1px solid #cbd1d5;
+  border: 1px solid var(--border);
   border-radius: 3px;
   margin: 10px 0 6px;
 }
@@ -80,7 +80,7 @@ textarea {
   overflow-wrap: anywhere;
 }
 #functions [aria-pressed='true'] {
-  background: #e6e9eb;
+  background: var(--default);
 }
 #arguments input {
   flex: 1;
@@ -94,7 +94,7 @@ textarea {
   padding: 4px 6px;
   display: grid;
   place-items: center;
-  background: #f0f1f2;
+  background: var(--surface-secondary);
 }
 #help {
   font-size: 12px;
@@ -108,16 +108,16 @@ textarea {
   overflow: auto;
 }
 #result[data-error='true'] {
-  color: #a12424;
+  color: var(--danger);
 }
 footer {
   justify-content: flex-end;
   align-items: center;
-  border-top: 1px solid #d8dcdf;
+  border-top: 1px solid var(--border);
   padding: 10px 16px;
 }
 #insert {
-  background: #e6e9eb;
+  background: var(--default);
 }
 #range-panel {
   display: none;

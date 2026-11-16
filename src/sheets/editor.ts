@@ -1,3 +1,4 @@
+import '../ui/theme.js';
 import {query} from '../dom.js';
 import {isCellError} from '../spreadsheet/index.js';
 import {SheetSession} from './session.js';
@@ -18,6 +19,9 @@ import {
 
 import {words} from './labels.js';
 import {gridSize} from './launch.js';
+import {addressName, columnName, parseAddress} from '../spreadsheet/address.js';
+import {limits} from '../spreadsheet/types.js';
+import {rowViewport} from './row-viewport.js';
 declare global {
   interface Window {
     sheetDesktop?: {
@@ -54,7 +58,7 @@ const size = gridSize(
     ? [boot.snapshot.address, boot.snapshot.draft?.address ?? 'A1']
     : [],
 );
-const transfer = rangeTransfer(session);
+const transfer = rangeTransfer(session, size.columns);
 let sheet =
   boot?.snapshot?.sheet ?? (blank ? book.getSheetNames()[0] : 'Практика');
 let selected = boot?.snapshot?.address ?? (blank ? 'A1' : 'H2');
@@ -116,26 +120,25 @@ const head = grid.createTHead().insertRow();
 for (let col = 0; col <= size.columns; col++) {
   const cell = document.createElement('th');
   cell.scope = 'col';
-  cell.textContent = col ? String.fromCharCode(64 + col) : '';
+  cell.textContent = col ? columnName(col) : '';
   head.append(cell);
 }
-const body = grid.createTBody();
-for (let row = 1; row <= size.rows; row++) {
-  const tr = body.insertRow();
-  const th = document.createElement('th');
-  th.scope = 'row';
-  th.textContent = String(row);
-  tr.append(th);
-  for (let col = 0; col < size.columns; col++) {
-    const cell = tr.insertCell();
-    cell.dataset.cell = `${String.fromCharCode(65 + col)}${row}`;
-    cell.setAttribute('role', 'gridcell');
-    cells.set(cell.dataset.cell, cell);
-  }
-}
+const viewport = rowViewport(
+  grid,
+  cells,
+  size,
+  () => selected,
+  () => {
+    paintCells();
+    selection.paint();
+    rangePicker.paint();
+  },
+);
 function status(text: string) {
   query('#status').textContent = text;
   query('#status').title = text;
+  query('footer').hidden =
+    !query('#status').textContent && !query('#recovery').textContent;
 }
 const editing = cellEditor(
   formula,
@@ -147,40 +150,35 @@ const editing = cellEditor(
   },
   tab => {
     if (!commit()) return;
-    const column = Math.min(
-      64 + size.columns,
-      Math.max(65, selected.charCodeAt(0) + tab),
+    const ref = parseAddress(selected);
+    select(
+      addressName({
+        ...ref,
+        column: Math.min(size.columns, Math.max(1, ref.column + tab)),
+      }),
     );
-    select(String.fromCharCode(column) + selected.slice(1));
   },
   () => {
     render();
     cells.get(selected)!.focus();
   },
 );
-const selection = gridSelection(grid, selected, select, size);
+const selection = gridSelection(
+  grid,
+  selected,
+  select,
+  {...size, rows: limits.rows},
+  cells,
+  key => viewport.show(parseAddress(key).row),
+);
 const errors = errorTooltip(grid);
 let renderedSheet: string | undefined;
 function render() {
   renderedSheet = sheet;
   errors.hide();
   editing.reset();
-  for (const [key, cell] of cells) {
-    const value = book.getValue(sheet, key);
-    const text = isCellError(value) ? value.code : String(value ?? '');
-    if (cell.textContent !== text) cell.textContent = text;
-    if (isCellError(value)) {
-      cell.dataset.error = errorExplanation(value.code, language);
-      cell.setAttribute('aria-description', cell.dataset.error);
-    } else {
-      delete cell.dataset.error;
-      cell.removeAttribute('aria-description');
-    }
-    cell.classList.toggle('number', typeof value === 'number');
-    cell.tabIndex = key === selected ? 0 : -1;
-    cell.setAttribute('aria-selected', String(key === selected));
-    cell.setAttribute('aria-label', `${key}: ${cell.textContent}`);
-  }
+  viewport.show(parseAddress(selected).row);
+  paintCells();
   address.value = selected;
   formula.value = session.source(sheet, selected, language);
   draft = false;
@@ -195,9 +193,28 @@ function render() {
         String(button.dataset.sheet === sheet),
       ),
     );
-  status(words[language].ready);
+  status('');
   selection.paint();
   checkpoint();
+}
+function paintCells() {
+  for (const [key, cell] of cells) {
+    const value = book.getValue(sheet, key);
+    const text = isCellError(value) ? value.code : String(value ?? '');
+    if (!cell.querySelector('#cell-editor') && cell.textContent !== text)
+      cell.textContent = text;
+    if (isCellError(value)) {
+      cell.dataset.error = errorExplanation(value.code, language);
+      cell.setAttribute('aria-description', cell.dataset.error);
+    } else {
+      delete cell.dataset.error;
+      cell.removeAttribute('aria-description');
+    }
+    cell.classList.toggle('number', typeof value === 'number');
+    cell.tabIndex = key === selected ? 0 : -1;
+    cell.setAttribute('aria-selected', String(key === selected));
+    cell.setAttribute('aria-label', `${key}: ${cell.textContent}`);
+  }
 }
 function updateTitle() {
   const title =
@@ -241,8 +258,11 @@ function checkpoint(final = false) {
   let generation = ++checkpointGeneration;
   const report = (saved: boolean) => {
     if (generation === checkpointGeneration)
-      query('#recovery').textContent =
-        words[language][saved ? 'recoverySaved' : 'recoveryFailed'];
+      query('#recovery').textContent = saved
+        ? ''
+        : words[language].recoveryFailed;
+    query('footer').hidden =
+      !query('#status').textContent && !query('#recovery').textContent;
     return saved;
   };
   if (final) {
@@ -250,8 +270,6 @@ function checkpoint(final = false) {
     checkpointTimer = undefined;
     return report(window.sheetDesktop.checkpoint(snapshotText()));
   }
-  query('#recovery').textContent =
-    language === 'ru' ? 'Сохранение…' : 'Saving…';
   if (checkpointTimer) return true;
   checkpointTimer = setTimeout(() => {
     checkpointTimer = undefined;
@@ -319,7 +337,14 @@ function commit() {
   }
 }
 function select(key: string) {
-  if (!cells.has(key) || !commit()) return false;
+  let reference;
+  try {
+    reference = parseAddress(key);
+  } catch {
+    return false;
+  }
+  if (reference.column > size.columns || !commit()) return false;
+  viewport.show(reference.row);
   errors.hide();
   editing.reset();
   const previous = cells.get(selected)!;
@@ -555,8 +580,9 @@ grid.addEventListener('keydown', event => {
   if (event.target instanceof HTMLInputElement) return;
   if (event.isComposing || event.ctrlKey || event.metaKey || event.altKey)
     return;
-  const col = selected.charCodeAt(0) - 65;
-  const row = Number(selected.slice(1));
+  const reference = parseAddress(selected);
+  const col = reference.column - 1;
+  const row = reference.row;
   const moves: Record<string, [number, number]> = {
     ArrowUp: [col, row - 1],
     ArrowDown: [col, row + 1],
@@ -572,13 +598,21 @@ grid.addEventListener('keydown', event => {
       return;
     }
     select(
-      `${String.fromCharCode(65 + Math.min(size.columns - 1, Math.max(0, c)))}${Math.min(size.rows, Math.max(1, r))}`,
+      addressName({
+        ...reference,
+        column: Math.min(size.columns, Math.max(1, c + 1)),
+        row: Math.min(limits.rows, Math.max(1, r)),
+      }),
     );
   } else if (['Delete', 'Backspace'].includes(event.key)) {
     event.preventDefault();
-    transfer.clear(sheet, selection.range);
-    render();
-    cells.get(selected)!.focus();
+    try {
+      transfer.clear(sheet, selection.range);
+      render();
+      cells.get(selected)!.focus();
+    } catch (error) {
+      status(String(error));
+    }
   } else if (event.key === 'F2' || event.key.length === 1) {
     event.preventDefault();
     edit(event.key === 'F2' ? undefined : event.key);
@@ -598,7 +632,11 @@ grid.addEventListener('paste', event => {
 grid.addEventListener('copy', event => {
   if (event.target instanceof HTMLInputElement || !event.clipboardData) return;
   event.preventDefault();
-  transfer.copy(sheet, selection.range, event.clipboardData);
+  try {
+    transfer.copy(sheet, selection.range, event.clipboardData);
+  } catch (error) {
+    status(String(error));
+  }
 });
 for (const action of ['fill', 'values'] as const)
   query(`#range-${action}`).onclick = () => {
@@ -626,12 +664,12 @@ query('#formula-bar').addEventListener('submit', event => {
   event.preventDefault();
   if (document.activeElement === address) {
     const key = address.value.toUpperCase();
-    if (cells.has(key)) select(key);
+    if (select(key)) return;
     else
       status(
         words[language].invalid.replace(
-          'L100',
-          `${String.fromCharCode(64 + size.columns)}${size.rows}`,
+          '{last}',
+          `${columnName(size.columns)}${limits.rows}`,
         ),
       );
   } else if (commit()) cells.get(selected)!.focus();
@@ -658,10 +696,6 @@ function translate(initial = false) {
     element.textContent =
       words[language][element.dataset.label as keyof typeof words.ru];
   });
-  query('#scope').textContent =
-    language === 'ru'
-      ? `${size.rows} строк × ${size.columns} столбцов`
-      : `${size.rows} rows × ${size.columns} columns`;
   for (const id of ['address', 'formula', 'grid', 'sheets'] as const)
     query('#' + id).setAttribute('aria-label', words[language][id]);
   query('#function-wizard').setAttribute('aria-label', words[language].wizard);
@@ -691,7 +725,7 @@ function translate(initial = false) {
     cell.dataset.error = errorExplanation(value.code, language);
     cell.setAttribute('aria-description', cell.dataset.error);
   }
-  status(words[language].ready);
+  status('');
   checkpoint();
 }
 document
