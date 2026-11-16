@@ -14,7 +14,7 @@ import {
   atomicWriteAsync,
   digest,
   readText,
-} from './sheet-store.cjs';
+} from './sheet-store.js';
 import type {DocumentBoot, SheetSnapshot} from '../src/sheets/document.js';
 
 interface DocumentState {

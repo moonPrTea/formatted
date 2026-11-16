@@ -10,7 +10,7 @@ import {createInterface} from 'node:readline';
 import {initialProject, readProject} from '../build/src/studio/model.js';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.cjs');
+const {StudioService} = require('../build/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime/dotnet' + (process.platform === 'win32' ? '.exe' : ''),
 );

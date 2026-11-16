@@ -1,5 +1,19 @@
-import {cp, readFile, writeFile} from 'node:fs/promises';
+import {cp, readFile, rm, writeFile} from 'node:fs/promises';
 import {calcLesson} from '../src/core/calc-lesson.js';
+
+for (const name of [
+  'calc',
+  'main',
+  'ollama',
+  'sheet-files',
+  'sheet-store',
+  'sheets',
+  'start',
+  'package-cache',
+  'studio-service',
+]) {
+  await rm(`build/electron/${name}.cjs`, {force: true});
+}
 
 for (const name of ['styles.css', 'theme.css', 'workspace.css', 'assets']) {
   await cp(`src/${name}`, `build/src/${name}`, {recursive: true});

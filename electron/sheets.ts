@@ -14,7 +14,7 @@ import {
   attachDocument,
   registerSheetFiles,
   restoreDocuments,
-} from './sheet-files.cjs';
+} from './sheet-files.js';
 
 let editor: BrowserWindow | null = null;
 const editors = new Set<BrowserWindow>();
@@ -151,7 +151,7 @@ function createEditor(
     minHeight: 480,
     backgroundColor: '#09090b',
     webPreferences: {
-      preload: path.join(__dirname, 'sheets-preload.cjs'),
+      preload: path.join(import.meta.dirname, 'sheets-preload.cjs'),
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,
@@ -202,7 +202,7 @@ function createEditor(
             minWidth: 360,
             minHeight: 400,
             webPreferences: {
-              preload: path.join(__dirname, 'wizard-preload.cjs'),
+              preload: path.join(import.meta.dirname, 'wizard-preload.cjs'),
               sandbox: true,
               contextIsolation: true,
               nodeIntegration: false,

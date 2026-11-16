@@ -4,7 +4,7 @@ const {existsSync} = require('node:fs');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const main = path.resolve('build/electron/main.cjs');
+const main = path.resolve('build/electron/main.js');
 const {setup, createWindow} = require(
   existsSync(main) ? main : main.replace(/\.cjs$/, '.js'),
 );

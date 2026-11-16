@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {atomicWrite, readText, digest} from '../build/electron/sheet-store.cjs';
+import {atomicWrite, readText, digest} from '../build/electron/sheet-store.js';
 
 test('Atomic file writes replace completely and failed rename preserves the previous target', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'formatted-store-'));

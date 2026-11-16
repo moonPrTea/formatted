@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {pathToFileURL} = require('node:url');
-require('../build/electron/main.cjs');
+require('../build/electron/main.js');
 
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'formatted-startup-'));
 app.setPath('userData', directory);

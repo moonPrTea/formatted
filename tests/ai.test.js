@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createOllamaClient} from '../build/electron/ollama.cjs';
+import {createOllamaClient} from '../build/electron/ollama.js';
 import {
   AI_MODEL,
   WINFORMS_LAYOUT_RULE,

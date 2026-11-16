@@ -4,8 +4,8 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const root = process.env.FORMATTED_PACKAGE || path.resolve(__dirname, '..');
-const {setup} = require(path.join(root, 'build/electron/main.cjs'));
-const {openSheets} = require(path.join(root, 'build/electron/sheets.cjs'));
+const {setup} = require(path.join(root, 'build/electron/main.js'));
+const {openSheets} = require(path.join(root, 'build/electron/sheets.js'));
 
 async function run() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'formatted-ranges-'));

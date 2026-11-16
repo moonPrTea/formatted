@@ -9,7 +9,7 @@ import {initialProject} from '../build/src/studio/model.js';
 import {selectStudioRuntime} from '../scripts/studio-runtime.mjs';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.cjs');
+const {StudioService} = require('../build/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime',
   process.platform === 'win32' ? 'dotnet.exe' : 'dotnet',

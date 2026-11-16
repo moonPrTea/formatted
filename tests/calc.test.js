@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync, spawnSync} from 'node:child_process';
 import {calcLesson} from '../build/src/core/calc-lesson.js';
-import {runCalcLesson} from '../build/electron/calc.cjs';
+import {runCalcLesson} from '../build/electron/calc.js';
 
 test('Calc lesson stays limited to the handout formulas and one source CSV', () => {
   assert.equal(calcLesson.steps.length, 7);

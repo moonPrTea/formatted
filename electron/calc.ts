@@ -4,7 +4,10 @@ import path from 'node:path';
 import type {CalcResult} from '../src/core/types.js';
 
 const execute = promisify(execFile);
-const script = path.resolve(__dirname, '../desktop-tools/calc_lesson.py');
+const script = path.resolve(
+  import.meta.dirname,
+  '../desktop-tools/calc_lesson.py',
+);
 
 export async function runCalcLesson(
   step?: number,

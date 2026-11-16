@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
-const {setup, createWindow} = require('../build/electron/main.cjs');
+const {setup, createWindow} = require('../build/electron/main.js');
 
 async function run() {
   const directory = await fs.mkdtemp(

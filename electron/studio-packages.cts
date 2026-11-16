@@ -3,8 +3,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import type {PackageReference, PackageResult} from '../src/studio/model.js';
-import type {StudioService} from './studio-service.cjs';
-import {publishPackageCache} from './package-cache.cjs';
+import type {StudioService} from './studio-service.js';
+import {publishPackageCache} from './package-cache.js';
 
 const cacheRoot = () => path.join(app.getPath('userData'), 'studio-nuget');
 const folder = (p: PackageReference) =>

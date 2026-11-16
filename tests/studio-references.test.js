@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import path from 'node:path';
-import {StudioService} from '../build/electron/studio-service.cjs';
+import {StudioService} from '../build/electron/studio-service.js';
 import {initialProject} from '../build/src/studio/model.js';
 
 const executable = path.resolve(

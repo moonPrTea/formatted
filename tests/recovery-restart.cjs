@@ -26,8 +26,8 @@ if (!process.argv[2]) {
   console.log('Recovery survives a real application restart:', directory);
 } else {
   const {app, BrowserWindow} = require('electron');
-  const {setup} = require('../build/electron/main.cjs');
-  const {openSheets, restoreSheets} = require('../build/electron/sheets.cjs');
+  const {setup} = require('../build/electron/main.js');
+  const {openSheets, restoreSheets} = require('../build/electron/sheets.js');
   const mode = process.argv[2],
     directory = process.argv[3];
   app.setPath('userData', directory);

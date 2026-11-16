@@ -4,8 +4,8 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const recoverySnapshots = require('./recovery-helper.cjs');
 const os = require('node:os');
-const {setup} = require('../build/electron/main.cjs');
-const {openSheets, restoreSheets} = require('../build/electron/sheets.cjs');
+const {setup} = require('../build/electron/main.js');
+const {openSheets, restoreSheets} = require('../build/electron/sheets.js');
 app.on('window-all-closed', () => {});
 
 async function run() {

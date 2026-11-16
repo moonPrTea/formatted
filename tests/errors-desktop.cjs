@@ -3,8 +3,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
-const {setup} = require('../build/electron/main.cjs');
-const {openSheets} = require('../build/electron/sheets.cjs');
+const {setup} = require('../build/electron/main.js');
+const {openSheets} = require('../build/electron/sheets.js');
 
 async function run() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'formatted-errors-'));

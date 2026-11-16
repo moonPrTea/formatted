@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const {setup, createWindow} = require('../build/electron/main.cjs');
+const {setup, createWindow} = require('../build/electron/main.js');
 
 async function run() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'forma-desktop-test-'));

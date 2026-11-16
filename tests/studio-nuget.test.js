@@ -9,7 +9,7 @@ import {spawn} from 'node:child_process';
 import {packageArchive} from './nuget-fixture.js';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.cjs');
+const {StudioService} = require('../build/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime',
   process.platform === 'win32' ? 'dotnet.exe' : 'dotnet',

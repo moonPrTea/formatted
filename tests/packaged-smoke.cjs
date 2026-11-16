@@ -15,7 +15,7 @@ async function run() {
       : 'resources/app',
   );
   for (const file of [
-    'build/electron/start.cjs',
+    'build/electron/start.js',
     'build/src/index.html',
     'build/src/sheets/index.html',
     'build/desktop-tools/calc_lesson.py',

@@ -13,10 +13,10 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 import type {ConfigInput, ExportResult} from '../src/core/types.js';
-import {createOllamaClient} from './ollama.cjs';
+import {createOllamaClient} from './ollama.js';
 import type {IpcMainInvokeEvent} from 'electron';
-import {runCalcLesson} from './calc.cjs';
-import {openSheets, restoreSheets} from './sheets.cjs';
+import {runCalcLesson} from './calc.js';
+import {openSheets, restoreSheets} from './sheets.js';
 
 // Keep the existing profile and origin so the rename preserves progress.
 app.setPath(
@@ -32,7 +32,7 @@ protocol.registerSchemesAsPrivileged([
     privileges: {standard: true, secure: true, supportFetchAPI: true},
   },
 ]);
-const root = path.resolve(__dirname, '../src');
+const root = path.resolve(import.meta.dirname, '../src');
 const trusted = 'forma://app/index.html';
 
 async function setup() {
@@ -200,7 +200,7 @@ function createWindow() {
         }),
     backgroundColor: '#f1f4f9',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.cjs'),
+      preload: path.join(import.meta.dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,

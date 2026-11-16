@@ -4,8 +4,8 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const recoverySnapshots = require('./recovery-helper.cjs');
-const {setup} = require('../build/electron/main.cjs');
-const {openSheets, restoreSheets} = require('../build/electron/sheets.cjs');
+const {setup} = require('../build/electron/main.js');
+const {openSheets, restoreSheets} = require('../build/electron/sheets.js');
 app.on('window-all-closed', () => {});
 async function run() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'formatted-navigation-'));
