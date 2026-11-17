@@ -1,5 +1,6 @@
 import {build} from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import {rm} from 'node:fs/promises';
 
@@ -9,7 +10,7 @@ await build({
   configFile: false,
   root: path.resolve('src'),
   base: './',
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: {
     outDir: path.resolve('build/src'),
     emptyOutDir: false,
