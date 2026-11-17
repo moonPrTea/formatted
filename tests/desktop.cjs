@@ -815,7 +815,7 @@ async function run() {
       nodeIntegration: false,
     },
   });
-  await preview.loadFile(path.resolve(__dirname, '../src/index.html'));
+  await preview.loadFile(path.resolve(__dirname, '../build/src/index.html'));
   assert.match(
     await preview.webContents.executeJavaScript(
       'document.querySelector("h1").textContent',

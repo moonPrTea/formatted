@@ -9,8 +9,8 @@
   "scripts": {
     "predoctor": "npm run build",
     "doctor": "node build/scripts/doctor.js",
-    "build": "tsc && node build/scripts/copy-assets.js",
-    "typecheck": "tsc --noEmit",
+    "build": "tsc && tsc -p tsconfig.renderer.json && node build/scripts/copy-assets.js && node scripts/build-ui.mjs",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.renderer.json --noEmit",
     "lint": "gts lint \"src/**/*.{ts,tsx}\" \"electron/**/*.{ts,cts}\" \"scripts/**/*.{ts,cts}\" eslint.config.js",
     "fix": "gts fix \"src/**/*.{ts,tsx}\" \"electron/**/*.{ts,cts}\" \"scripts/**/*.{ts,cts}\" eslint.config.js",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,html}\" \"electron/**/*.{ts,cts}\" \"scripts/**/*.{ts,cts}\" \"tests/**/*.{js,cjs}\" *.json eslint.config.js",
@@ -49,9 +49,11 @@
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
     "electron": "44.9.3",
     "gts": "^7.0.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^8.3.8"
   },
   "overrides": {
     "tmp": "^0.2.6"

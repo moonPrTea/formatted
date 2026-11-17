@@ -20,5 +20,11 @@ export default [
       ? {...config, files: ['**/*.ts', '**/*.cts', '**/*.tsx']}
       : config,
   ),
+  {
+    files: ['**/*.ts', '**/*.tsx', '**/*.cts'],
+    languageOptions: {
+      parserOptions: {project: ['./tsconfig.json', './tsconfig.renderer.json']},
+    },
+  },
   {files: ['eslint.config.js'], languageOptions: {sourceType: 'module'}},
 ];
