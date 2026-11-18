@@ -1,0 +1,13 @@
+@import '../../src/ui/heroui.css';
+@source './app.tsx';
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+main {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  max-width: 480px;
+}

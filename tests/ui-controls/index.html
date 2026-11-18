@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru" data-theme="light" class="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'sha256-38RhXrc7EdReTKsOm23ZPOCUgniTUUcjky8QOOrQx6o='"
+    />
+    <title>Shared controls</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.tsx"></script>
+  </head>
+  <body>
+    <select id="source-select" hidden>
+      <option value="light">Light</option>
+      <option value="medium">Medium</option>
+      <option value="hard" disabled>Hard</option>
+    </select>
+    <div id="app"></div>
+  </body>
+</html>

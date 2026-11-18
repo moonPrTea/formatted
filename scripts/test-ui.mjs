@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 const available = (await readdir('tests'))
   .filter(
     name =>
-      name.endsWith('-desktop.cjs') ||
+      /-desktop\.(cjs|mjs)$/.test(name) ||
       [
         'desktop.cjs',
         'startup.cjs',
@@ -27,9 +27,11 @@ const artifacts = path.resolve(
   process.env.UI_TEST_ARTIFACTS ?? '.ui-test-artifacts',
 );
 await mkdir(artifacts, {recursive: true});
+if (suites.includes('controls-desktop.mjs'))
+  await import('../tests/ui-controls/build.mjs');
 const results = [];
 for (const suite of suites) {
-  const directory = path.join(artifacts, suite.replace(/\.cjs$/, ''));
+  const directory = path.join(artifacts, suite.replace(/\.(cjs|mjs)$/, ''));
   await mkdir(directory, {recursive: true});
   console.log('\nUI: ' + suite);
   const start = Date.now();
