@@ -4,3 +4,4 @@
 @import './workspace.css' layer(legacy);
 @import './ui/heroui.css';
 @import './ui/shell.css';
+@import './ui/data-preview.css';
