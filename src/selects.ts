@@ -119,7 +119,7 @@ function openMenu(control: SelectControl) {
 
 export function enhanceSelects(root: ParentNode) {
   for (const select of root.querySelectorAll<HTMLSelectElement>(
-    'select:not([data-enhanced])',
+    'select:not([data-enhanced]):not([aria-hidden])',
   )) {
     select.dataset.enhanced = 'true';
     const label = select.closest('label')!;

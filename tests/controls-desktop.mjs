@@ -40,9 +40,9 @@ async function run() {
         throw new Error(`${code}\n${error.message}\n${errors.join('\n')}`);
       }
     };
-    const wait = async code => {
+    const wait = async (code, read = evaluate) => {
       for (let attempt = 0; attempt < 100; attempt++) {
-        if (await evaluate(code)) return;
+        if (await read(code)) return;
         await new Promise(resolve => setTimeout(resolve, 30));
       }
       throw new Error(`Condition timed out: ${code}\n${errors.join('\n')}`);
@@ -59,6 +59,18 @@ async function run() {
     };
     const click = selector =>
       evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
+    const chooseTheme = async mode => {
+      await click(`[data-theme-choice="${mode}"]`);
+      await wait(`localStorage.getItem('formatted.theme') === '${mode}' &&
+        document.querySelector('[data-theme-choice="${mode}"]').getAttribute('aria-pressed') === 'true'`);
+      await wait(
+        '!document.documentElement.hasAttribute("data-theme-switching")',
+      );
+    };
+    const systemTheme = mode =>
+      window.webContents.debugger.sendCommand('Emulation.setEmulatedMedia', {
+        features: [{name: 'prefers-color-scheme', value: mode}],
+      });
     const menuOpen =
       'document.querySelector("#difficulty").getAttribute("aria-expanded") === "true"';
     const directory = path.resolve(
@@ -74,6 +86,16 @@ async function run() {
     );
     stage = 'button and keyboard';
     await wait('document.body.dataset.ready === "true"');
+    assert.deepEqual(
+      await evaluate(`(() => {
+      const button = document.querySelector('#action');
+      const style = getComputedStyle(button);
+      const icon = button.querySelector('svg').getBoundingClientRect();
+      return [style.fontSize, style.paddingLeft, style.gap,
+        button.getBoundingClientRect().height, icon.width, icon.height];
+    })()`),
+      ['14px', '16px', '8px', 40, 16, 16],
+    );
     await evaluate(
       'document.querySelector("#action svg").dispatchEvent(new MouseEvent("click", {bubbles:true, cancelable:true}))',
     );
@@ -137,9 +159,8 @@ async function run() {
     await wait('!document.querySelector("#difficulty").disabled');
 
     for (const mode of ['light', 'dark']) {
-      await evaluate(
-        `document.documentElement.className = '${mode}'; document.documentElement.dataset.theme = '${mode}'`,
-      );
+      await chooseTheme(mode);
+      await wait(`document.documentElement.dataset.theme === '${mode}'`);
       for (const width of [390, 1024]) {
         window.setContentSize(width, 720);
         await click('#difficulty');
@@ -176,11 +197,80 @@ async function run() {
         );
         await key('Escape');
         await wait(`!(${menuOpen})`);
+        assert.equal(
+          await evaluate(`(() => {
+          const group = document.querySelector('.appearance-modes');
+          const bounds = group.getBoundingClientRect();
+          return [...group.querySelectorAll('button')].every(button => {
+            const rect = button.getBoundingClientRect();
+            return rect.left >= bounds.left && rect.right <= bounds.right && rect.height === 40;
+          });
+        })()`),
+          true,
+        );
+        if (width === 390)
+          await fs.writeFile(
+            path.join(profile, `${mode}-theme.png`),
+            (await window.webContents.capturePage()).toPNG(),
+          );
       }
     }
+
+    stage = 'system theme';
+    await systemTheme('dark');
+    await chooseTheme('light');
+    assert.equal(
+      await evaluate('document.documentElement.dataset.theme'),
+      'light',
+    );
+    await chooseTheme('system');
+    await wait('document.documentElement.dataset.theme === "dark"');
+    await systemTheme('light');
+    await wait('document.documentElement.dataset.theme === "light"');
+
+    stage = 'saved theme';
+    await chooseTheme('dark');
+    const loaded = new Promise(resolve =>
+      window.webContents.once('did-finish-load', resolve),
+    );
+    window.reload();
+    await loaded;
+    await wait('document.body.dataset.ready === "true"');
+    await wait('document.documentElement.dataset.theme === "dark"');
+    assert.equal(
+      await evaluate(
+        'document.querySelector("[data-theme-choice=dark]").getAttribute("aria-pressed")',
+      ),
+      'true',
+    );
+
+    stage = 'theme across windows';
+    const second = new BrowserWindow({
+      show: false,
+      webPreferences: {sandbox: true},
+    });
+    second.webContents.setBackgroundThrottling(false);
+    await second.loadFile(path.join(directory, 'controls-build/index.html'));
+    const secondRead = code => second.webContents.executeJavaScript(code);
+    await wait('document.documentElement.dataset.theme === "dark"', secondRead);
+    await chooseTheme('light');
+    await wait(
+      'document.documentElement.dataset.theme === "light"',
+      secondRead,
+    );
+    second.destroy();
+
+    stage = 'keyboard theme choice';
+    await evaluate(
+      'document.querySelector("[data-theme-choice=dark]").focus()',
+    );
+    await key('Enter');
+    await wait(
+      'localStorage.getItem("formatted.theme") === "dark" && document.documentElement.dataset.theme === "dark"',
+    );
     assert.deepEqual(errors, []);
     console.log(
-      `Shared buttons, select changes, keyboard, disabled state and responsive themes passed: ${profile}`,
+      `Shared controls, spacing, saved and system themes, cross-window sync and keyboard passed: ${profile}`,
     );
     app.exit(0);
   } catch (error) {

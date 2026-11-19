@@ -1,5 +1,9 @@
 import type {DesktopApi} from '../src/core/types.js';
 import {contextBridge, ipcRenderer} from 'electron';
+contextBridge.exposeInMainWorld('windowAppearance', {
+  setMode: (mode: 'light' | 'dark') =>
+    ipcRenderer.send('appearance-mode', mode),
+});
 const desktop: DesktopApi = {
   openSheets: request => ipcRenderer.invoke('open-sheets', request),
   openSetupPage: tool => ipcRenderer.invoke('setup-page', tool),

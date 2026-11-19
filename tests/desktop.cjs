@@ -1,4 +1,4 @@
-const {app, dialog, BrowserWindow, ipcMain} = require('electron');
+const {app, dialog, BrowserWindow, ipcMain, nativeTheme} = require('electron');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
@@ -12,6 +12,7 @@ async function run() {
   });
   app.setPath('userData', path.join(dir, 'profile'));
   await app.whenReady();
+  nativeTheme.themeSource = 'light';
   const {modelReply, themeFixture} = await import('./ai-fixture.js');
   const {AI_MODEL} = await import('../build/src/core/ai-theme.js');
   const aiRequests = [];
@@ -99,10 +100,10 @@ async function run() {
     );
   };
 
-  assert.match(await text('h1'), /От данных/);
+  assert.match(await text('h1'), /Главная/);
   assert.match(await text('.wordmark'), /formatted/);
   assert.match(await evaluate('document.title'), /^formatted/);
-  assert.equal(await text('h1'), 'От данных - к пониманию');
+  assert.equal(await text('h1'), 'Главная');
   assert.equal(
     await evaluate(
       '[...document.querySelectorAll(".page-heading p, .sidebar-note p, .main-footer span")].some(el => el.textContent.trim().endsWith("."))',
@@ -120,7 +121,7 @@ async function run() {
   );
   assert.equal(
     await evaluate(
-      'getComputedStyle(document.querySelector(".hero-card")).backgroundImage',
+      'getComputedStyle(document.querySelector(".dashboard-modules .card")).backgroundImage',
     ),
     'none',
   );
@@ -148,7 +149,7 @@ async function run() {
     7,
   );
   await click('[data-action="nav-back"]');
-  assert.match(await text('h1'), /От данных/);
+  assert.match(await text('h1'), /Главная/);
   await click('[data-action="nav-forward"]');
   assert.match(await text('h1'), /От CSV к внешнему ключу/);
   await click('[data-action="lesson-step"][data-step="4"]');
@@ -557,7 +558,9 @@ async function run() {
     await evaluate(
       'getComputedStyle(document.querySelector(".dataset-panel")).backgroundColor',
     ),
-    'rgb(255, 255, 255)',
+    await evaluate(
+      `(() => {const probe=document.createElement('span'); probe.style.backgroundColor='var(--panel)'; document.body.append(probe); const color=getComputedStyle(probe).backgroundColor; probe.remove(); return color;})()`,
+    ),
   );
   await capture('generator');
   for (const [width, height] of [
@@ -820,7 +823,7 @@ async function run() {
     await preview.webContents.executeJavaScript(
       'document.querySelector("h1").textContent',
     ),
-    /От данных/,
+    /Главная/,
   );
   assert.equal(
     await preview.webContents.executeJavaScript('typeof window.desktop'),

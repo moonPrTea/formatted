@@ -1,3 +1,6 @@
+import './ui/theme.js';
+import {renderAppShell, showConfirmation} from './ui/shell.js';
+import {observeControls} from './ui/controls.js';
 import {query, errorMessage, html, escapeHtml as esc} from './dom.js';
 import {
   progressAchievements,
@@ -17,7 +20,6 @@ import type {
   AiTheme,
   Config,
   Dataset,
-  Domain,
   PracticeSession,
   View,
 } from './core/types.js';
@@ -122,7 +124,7 @@ const icon = (name: string, cls = '') =>
 const caption = (text: string) => String(text).replace(/\.\s*$/, '');
 const active = () => state.session?.status === 'running';
 const label: Record<View, string> = {
-  home: 'Обзор',
+  home: 'Главная',
   quiz: 'Блиц-викторина',
   generator: 'Генератор данных',
   practice: 'На время',
@@ -154,166 +156,32 @@ let toastTimer: ReturnType<typeof setTimeout>;
 function toast(message: string, error = false) {
   const el = query('#toast');
   el.textContent = message;
-  el.className = `toast visible ${error ? 'error' : ''}`;
+  el.className = `app-notification ${error ? 'error' : ''}`;
+  el.hidden = false;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('visible'), 6000);
-}
-
-function folder(domain: Domain) {
-  return html`<div class="domain-icon" aria-hidden="true">
-    ${icon(domain.icon)}
-  </div>`;
+  toastTimer = setTimeout(() => {
+    el.hidden = true;
+    el.textContent = '';
+  }, 6000);
 }
 
 function shell(content: string) {
-  const nav: [View, string][] = [
-    ['home', 'home'],
-    ['quiz', 'quiz'],
-    ['generator', 'database'],
-    ['lesson', 'book'],
-    ['practice', 'clock'],
-    ['history', 'chart'],
-  ];
-  const railNav: [View, string][] = [...nav, ['database', 'database']];
-  return html`${windowBar()}
-    <div class="layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}">
-      <aside class="rail">
-        <a class="brand-mark" href="#home" aria-label="formatted, главная"
-          ><img class="brand-logo" src="assets/forma.svg" alt=""
-        /></a>
-        <div class="rail-nav">
-          ${railNav.map(([id, glyph]) => html`<button class="rail-button ${state.view === id ? 'active' : ''}" data-view="${id}" aria-label="${label[id]}" title="${label[id]}">${icon(glyph)}</button>`).join('')}
-        </div>
-        <div class="rail-bottom">
-          <span class="connection-dot" title="Локальная работа"></span>
-          <div class="avatar">Я</div>
-        </div>
-      </aside>
-      <aside class="sidebar">
-        <div class="wordmark">
-          <img class="brand-logo" src="assets/forma.svg" alt="" />formatted
-        </div>
-        <div class="workspace">
-          <div class="workspace-icon">${icon('layers')}</div>
-          <div>Демоэкзамен<small>Личное пространство</small></div>
-          <span class="version">01</span>
-        </div>
-        <div class="nav-label">ПОДГОТОВКА</div>
-        <nav>
-          ${nav.map(([id, glyph]) => html`<button class="nav-item ${state.view === id ? 'selected' : ''}" data-view="${id}" ${state.view === id ? 'aria-current="page"' : ''}>${icon(glyph)}<span>${label[id]}</span>${id === 'quiz' ? html`<span class="nav-count">${questions.length}</span>` : id === 'practice' && active() ? '<span class="live-dot"></span>' : ''}</button>`).join('')}
-        </nav>
-        <div class="sidebar-divider"></div>
-        <div class="nav-label">ПРОГРАММА</div>
-        <div class="module-row">
-          <span class="module-index">01</span>
-          <div>Данные и нормализация<small>Текущий модуль</small></div>
-          <span class="live-dot"></span>
-        </div>
-        <button
-          class="module-row module-link"
-          data-view="database"
-          ${state.view === 'database' ? 'aria-current="page"' : ''}
-        >
-          <span class="module-index">02</span>
-          <span>Базы данных<small>Практикум PostgreSQL</small></span>
-        </button>
-        <div class="module-row muted">
-          <span class="module-index">03</span>
-          <div>C# и WinForms<small>В планах</small></div>
-          ${icon('lock')}
-        </div>
-        <div class="module-row muted">
-          <span class="module-index">04</span>
-          <div>Полный экзамен<small>В планах</small></div>
-          ${icon('lock')}
-        </div>
-        <div class="sidebar-footer">
-          МОДУЛЬ ${state.view === 'database' ? '02' : '01'} <span>v0.1</span>
-        </div>
-      </aside>
-      <div class="main-shell">
-        <main id="main" tabindex="-1">
-          ${storageWarning ? html`<div class="notice">${esc(storageWarning)}</div>` : ''}${content}
-        </main>
-      </div>
-    </div>
-    <dialog id="confirm-dialog">
-      <div class="dialog-icon">${icon('clock')}</div>
-      <h2>Завершить попытку?</h2>
-      <p>
-        Ответы будут зафиксированы, откроется разбор. Продолжить эту попытку
-        будет нельзя
-      </p>
-      <div class="actions">
-        ${button('cancel-finish', 'Продолжить работу', 'secondary')}${button('confirm-finish', 'Завершить', 'primary')}
-      </div>
-    </dialog>`;
-}
-
-function windowBar() {
-  const platform = window.desktop?.platform ?? 'browser';
-  return html`<header class="window-bar platform-${platform}">
-    <div class="window-navigation">
-      <button
-        class="chrome-button"
-        data-action="toggle-sidebar"
-        aria-label="Переключить боковую панель"
-        aria-expanded="${!sidebarCollapsed}"
-        title="Боковая панель"
-      >
-        <svg
-          class="icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.7"
-        >
-          <rect x="3" y="4" width="18" height="16" rx="2" />
-          <path d="M9 4v16" />
-        </svg>
-      </button>
-      <button
-        class="chrome-button back-icon"
-        data-action="nav-back"
-        aria-label="Назад"
-        ${navigationIndex <= 0 ? 'disabled' : ''}
-      >
-        ${icon('arrow')}
-      </button>
-      <button
-        class="chrome-button"
-        data-action="nav-forward"
-        aria-label="Вперёд"
-        ${navigationIndex >= navigation.length - 1 ? 'disabled' : ''}
-      >
-        ${icon('arrow')}
-      </button>
-      <div class="window-modes" aria-label="Режим работы">
-        <button
-          class="chrome-button ${state.view === 'lesson' ? 'selected' : ''}"
-          data-view="lesson"
-          aria-label="Учиться в Calc"
-          title="Разбор CSV"
-        >
-          ${icon('book')}
-        </button>
-        <button
-          class="chrome-button ${state.view === 'generator' ? 'selected' : ''}"
-          data-view="generator"
-          aria-label="Генерировать данные"
-          title="Генератор"
-        >
-          ${icon('database')}
-        </button>
-      </div>
-    </div>
-    <div class="window-title">
-      <span>formatted</span><strong>${label[state.view]}</strong>
-    </div>
-    <div class="window-status">
-      ${active() ? html`<button class="timer-pill" data-view="practice">${icon('clock')}<span data-clock>${formatTime(remainingMs(state.session))}</span></button>` : html`<span class="connection-dot"></span><span class="local-label">На этом устройстве</span>`}
-    </div>
-  </header>`;
+  renderAppShell(query('#app'), {
+    view: state.view,
+    title: label[state.view],
+    content,
+    warning: storageWarning,
+    environment: environmentView(),
+    sidebarCollapsed,
+    canGoBack: navigationIndex > 0,
+    canGoForward: navigationIndex < navigation.length - 1,
+    timer: active() ? formatTime(remainingMs(state.session)) : undefined,
+    platform: window.desktop?.platform ?? 'browser',
+    canOpenSheets: !!window.desktop && !active(),
+    dashboard: {
+      history: historyTable(3),
+    },
+  });
 }
 
 function lessonView() {
@@ -457,97 +325,7 @@ function heading(
 }
 
 function home() {
-  const s = summarizeProgress(state);
-  return html`${heading('ТВОЁ УЧЕБНОЕ ПРОСТРАНСТВО', 'От данных - к пониманию.', 'Новая предметная область. Та же уверенность в своих навыках.', html`<span class="date-chip">${new Intl.DateTimeFormat('ru', {day: 'numeric', month: 'long'}).format(new Date())}</span>`)}
-    ${environmentView()}
-    <div class="stats-row">
-      <div>
-        <span class="stat-number"
-          >${String(state.quizHistory.length).padStart(2, '0')}</span
-        ><span class="stat-caption">Блицев пройдено</span
-        ><span class="stat-tag">Теория</span>
-      </div>
-      <div>
-        <span class="stat-number"
-          >${s.accuracy === null ? '-' : s.accuracy + '%'}</span
-        ><span class="stat-caption">Верных ответов</span>
-      </div>
-      <div>
-        <span class="stat-number"
-          >${String(state.history.length).padStart(2, '0')}</span
-        ><span class="stat-caption">Практических попыток</span>
-      </div>
-      <div>
-        <span class="stat-number">${s.minutes}<small> мин</small></span
-        ><span class="stat-caption">В практике</span>
-      </div>
-    </div>
-    <div class="feature-grid">
-      <section class="hero-card">
-        <div class="hero-copy">
-          <span class="pill">МОДУЛЬ 01 / ОСНОВЫ</span>
-          <h2>Сначала понять<br />Потом нормализовать</h2>
-          <p>Ключи, связи и формулы - через короткие вопросы с объяснениями</p>
-          <button class="button light" data-view="quiz">
-            Начать блиц ${icon('arrow')}
-          </button>
-        </div>
-        <div class="hero-bottom">
-          <span>${questions.length} вопроса в библиотеке</span
-          ><span>~ 5 минут</span>
-        </div>
-      </section>
-      <section class="sprint-card">
-        <div class="sprint-top">${icon('clock')}<span>ПРАКТИКА</span></div>
-        <h2>Практика на время</h2>
-        <p>Три CSV, 12 таблиц и самостоятельная работа в Calc</p>
-        <div class="sprint-digits">45<span>:00</span></div>
-        <button class="button secondary" data-view="practice">
-          ${active() ? 'Вернуться к попытке' : 'Настроить тренировку'}
-          ${icon('arrow')}</button
-        ><small>Время выбираешь сам, не официальный лимит</small>
-      </section>
-    </div>
-    <div class="section-heading">
-      <div>
-        <h2>Данные для практики</h2>
-        <p>Три области. Три разные модели отношений</p>
-      </div>
-      <button class="text-button" data-view="generator">
-        Открыть генератор ${icon('arrow')}
-      </button>
-    </div>
-    <div class="domain-grid">
-      ${domains
-        .map(
-          d =>
-            html`<button
-              class="domain-card"
-              data-action="domain"
-              data-domain="${d.id}"
-            >
-              ${folder(d)}
-              <div class="domain-info">
-                <div>
-                  <h3>${d.name}</h3>
-                  <p>${caption(d.subtitle)}</p>
-                </div>
-                ${icon('arrow')}
-              </div>
-            </button>`,
-        )
-        .join('')}
-    </div>
-    <div class="section-heading">
-      <div>
-        <h2>Последние попытки</h2>
-        <p>Возвращайся к результатам и находи, что повторить</p>
-      </div>
-      <button class="text-button" data-view="history">
-        Весь прогресс ${icon('arrow')}
-      </button>
-    </div>
-    ${historyTable(3)}`;
+  return '';
 }
 
 function configFields(config: Config, {duration = false} = {}) {
@@ -1331,8 +1109,11 @@ function history() {
     </div>`;
 }
 
+let stopObserving: (() => void) | undefined;
+
 function render() {
   closeSelectMenu();
+  stopObserving?.();
   if (!label[state.view]) state.view = 'home';
   if (active() && ['lesson', 'quiz', 'database'].includes(state.view))
     state.view = 'practice';
@@ -1341,7 +1122,7 @@ function render() {
     navigation.push(state.view);
     navigationIndex = navigation.length - 1;
   }
-  query('#app').innerHTML = shell(
+  shell(
     {
       home,
       generator,
@@ -1355,10 +1136,12 @@ function render() {
   enhanceSelects(query('#app'));
   enhanceNumbers(query('#app'));
   if (state.view === 'database') mountDatabase();
+  stopObserving = observeControls(document.body);
 }
 
 function complete() {
   if (!active()) return;
+  showConfirmation(false);
   state.session = finishSession(state.session!);
   if (!state.history.some(s => s.id === state.session!.id))
     state.history.push(structuredClone(state.session!));
@@ -1401,12 +1184,17 @@ async function exportCurrent(fileName?: string) {
   render();
 }
 
-document.addEventListener('click', async event => {
+const handleAction = async (event: Event) => {
   const target =
     event.target instanceof Element
       ? event.target.closest<HTMLButtonElement>('[data-view], [data-action]')
       : null;
-  if (!target || target.disabled) return;
+  if (
+    !target ||
+    target.disabled ||
+    (event.type === 'click' && target.dataset.reactAction)
+  )
+    return;
   try {
     if (active() && Date.now() >= state.session!.deadline) {
       complete();
@@ -1713,10 +1501,10 @@ document.addEventListener('click', async event => {
         state.view = 'generator';
         break;
       case 'finish':
-        query<HTMLDialogElement>('#confirm-dialog').showModal();
+        showConfirmation(true);
         return;
       case 'cancel-finish':
-        query<HTMLDialogElement>('#confirm-dialog').close();
+        showConfirmation(false);
         return;
       case 'confirm-finish':
         complete();
@@ -1743,7 +1531,9 @@ document.addEventListener('click', async event => {
   } catch (error) {
     toast(errorMessage(error), true);
   }
-});
+};
+document.addEventListener('click', handleAction);
+document.addEventListener('formatted-action', handleAction);
 
 function applyGenerator(randomize: boolean) {
   if (active()) {

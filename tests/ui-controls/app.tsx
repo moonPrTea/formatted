@@ -3,6 +3,7 @@ import {flushSync} from 'react-dom';
 import {House} from 'lucide-react';
 import {ActionButton} from '../../src/ui/components/action-button.js';
 import {SelectControl} from '../../src/ui/components/select-control.js';
+import {ThemePicker} from '../../src/ui/components/theme-picker.js';
 
 const select = document.querySelector<HTMLSelectElement>('#source-select')!;
 let closeMenu = () => {};
@@ -41,6 +42,7 @@ flushSync(() =>
         }}
       />
       <ActionButton id="after">Далее</ActionButton>
+      <ThemePicker />
     </main>,
   ),
 );

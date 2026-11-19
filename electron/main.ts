@@ -8,6 +8,7 @@ import {
   session,
   Menu,
   shell,
+  nativeTheme,
 } from 'electron';
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -46,9 +47,18 @@ async function setup() {
       return;
     const paths = ['/index.html', '/sheets/index.html', '/sheets/wizard.html'];
     if (!paths.includes(new URL(source.url).pathname)) return;
-    BrowserWindow.fromWebContents(event.sender)?.setBackgroundColor(
-      mode === 'dark' ? '#09090b' : '#fafafa',
-    );
+    const appWindow = BrowserWindow.fromWebContents(event.sender);
+    const background = mode === 'dark' ? '#09090b' : '#fafafa';
+    appWindow?.setBackgroundColor(background);
+    if (
+      process.platform !== 'darwin' &&
+      new URL(source.url).pathname === '/index.html'
+    )
+      appWindow?.setTitleBarOverlay({
+        color: background,
+        symbolColor: mode === 'dark' ? '#f4f4f5' : '#22272b',
+        height: 52,
+      });
   });
   const ai = createOllamaClient();
   const trustedAi = (event: IpcMainInvokeEvent) => {
@@ -193,12 +203,14 @@ function createWindow() {
       ? {trafficLightPosition: {x: 18, y: 19}}
       : {
           titleBarOverlay: {
-            color: '#ffffff',
-            symbolColor: '#22272b',
-            height: 54,
+            color: nativeTheme.shouldUseDarkColors ? '#09090b' : '#fafafa',
+            symbolColor: nativeTheme.shouldUseDarkColors
+              ? '#f4f4f5'
+              : '#22272b',
+            height: 52,
           },
         }),
-    backgroundColor: '#f1f4f9',
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#09090b' : '#fafafa',
     webPreferences: {
       preload: path.join(import.meta.dirname, 'preload.cjs'),
       contextIsolation: true,
