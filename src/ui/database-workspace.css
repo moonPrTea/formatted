@@ -1,0 +1,245 @@
+.sql-workspace {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+#app .sql-workspace > .page-heading {
+  margin: 0;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.sql-about {
+  max-width: 34ch;
+  font-size: 13px;
+  color: var(--muted);
+}
+.sql-about summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.sql-about summary svg {
+  width: 16px;
+  height: 16px;
+}
+.sql-about p {
+  margin: 12px 0 0;
+  line-height: 22px;
+}
+.sql-layout {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  min-width: 0;
+}
+.sql-steps {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.sql-section-label,
+.sql-source,
+.sql-footer > span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+#app .sql-step {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 48px;
+  padding: 12px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 20px;
+  white-space: normal;
+  text-align: left;
+}
+#app .sql-step[aria-current='step'] {
+  color: var(--foreground);
+}
+.sql-step-number {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.sql-step-check {
+  color: var(--success);
+}
+.sql-editor.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  gap: 24px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: none;
+}
+.sql-editor .card__header {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+}
+.sql-editor .card__title {
+  font-size: 20px;
+  font-weight: 550;
+  line-height: 28px;
+}
+.sql-editor .card__content {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+.sql-tabs {
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+}
+.sql-tabs .tabs__list-container {
+  width: fit-content;
+  max-width: 100%;
+}
+.sql-tabs .tabs__panel {
+  padding: 0;
+}
+.sql-tabs .tabs__panel[data-inert] {
+  display: none;
+}
+.sql-task,
+.sql-query,
+.sql-check {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.sql-task > * {
+  margin: 0;
+}
+.sql-tasks {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 20px;
+  list-style: decimal;
+}
+.sql-tasks li {
+  padding-left: 4px;
+}
+.sql-tasks li::marker {
+  color: var(--muted);
+  font-size: 12px;
+}
+.sql-hint summary {
+  width: fit-content;
+  color: var(--muted);
+  cursor: pointer;
+}
+.sql-hint p {
+  margin: 12px 0 0;
+}
+.sql-source {
+  overflow-wrap: anywhere;
+}
+#app #database-sql {
+  width: 100%;
+  min-height: 240px;
+  margin: 0;
+  padding: 16px;
+  font:
+    13px/1.7 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.sql-query > .button {
+  justify-self: start;
+}
+.sql-check fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.sql-check legend {
+  margin-bottom: 16px;
+}
+#app .sql-check label {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface-secondary);
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+}
+.sql-check input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 3px 0 0;
+}
+#database-feedback {
+  margin: 0;
+  color: var(--muted);
+}
+.sql-footer.card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--separator);
+}
+@media (max-width: 1100px) {
+  .sql-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .sql-steps {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sql-steps > .sql-section-label {
+    display: none;
+  }
+  #app .sql-step {
+    flex: 0 0 180px;
+    width: 180px;
+  }
+}
+@media (max-width: 640px) {
+  .sql-editor.card {
+    padding: 20px;
+    gap: 20px;
+  }
+  .sql-footer.card__footer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sql-footer > span {
+    flex: 1;
+    min-width: 100px;
+  }
+  .sql-about {
+    margin: 0;
+  }
+}

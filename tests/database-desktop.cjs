@@ -26,8 +26,16 @@ async function run() {
       await new Promise(r => setTimeout(r, 25));
     }
   };
-  const click = selector =>
-    js(`document.querySelector(${JSON.stringify(selector)}).click()`);
+  const click = async selector => {
+    await js(`(() => {
+      const element = document.querySelector(${JSON.stringify(selector)});
+      const panel = element.closest('[role=tabpanel]');
+      if (panel) document.getElementById(panel.getAttribute('aria-labelledby'))?.click();
+    })()`);
+    await js('new Promise(r => requestAnimationFrame(r))');
+    await js(`document.querySelector(${JSON.stringify(selector)}).click()`);
+    await js('new Promise(r => requestAnimationFrame(r))');
+  };
   await wait(() => js('!!document.querySelector("[data-view=database]")'));
   await click('[data-view=database]');
   assert.equal(
@@ -36,7 +44,7 @@ async function run() {
   );
   const sql = "SELECT '00101';\n-- </textarea><script>bad()</script>";
   await js(
-    `(() => { const field = document.querySelector('#database-sql'); field.value = ${JSON.stringify(sql)}; field.dispatchEvent(new Event('input')); })()`,
+    `(() => { const field = document.querySelector('#database-sql'); field.value = ${JSON.stringify(sql)}; field.dispatchEvent(new Event('input', {bubbles:true})); })()`,
   );
   await click('[name=db-answer][value="0"]');
   assert.ok(
@@ -99,6 +107,9 @@ async function run() {
       assert.ok(
         await js(
           'document.querySelector("#database-steps").getBoundingClientRect().height < 160',
+        ),
+        await js(
+          `JSON.stringify({width:innerWidth, nav:getComputedStyle(document.querySelector('#database-steps')).display, height:document.querySelector('#database-steps').getBoundingClientRect().height, buttons:[...document.querySelectorAll('[data-db-step]')].map(e=>e.getBoundingClientRect().height)})`,
         ),
       );
     await js(

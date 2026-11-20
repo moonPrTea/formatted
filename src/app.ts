@@ -14,7 +14,6 @@ import {
   checkNormalizationForm,
 } from './normalization-view.js';
 import {environmentView} from './environment-view.js';
-import {databaseView, mountDatabase} from './database-view.js';
 import type {
   AppState,
   AiTheme,
@@ -771,15 +770,10 @@ async function proposeTheme() {
 function quizView() {
   const quiz = state.quiz;
   if (!quiz)
-    return html`${heading('КОРОТКО. ОСМЫСЛЕННО.', 'Проверим понимание?', 'Не вспоминай готовый код. Выбирай ответ и разбирай причину.')}
+    return html`${heading('', 'Блиц', '')}
       <div class="quiz-intro panel">
-        <div class="quiz-illustration">${icon('quiz')}</div>
-        <span class="pill">БЛИЦ / МОДУЛЬ 01</span>
-        <h2>Один вопрос - одна идея</h2>
-        <p>
-          До 8 вопросов за подход. Порядок вопросов и ответов меняется<br />Подсказки
-          доступны, но самостоятельные ответы отмечаются отдельно
-        </p>
+        <h2>Проверим знания</h2>
+        <p>До 8 вопросов с разбором ответов</p>
         <form id="quiz-form">
           <label
             >Тема<select name="topic">
@@ -787,14 +781,17 @@ function quizView() {
               ${topics.map(t => html`<option>${t}</option>`).join('')}
             </select></label
           ><button class="button primary" type="submit">
-            Начать викторину ${icon('arrow')}
+            Начать викторину
           </button>
         </form>
-        <div class="intro-tags">
-          <span>${questions.length} вопроса</span
-          ><span>Разбор каждого ответа</span><span>Без таймера</span>
-        </div>
-        <p class="formula-scope">${FORMULA_SCOPE}</p>
+        <details class="quiz-help">
+          <summary>О вопросах и подсказках</summary>
+          <p>
+            ${questions.length} вопроса в базе. Подсказки доступны;
+            самостоятельные ответы отмечаются отдельно.
+          </p>
+          <p class="formula-scope">${FORMULA_SCOPE}</p>
+        </details>
       </div>`;
   if (quiz.completed) {
     const correct = quiz.answers.filter(a => a.correct).length;
@@ -844,7 +841,11 @@ function quizView() {
           <span class="muted">/ ${quiz.questions.length}</span></span
         >
       </div>
-      <progress max="${quiz.questions.length}" value="${index}"></progress>
+      <progress
+        aria-label="Прогресс викторины"
+        max="${quiz.questions.length}"
+        value="${index}"
+      ></progress>
       <h2>${esc(q.question)}</h2>
       <div class="answer-options">
         ${q.options.map((option, i) => html`<button class="answer ${pending ? (i === q.correct ? 'correct' : pending.choice === i ? 'incorrect' : '') : ''}" data-action="answer" data-choice="${i}" ${pending ? 'disabled' : ''}><span class="answer-letter">${String.fromCharCode(65 + i)}</span><span>${esc(option)}</span>${pending && i === q.correct ? icon('check') : ''}</button>`).join('')}
@@ -867,7 +868,27 @@ function quizView() {
             : ''
       }
       <div class="quiz-footer">
-        ${!pending ? button('hint', `${icon('help')} Подсказка`, 'ghost', quiz.hint ? 'disabled' : '') : '<span class="small-note">Знание закрепляется через объяснение</span>'}${pending ? button('next-question', `${index + 1 === quiz.questions.length ? 'Завершить блиц' : 'Следующий вопрос'} ${icon('arrow')}`, 'primary') : '<span class="small-note">Выбери один ответ</span>'}
+        ${
+          !pending
+            ? button(
+                'hint',
+                `${icon('help')} Подсказка`,
+                'ghost',
+                quiz.hint ? 'disabled' : '',
+              )
+            : '<span class="small-note">Знание закрепляется через объяснение</span>'
+        }
+        ${
+          pending
+            ? button(
+                'next-question',
+                index + 1 === quiz.questions.length
+                  ? 'Завершить блиц'
+                  : 'Следующий вопрос',
+                'primary',
+              )
+            : '<span class="small-note">Выбери один ответ</span>'
+        }
       </div>
     </section>`;
 }
@@ -1130,12 +1151,11 @@ function render() {
       practice,
       history,
       lesson: lessonView,
-      database: databaseView,
+      database: () => '',
     }[state.view](),
   );
   enhanceSelects(query('#app'));
   enhanceNumbers(query('#app'));
-  if (state.view === 'database') mountDatabase();
   stopObserving = observeControls(document.body);
 }
 

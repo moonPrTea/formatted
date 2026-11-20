@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import {ActionButton} from './action-button.js';
 import {Dashboard} from './dashboard.js';
+import {DatabaseWorkspace} from './database-workspace.js';
 import {ThemePicker} from './theme-picker.js';
 import type {ShellProps} from '../shell-types.js';
 
@@ -214,6 +215,8 @@ export function AppShell(props: ShellProps & {contentKey: number}) {
                 summary={props.dashboard}
                 canOpenSheets={props.canOpenSheets}
               />
+            ) : props.view === 'database' ? (
+              <DatabaseWorkspace />
             ) : (
               <div
                 key={props.contentKey}

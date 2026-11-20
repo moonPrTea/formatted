@@ -1,0 +1,115 @@
+#app .quiz-intro,
+#app .quiz-card,
+#app .result-hero {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+#app .quiz-intro {
+  text-align: left;
+}
+#app .quiz-intro > *,
+#app .quiz-card > *,
+#app .result-hero > * {
+  margin: 0;
+}
+#app .quiz-intro h2,
+#app .quiz-card h2,
+#app .result-hero h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+}
+#app .quiz-intro p,
+#app .quiz-card p {
+  font-size: 14px;
+  line-height: 24px;
+}
+#app #quiz-form {
+  display: grid;
+  width: 100%;
+  justify-self: start;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+  max-width: 680px;
+  margin: 0;
+}
+#app #quiz-form > .button {
+  height: 44px;
+}
+#app #quiz-form .select-field {
+  min-width: 0;
+  width: 100%;
+}
+#app .quiz-help {
+  display: grid;
+  gap: 12px;
+}
+#app .quiz-help p {
+  max-width: 80ch;
+  margin: 12px 0 0;
+}
+#app .quiz-card .quiz-meta,
+#app .quiz-card .quiz-footer {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+#app .quiz-card .answer-options {
+  gap: 12px;
+}
+#app .quiz-card .answer {
+  min-height: 56px;
+  padding: 12px 16px;
+  gap: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 22px;
+}
+#app .quiz-card .answer:disabled {
+  opacity: 1;
+}
+#app .quiz-card .answer > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#app .quiz-card .answer-letter {
+  width: 32px;
+  height: 32px;
+}
+#app .quiz-card .feedback,
+#app .quiz-card .hint-box {
+  margin: 0;
+  padding: 16px;
+  border-radius: 12px;
+}
+#app .quiz-card .hint-box {
+  align-items: start;
+}
+#app .quiz-card .hint-box > .icon {
+  flex-shrink: 0;
+}
+#app .quiz-card .quiz-footer {
+  padding-top: 4px;
+}
+@media (max-width: 700px) {
+  #app #quiz-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #app #quiz-form > .button {
+    width: 100%;
+  }
+}
+@media (max-width: 640px) {
+  #app .quiz-intro,
+  #app .quiz-card,
+  #app .result-hero {
+    padding: 20px;
+  }
+  #app .quiz-card .quiz-footer > .button {
+    width: 100%;
+  }
+}
