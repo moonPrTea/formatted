@@ -1,6 +1,7 @@
 import './ui/theme.js';
 import {renderAppShell, showConfirmation} from './ui/shell.js';
 import {observeControls} from './ui/controls.js';
+import {mountSections} from './ui/sections.js';
 import {query, errorMessage, html, escapeHtml as esc} from './dom.js';
 import {
   progressAchievements,
@@ -129,6 +130,7 @@ const label: Record<View, string> = {
   practice: 'На время',
   history: 'Мой прогресс',
   lesson: 'Разбор CSV в Calc',
+  workbook: 'Рабочая книга',
   database: 'Базы данных',
 };
 const navigation: View[] = [];
@@ -209,18 +211,14 @@ function lessonView() {
                   class="lesson-formula"
                 ><code>${esc(step.formula)}</code></pre>
                 <p class="small-note">
-                  Если включены английские имена функций, ИНДЕКС называется
-                  INDEX, ПОИСКПОЗ называется MATCH
+                  В английской версии: ИНДЕКС называется INDEX, ПОИСКПОЗ
+                  называется MATCH
                 </p>`
             : ''
         }
         <p class="lesson-reason">${esc(step.why)}</p>
         <div class="lesson-example table-scroll">
-          <table class="data-table">
-            <caption>
-              Один исходный файл, четыре
-              товара${lessonStep ? ', категории очищены' : ''}
-            </caption>
+          <table class="data-table" aria-label="Пример данных урока">
             <thead>
               <tr>
                 ${['Код', 'Товар', 'Категория'].map(name => html`<th>${name}</th>`).join('')}${lessonStep >= 3 ? '<th>Позиция</th>' : ''}${lessonStep >= 4 ? '<th>Ключ</th>' : ''}
@@ -241,7 +239,7 @@ function lessonView() {
             </tbody>
           </table>
         </div>
-        ${lessonStep >= 2 ? html`<div class="lesson-dictionary"><b>Справочник «Категории»</b>${calcLesson.categories.map(([id, name], i) => html`<span>${id}: ${esc(name)} <small>позиция ${i + 1}</small></span>`).join('')}</div>` : ''}
+        ${lessonStep >= 2 ? html`<div class="lesson-dictionary"><b>Справочник «Категории»</b>${calcLesson.categories.map(([id, name]) => html`<span>${id}: ${esc(name)}</span>`).join('')}</div>` : ''}
         <fieldset class="lesson-question">
           <legend>${esc(step.question)}</legend>
           <div class="actions">
@@ -253,17 +251,23 @@ function lessonView() {
           ${button('lesson-prev', 'Предыдущий шаг', 'secondary', lessonStep === 0 ? 'disabled' : '')}${button('lesson-next', 'Следующий шаг', 'primary', lessonStep === calcLesson.steps.length - 1 ? 'disabled' : '')}
         </div>
       </section>
-    </div>
-    <section class="panel calc-launch">
-      <div class="calc-option">
+    </div> `;
+}
+
+function workbookView() {
+  return html`${heading('', 'Рабочая книга', '')}<label class="workbook-step"
+      >Шаг урока<select name="workbook-step">
+        ${calcLesson.steps.map((step, i) => html`<option value="${i}" ${i === lessonStep ? 'selected' : ''}>${i + 1}. ${esc(step.title)}</option>`).join('')}
+      </select></label
+    >
+    <section class="calc-launch">
+      <div class="calc-option" data-workbook-section="editor">
         <h2>Редактор таблиц</h2>
         <p>Учебная книга с ИНДЕКС и ПОИСКПОЗ, без установки LibreOffice</p>
         ${window.desktop ? button('open-sheets', 'Открыть редактор таблиц', 'secondary') : '<p>Редактор запускается из desktop-приложения</p>'}
-        <p class="small-note">
-          Изменения пока хранятся только до закрытия окна
-        </p>
+        <p class="small-note">Сохраняй книгу в файл через меню «Файл»</p>
       </div>
-      <div class="calc-option">
+      <div class="calc-option" data-workbook-section="work">
         <h2>Выполнить самостоятельно</h2>
         <p>
           Одна рабочая книга на все шаги. Импортируй source.csv и скопируй
@@ -280,7 +284,7 @@ function lessonView() {
           формулами проверяются ИНДЕКС и ПОИСКПОЗ с обычными ссылками на ячейки
         </p>
       </div>
-      <div class="calc-option">
+      <div class="calc-option" data-workbook-section="examples">
         <h2>Пример в LibreOffice Calc</h2>
         <p>
           Python открывает учебную копию с выделенной ячейкой и листом
@@ -290,21 +294,21 @@ function lessonView() {
         <div class="actions">
           ${window.desktop ? button('open-calc', calcBusy ? 'Открываем…' : 'Открыть шаг в Calc', 'primary', calcBusy ? 'disabled' : '') + button('check-calc', 'Проверить Python и Calc', 'secondary', calcBusy ? 'disabled' : '') : '<span class="small-note">Открытие Calc доступно в desktop-приложении, не в браузерном превью</span>'}${button('lesson-source', 'Скачать исходный CSV', 'secondary')}
         </div>
-        <p
-          class="calc-status"
-          role="status"
-          aria-live="polite"
-          ${calcMessage ? '' : 'hidden'}
-        >
-          ${esc(calcMessage)}
-        </p>
         <p class="small-note">
           Нужны Python 3.9+ и LibreOffice Calc. Урок не устанавливает программы,
           не управляет мышью и не меняет открытые документы. В режиме на время
           подсказки недоступны
         </p>
       </div>
-    </section>`;
+    </section>
+    <p
+      class="calc-status"
+      role="status"
+      aria-live="polite"
+      ${calcMessage ? '' : 'hidden'}
+    >
+      ${esc(calcMessage)}
+    </p> `;
 }
 
 function heading(
@@ -1136,7 +1140,10 @@ function render() {
   closeSelectMenu();
   stopObserving?.();
   if (!label[state.view]) state.view = 'home';
-  if (active() && ['lesson', 'quiz', 'database'].includes(state.view))
+  if (
+    active() &&
+    ['lesson', 'workbook', 'quiz', 'database'].includes(state.view)
+  )
     state.view = 'practice';
   if (navigation[navigationIndex] !== state.view) {
     navigation.splice(navigationIndex + 1);
@@ -1151,9 +1158,11 @@ function render() {
       practice,
       history,
       lesson: lessonView,
+      workbook: workbookView,
       database: () => '',
     }[state.view](),
   );
+  mountSections(state.view);
   enhanceSelects(query('#app'));
   enhanceNumbers(query('#app'));
   stopObserving = observeControls(document.body);
@@ -1223,7 +1232,7 @@ const handleAction = async (event: Event) => {
     if (target.dataset.view) {
       if (
         active() &&
-        ['quiz', 'lesson', 'database'].includes(target.dataset.view)
+        ['quiz', 'lesson', 'workbook', 'database'].includes(target.dataset.view)
       ) {
         toast('Блиц и подсказки доступны после завершения попытки.');
         return;
@@ -1267,7 +1276,10 @@ const handleAction = async (event: Event) => {
           navigationIndex + (target.dataset.action === 'nav-back' ? -1 : 1);
         const view = navigation[index];
         if (!view) return;
-        if (active() && ['quiz', 'lesson'].includes(view)) {
+        if (
+          active() &&
+          ['quiz', 'lesson', 'workbook', 'database'].includes(view)
+        ) {
           toast('Подсказки доступны после завершения попытки');
           return;
         }
@@ -1588,6 +1600,13 @@ function formConfig(values: Record<string, FormDataEntryValue>) {
 
 document.addEventListener('change', async event => {
   const input = event.target;
+  if (input instanceof HTMLSelectElement && input.name === 'workbook-step') {
+    lessonStep = Number(input.value);
+    lessonAnswer = null;
+    calcMessage = '';
+    render();
+    return;
+  }
   if (
     input instanceof HTMLInputElement &&
     input.matches('#normalization-form [name=files]')

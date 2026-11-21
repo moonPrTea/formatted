@@ -1,0 +1,132 @@
+#app .lesson-layout {
+  align-items: start;
+}
+#app .panel.lesson-nav {
+  padding: 8px;
+}
+#app .lesson-step {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  min-height: 44px;
+  padding: 12px;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+#app .lesson-body {
+  display: grid;
+  min-height: 0;
+  padding: 24px;
+  gap: 20px;
+}
+#app .lesson-body h2,
+#app .workbook-panel h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+}
+#app .workspace-sections,
+#app .sections-host,
+#app .workspace-section {
+  min-width: 0;
+}
+#app .workspace-sections {
+  gap: 20px;
+}
+#app .workspace-sections .tabs__tab {
+  white-space: nowrap;
+}
+#app .workspace-sections .tabs__panel {
+  padding: 0;
+}
+#app .workspace-sections .tabs__panel[data-inert] {
+  display: none;
+}
+#app .workspace-sections .tabs__list-container {
+  width: fit-content;
+  max-width: 100%;
+}
+#app .workspace-section {
+  display: grid;
+  gap: 16px;
+}
+#app .workspace-section > *,
+#app .workbook-panel > * {
+  margin: 0;
+}
+#app .lesson-instructions {
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
+  list-style: decimal;
+}
+#app .lesson-instructions li {
+  margin: 0;
+  padding-left: 4px;
+}
+#app .lesson-body p,
+#app .lesson-body li,
+#app .workbook-panel p {
+  font: 14px/24px var(--font-sans);
+}
+#app .lesson-formula,
+#app .lesson-formula code {
+  font: 500 14px/24px var(--font-sans);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#app .lesson-question {
+  margin: 0;
+}
+#app .lesson-question legend {
+  margin: 0 0 16px;
+  padding: 0;
+  line-height: 24px;
+}
+#app .lesson-question .actions > .button {
+  height: auto;
+  min-height: 40px;
+  padding-block: 10px;
+  white-space: normal;
+  text-align: left;
+}
+#app .lesson-body .lesson-controls {
+  margin: 0;
+  padding-top: 20px;
+}
+#app .lesson-dictionary {
+  display: grid;
+  gap: 8px;
+  padding-top: 16px;
+}
+#app .lesson-dictionary > span {
+  padding-block: 6px;
+}
+#app .workbook-step {
+  max-width: 420px;
+}
+#app .calc-launch {
+  margin: 0;
+  padding: 0;
+}
+#app .workbook-panel {
+  display: grid;
+  padding: 24px;
+  gap: 16px;
+}
+#app .workbook-panel .small-note {
+  max-width: 90ch;
+  font-size: 12px;
+  line-height: 20px;
+}
+@media (max-width: 640px) {
+  #app .lesson-body,
+  #app .workbook-panel {
+    padding: 20px;
+  }
+}
+#app #main[data-screen='workbook'] .page-heading p:empty {
+  display: none;
+}

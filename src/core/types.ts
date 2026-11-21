@@ -137,6 +137,7 @@ export type View =
   | 'practice'
   | 'history'
   | 'lesson'
+  | 'workbook'
   | 'database';
 
 export interface AppState {

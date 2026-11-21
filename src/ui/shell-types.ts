@@ -18,3 +18,9 @@ export interface ShellProps {
   platform: string;
   canOpenSheets: boolean;
 }
+
+export interface WorkspaceSection {
+  label: string;
+  value: string;
+  content: string;
+}

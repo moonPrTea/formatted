@@ -26,13 +26,14 @@ const navigation = [
   {id: 'generator', title: 'Данные', icon: Database},
   {id: 'database', title: 'SQL', icon: Code2},
   {id: 'lesson', title: 'Практика Calc', icon: BookOpen},
+  {id: 'workbook', title: 'Рабочая книга', icon: Table2},
   {id: 'quiz', title: 'Блиц', icon: Zap},
   {id: 'practice', title: 'На время', icon: Clock3},
   {id: 'history', title: 'Прогресс', icon: ChartNoAxesCombined},
 ] as const;
 const navigationGroups = [
   {title: 'Практика', views: ['generator', 'database', 'practice']},
-  {title: 'Обучение', views: ['lesson', 'quiz']},
+  {title: 'Обучение', views: ['lesson', 'workbook', 'quiz']},
 ];
 
 export function AppShell(props: ShellProps & {contentKey: number}) {

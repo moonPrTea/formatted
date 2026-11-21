@@ -81,6 +81,11 @@ async function run() {
     await evaluate(
       'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))',
     );
+    await evaluate(`(() => {
+      const panel = document.querySelector(${JSON.stringify(selector)}).closest('[role=tabpanel]');
+      if (panel) document.getElementById(panel.getAttribute('aria-labelledby'))?.click();
+    })()`);
+    await evaluate('new Promise(resolve => requestAnimationFrame(resolve))');
     return evaluate(
       `document.querySelector(${JSON.stringify(selector)}).click()`,
     );
@@ -159,9 +164,10 @@ async function run() {
   await click('[data-action="lesson-answer"][data-answer="0"]');
   assert.match(await text('.lesson-question'), /Верно/);
   await capture('calc-lesson');
-  assert.equal(await evaluate('document.querySelector(".sidebar-note")'), null);
+  assert.equal(await evaluate('document.querySelector(".calc-launch")'), null);
+  await click('[data-view="workbook"]');
   assert.equal(
-    await evaluate('document.querySelectorAll(".calc-option").length'),
+    await evaluate('document.querySelectorAll(".workbook-panel").length'),
     3,
   );
   for (const width of [1440, 1000, 900]) {
@@ -172,7 +178,7 @@ async function run() {
     await capture(`calc-options-${width}`);
     assert.equal(
       await evaluate(
-        `document.documentElement.scrollWidth <= innerWidth && [...document.querySelectorAll('.calc-option')].every(e => getComputedStyle(e).gap === '16px' && e.scrollWidth <= e.clientWidth)`,
+        `document.documentElement.scrollWidth <= innerWidth && [...document.querySelectorAll('.workbook-panel')].filter(e => e.checkVisibility()).every(e => getComputedStyle(e).gap === '16px' && e.scrollWidth <= e.clientWidth)`,
       ),
       true,
     );
@@ -852,7 +858,7 @@ async function run() {
     /подключение к модели отключено/,
   );
   await preview.webContents.executeJavaScript(
-    'document.querySelector("[data-view=lesson]").click()',
+    'document.querySelector("[data-view=workbook]").click()',
   );
   assert.match(
     await preview.webContents.executeJavaScript(
