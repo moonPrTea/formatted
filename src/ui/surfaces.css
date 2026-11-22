@@ -1,0 +1,128 @@
+#app .panel {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: var(--panel-padding);
+  gap: var(--panel-gap);
+}
+#app .panel > h2,
+#app .panel-title h2,
+#app .lesson-body h2,
+#app .rules-panel h2,
+#app .dashboard-modules .card__title,
+#app .sql-editor .card__title {
+  font-size: 20px;
+  font-weight: 550;
+  line-height: 28px;
+}
+#app .panel p,
+#app .panel li {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 24px;
+}
+#app .panel .small-note {
+  font-size: 12px;
+  line-height: 20px;
+}
+#app .workbook-panel {
+  --panel-gap: 16px;
+}
+#app .panel.lesson-nav {
+  gap: 4px;
+}
+#app .lesson-body {
+  align-self: start;
+  gap: 24px;
+}
+@media (max-width: 700px) {
+  #app .panel {
+    --panel-padding: 20px;
+  }
+}
+#app .panel-title,
+#app .panel > h2,
+#app .panel > p {
+  margin: 0;
+}
+#app .panel-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+#app .practice-guide ol {
+  display: grid;
+  gap: 24px;
+  max-width: 85ch;
+  margin: 0 0 24px;
+  padding-left: 24px;
+  list-style: decimal;
+}
+#app .practice-guide li {
+  padding-left: 8px;
+}
+#app .practice-guide li p {
+  margin: 6px 0 0;
+}
+.settings-content .environment-panel {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.settings-content .environment-panel > h2 {
+  display: block;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.settings-content .environment-panel p {
+  margin: 0;
+  line-height: 22px;
+}
+.environment-tools {
+  width: 100%;
+}
+.environment-tools > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--separator);
+}
+.environment-tools span {
+  display: grid;
+  gap: 4px;
+}
+.environment-tools strong {
+  font-weight: 500;
+}
+.environment-tools small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.environment-status:empty {
+  display: none;
+}
+#app .notice,
+#app .hint-box,
+#app .feedback,
+#app .tip-box {
+  margin: 0;
+  padding: 16px 20px;
+  border-radius: 16px;
+  line-height: 1.6;
+}
+#database-storage:empty {
+  display: none;
+}
+@media (max-width: 700px) {
+  .environment-tools > div {
+    flex-wrap: wrap;
+  }
+}
