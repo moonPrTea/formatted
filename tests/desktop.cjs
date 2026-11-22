@@ -82,8 +82,9 @@ async function run() {
       'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))',
     );
     await evaluate(`(() => {
-      const panel = document.querySelector(${JSON.stringify(selector)}).closest('[role=tabpanel]');
-      if (panel) document.getElementById(panel.getAttribute('aria-labelledby'))?.click();
+      const section = document.querySelector(${JSON.stringify(selector)}).closest('[data-section]');
+      section?.closest('[data-workspace]')
+        ?.querySelector('[role=tab][data-ui-value="' + section.dataset.section + '"]')?.click();
     })()`);
     await evaluate('new Promise(resolve => requestAnimationFrame(resolve))');
     return evaluate(
@@ -292,6 +293,7 @@ async function run() {
     1,
   );
   await click('[data-view="generator"]');
+  await click('[data-ui-value="schema"]');
   for (const width of [1440, 1000, 900]) {
     window.setContentSize(width, 960);
     await evaluate(
@@ -348,12 +350,12 @@ async function run() {
   );
   assert.equal(await text('[data-file-summary]'), 'Файлы не выбраны');
   assert.equal(await text('.normalization-result'), '');
-  await click('.number-field [data-step="1"]');
+  await click('.number-control [data-step="1"]');
   assert.equal(
     await evaluate('document.querySelector("[name=size]").value'),
     '61',
   );
-  await click('.number-field [data-step="-1"]');
+  await click('.number-control [data-step="-1"]');
   assert.equal(
     await evaluate('document.querySelector("[name=size]").value'),
     '60',
@@ -367,11 +369,11 @@ async function run() {
     );
     assert.equal(
       await evaluate(
-        `document.querySelector('.number-field [data-step="${direction}"]').disabled`,
+        `document.querySelector('.number-control [data-step="${direction}"]').disabled`,
       ),
       true,
     );
-    await click(`.number-field [data-step="${direction}"]`);
+    await click(`.number-control [data-step="${direction}"]`);
     assert.equal(
       await evaluate('document.querySelector("[name=size]").value'),
       String(value),
@@ -380,7 +382,7 @@ async function run() {
   await evaluate(
     '{ const input = document.querySelector("[name=size]"); input.value = ""; input.dispatchEvent(new Event("input", {bubbles:true})); }',
   );
-  await click('.number-field [data-step="1"]');
+  await click('.number-control [data-step="1"]');
   assert.equal(
     await evaluate('document.querySelector("[name=size]").value'),
     '20',
@@ -569,6 +571,7 @@ async function run() {
     ),
   );
   await capture('generator');
+  await click('[data-ui-value="variant"]');
   for (const [width, height] of [
     [1280, 800],
     [1000, 720],
@@ -600,6 +603,7 @@ async function run() {
     );
   }
   window.setSize(1440, 960);
+  await click('[data-ui-value="data"]');
   await evaluate(
     'document.querySelector(".dataset-panel").scrollIntoView({block:"start"})',
   );

@@ -1,0 +1,106 @@
+#app #main[data-screen='generator'] .panel {
+  padding: var(--panel-padding);
+}
+#app #main[data-screen='generator'] .panel h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+}
+#app .normalization-panel,
+#app .ai-panel {
+  display: grid;
+  gap: 20px;
+}
+#app .normalization-panel > *,
+#app .ai-panel > * {
+  margin: 0;
+}
+#app .normalization-panel p,
+#app .rules-panel p,
+#app .ai-panel p {
+  font-size: 14px;
+  line-height: 24px;
+}
+#app .normalization-panel .small-note,
+#app .ai-panel .small-note {
+  font-size: 12px;
+  line-height: 20px;
+}
+#app .normalization-panel form {
+  margin: 0;
+}
+#app .file-picker {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 44px;
+  padding: 4px 12px 4px 4px;
+  gap: 12px;
+  overflow: hidden;
+  background: var(--soft);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+#app .file-picker input[type='file'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+#app .rules-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+#app .rules-panel > div {
+  max-width: 78ch;
+}
+#app .rules-panel h2,
+#app .rules-panel p {
+  margin: 0 0 8px;
+}
+#app .rules-panel ul {
+  display: grid;
+  gap: 0;
+  max-width: 90ch;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+#app .rules-panel li {
+  padding: 14px 0;
+  border-top: 1px solid var(--separator);
+  font-size: 14px;
+  line-height: 24px;
+}
+@media (max-width: 700px) {
+  #app #main[data-screen='generator'] {
+    --panel-padding: 20px;
+  }
+}
+#app .file-picker:focus-within {
+  border-color: var(--focus);
+}
+#app .file-picker-button {
+  background: var(--default);
+  color: var(--foreground);
+}
+#app .file-picker:hover .file-picker-button {
+  background: var(--hover);
+}
+#app [data-file-summary] {
+  min-width: 0;
+  color: var(--muted);
+}
+#app .normalization-result:not(:empty) {
+  background: var(--soft);
+  color: var(--foreground);
+}
+#app .normalization-result:empty {
+  display: none;
+}
+#app .normalization-result p {
+  margin: 0;
+}

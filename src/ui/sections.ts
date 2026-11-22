@@ -58,6 +58,40 @@ export function mountSections(view: View) {
   );
   if (!screenContent) return;
 
+  if (view === 'generator') {
+    const getSectionMarkup = (selector: string) =>
+      screenContent.querySelector<HTMLElement>(selector)?.outerHTML ?? '';
+    const sections: WorkspaceSection[] = [
+      {
+        value: 'variant',
+        label: 'Вариант',
+        content: getSectionMarkup('.config-panel'),
+      },
+      {
+        value: 'data',
+        label: 'Данные и задания',
+        content: getSectionMarkup('.generator-right'),
+      },
+      {
+        value: 'schema',
+        label: 'Проверка схемы',
+        content: getSectionMarkup('.normalization-panel'),
+      },
+      {
+        value: 'rules',
+        label: 'Правила',
+        content: getSectionMarkup('.rules-panel'),
+      },
+      {value: 'ai', label: 'ИИ-тема', content: getSectionMarkup('.ai-panel')},
+    ].filter(section => section.content);
+    const introduction = [...screenContent.children].filter(element =>
+      element.matches('.page-heading, .notice'),
+    );
+    const host = document.createElement('div');
+    screenContent.replaceChildren(...introduction, host);
+    renderWorkspaceSections(host, view, sections);
+  }
+
   if (view === 'lesson') {
     const lessonBody = screenContent.querySelector<HTMLElement>('.lesson-body');
     if (!lessonBody) return;
@@ -109,4 +143,12 @@ export function mountSections(view: View) {
 export function disposeSections() {
   for (const workspace of mountedWorkspaces) workspace.root.unmount();
   mountedWorkspaces.clear();
+}
+
+export function selectWorkspaceSection(workspace: string, section: string) {
+  const tab = document.querySelector<HTMLElement>(
+    `[data-workspace="${workspace}"] [role="tab"][data-ui-value="${section}"]`,
+  );
+  if (tab?.getAttribute('aria-selected') !== 'true')
+    flushSync(() => tab?.click());
 }

@@ -1,7 +1,7 @@
 import './ui/theme.js';
 import {renderAppShell, showConfirmation} from './ui/shell.js';
 import {observeControls} from './ui/controls.js';
-import {mountSections} from './ui/sections.js';
+import {mountSections, selectWorkspaceSection} from './ui/sections.js';
 import {query, errorMessage, html, escapeHtml as esc} from './dom.js';
 import {
   progressAchievements,
@@ -126,7 +126,7 @@ const active = () => state.session?.status === 'running';
 const label: Record<View, string> = {
   home: 'Главная',
   quiz: 'Блиц-викторина',
-  generator: 'Генератор данных',
+  generator: 'Данные',
   practice: 'На время',
   history: 'Мой прогресс',
   lesson: 'Разбор CSV в Calc',
@@ -544,7 +544,7 @@ function tasksList(dataset: Dataset) {
 
 function generator() {
   const data = generateDataset(state.config);
-  return html`${heading('СОЗДАЙ СВОЙ ВАРИАНТ', 'Лаборатория данных', 'Исходники и условия меняются. Решение всегда остаётся за тобой.')}
+  return html`${heading('СОЗДАЙ СВОЙ ВАРИАНТ', 'Данные', 'Исходники и условия меняются. Решение всегда остаётся за тобой.')}
     ${active() ? '<div class="notice">Идёт попытка на время. Генерация других вариантов доступна после завершения</div>' : ''}
     <div class="generator-layout">
       <section class="panel config-panel">
@@ -560,7 +560,7 @@ function generator() {
               class="button primary full"
               ${active() ? 'disabled' : ''}
             >
-              Новый вариант ${icon('arrow')}</button
+              Новый вариант</button
             ><button
               type="button"
               class="button secondary full"
@@ -749,7 +749,11 @@ function refreshAiPanel() {
 async function proposeTheme() {
   if (!window.desktop || aiBusy || active()) return;
   const form = query<HTMLFormElement>('#generator-form');
-  if (!form.reportValidity()) return;
+  if (!form.checkValidity()) {
+    selectWorkspaceSection('generator', 'variant');
+    form.reportValidity();
+    return;
+  }
   aiBusy = true;
   aiDraft = null;
   aiMessage =
@@ -1364,7 +1368,8 @@ const handleAction = async (event: Event) => {
         return;
       }
       case 'show-ai':
-        query('#ai-panel').scrollIntoView({behavior: 'smooth', block: 'start'});
+        selectWorkspaceSection('generator', 'ai');
+        document.querySelector<HTMLInputElement>('#ai-topic')?.focus();
         return;
       case 'check-ai':
         if (!window.desktop || active() || aiBusy) return;

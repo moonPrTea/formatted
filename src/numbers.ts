@@ -7,7 +7,7 @@ export function enhanceNumbers(root: ParentNode) {
     input.id ||= `${input.form!.id}-${input.name}`;
     label.htmlFor = input.id;
     const field = document.createElement('span');
-    field.className = 'number-field';
+    field.className = 'number-control';
     input.before(field);
     field.append(input);
     const buttons = [-1, 1].map(direction => {

@@ -2847,7 +2847,7 @@ input:not([type='checkbox']):hover {
 input:not([type='checkbox']):focus {
   border-color: #8695a7;
 }
-.number-field {
+.number-control {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -2857,14 +2857,14 @@ input:not([type='checkbox']):focus {
   border-radius: 8px;
   background: var(--panel);
 }
-.number-field:hover {
+.number-control:hover {
   border-color: #a6b2c0;
 }
-.number-field:focus-within {
+.number-control:focus-within {
   border-color: #8aadd2;
   background: #f7faff;
 }
-.number-field input[type='number'] {
+.number-control input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
   flex: 1;
@@ -2877,8 +2877,8 @@ input:not([type='checkbox']):focus {
   box-shadow: none;
   background: none;
 }
-.number-field input::-webkit-inner-spin-button,
-.number-field input::-webkit-outer-spin-button {
+.number-control input::-webkit-inner-spin-button,
+.number-control input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
