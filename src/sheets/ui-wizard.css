@@ -3,3 +3,4 @@
 @import './wizard.css' layer(legacy);
 @import '../ui/heroui.css';
 @import './wizard-controls.css';
+@import '../ui/selects.css';

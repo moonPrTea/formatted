@@ -87,10 +87,38 @@ async function run() {
         ?.querySelector('[role=tab][data-ui-value="' + section.dataset.section + '"]')?.click();
     })()`);
     await evaluate('new Promise(resolve => requestAnimationFrame(resolve))');
-    return evaluate(
+    await evaluate(
       `document.querySelector(${JSON.stringify(selector)}).click()`,
     );
+    await evaluate('new Promise(resolve => requestAnimationFrame(resolve))');
   };
+  window.webContents.debugger.attach('1.3');
+  await window.webContents.debugger.sendCommand(
+    'Emulation.setFocusEmulationEnabled',
+    {enabled: true},
+  );
+  const frame = () =>
+    evaluate(
+      'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))',
+    );
+  const key = async key => {
+    for (const type of ['keyDown', 'keyUp'])
+      await window.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {
+        type,
+        key,
+        code: key,
+      });
+    await frame();
+  };
+  const waitForMenuClose = () =>
+    evaluate(`new Promise((resolve, reject) => {
+    const deadline = Date.now() + 2000;
+    const poll = () => {
+      if (!document.querySelector('.select-menu')) return resolve();
+      if (Date.now() > deadline) return reject(new Error('Menu did not close'));
+      setTimeout(poll, 20);
+    }; poll();
+  })`);
   const text = selector =>
     evaluate(
       `document.querySelector(${JSON.stringify(selector)}).textContent.replace(/\\s+/g, ' ').trim()`,
@@ -220,9 +248,8 @@ async function run() {
     await evaluate('document.querySelectorAll(".select-menu").length'),
     1,
   );
-  await evaluate(
-    'document.querySelector("[data-select-name=topic]").dispatchEvent(new KeyboardEvent("keydown", {key:"Escape", bubbles:true}))',
-  );
+  await key('Escape');
+  await waitForMenuClose();
   assert.equal(
     await evaluate('document.querySelectorAll(".select-menu").length'),
     0,
@@ -231,6 +258,7 @@ async function run() {
   await evaluate(
     '[...document.querySelectorAll(".select-option")].find(el => el.textContent.startsWith("Формулы Calc")).click()',
   );
+  await frame();
   await evaluate('document.querySelector("#quiz-form").requestSubmit()');
   assert.equal(
     await evaluate('JSON.parse(localStorage.getItem("forma.v1")).quiz.topic'),
@@ -482,37 +510,48 @@ async function run() {
     await evaluate(
       'document.querySelector(".select-option[aria-selected=true]").textContent',
     ),
-    'Библиотека✓',
+    'Библиотека',
   );
   await capture('dropdown-open');
   await evaluate(
     '[...document.querySelectorAll(".select-option")].find(el => el.textContent.startsWith("Учебный центр")).click()',
   );
+  await frame();
+  await waitForMenuClose();
   assert.match(await text('.dataset-summary'), /Учебный центр/);
   assert.equal(
     await evaluate('document.querySelectorAll(".select-menu").length'),
     0,
   );
-  await evaluate(
-    '{ const trigger = document.querySelector("[data-select-name=domain]"); for (const key of ["ArrowDown", "Home", "ArrowDown", "Enter"]) trigger.dispatchEvent(new KeyboardEvent("keydown", {key, bubbles:true})); }',
-  );
+  await evaluate('document.querySelector("[data-select-name=domain]").focus()');
+  for (const code of ['ArrowDown', 'Home', 'ArrowDown', 'Enter'])
+    await key(code);
+  await waitForMenuClose();
   assert.match(await text('.dataset-summary'), /Библиотека/);
   assert.equal(
     await evaluate('document.activeElement.dataset.selectName'),
     'domain',
   );
   await click('[data-select-name="difficulty"]');
-  await evaluate(
-    'document.querySelector("h1").dispatchEvent(new PointerEvent("pointerdown", {bubbles:true}))',
-  );
+  const outside = await evaluate(`(() => {
+    const rect = document.querySelector('h1').getBoundingClientRect();
+    return {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+  })()`);
+  for (const type of ['mousePressed', 'mouseReleased'])
+    await window.webContents.debugger.sendCommand('Input.dispatchMouseEvent', {
+      type,
+      ...outside,
+      button: 'left',
+      clickCount: 1,
+    });
+  await waitForMenuClose();
   assert.equal(
     await evaluate('document.querySelectorAll(".select-menu").length'),
     0,
   );
   await click('[data-select-name="delimiter"]');
-  await evaluate(
-    '{ const trigger = document.querySelector("[data-select-name=delimiter]"); trigger.dispatchEvent(new KeyboardEvent("keydown", {key:"Tab", bubbles:true})); }',
-  );
+  await key('Tab');
+  await waitForMenuClose();
   assert.equal(
     await evaluate('document.querySelectorAll(".select-menu").length'),
     0,

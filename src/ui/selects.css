@@ -1,0 +1,25 @@
+.select-host,
+.select-host > div {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.select-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 8px;
+}
+.select-field > label {
+  margin: 0;
+}
+.select-menu {
+  position: relative;
+  inset: auto;
+  margin: 0;
+  padding: 4px;
+}
+.select-menu[data-entering],
+.select-menu[data-exiting] {
+  animation: none;
+}

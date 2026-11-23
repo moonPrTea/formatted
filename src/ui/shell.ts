@@ -2,6 +2,7 @@ import {createElement} from 'react';
 import {createRoot, type Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {AppShell} from './components/app-shell.js';
+import {disposeSelects} from '../selects.js';
 import {disposeSections} from './sections.js';
 import type {ShellProps} from './shell-types.js';
 
@@ -10,6 +11,7 @@ let contentKey = 0;
 let previousView: ShellProps['view'] | undefined;
 
 export function renderAppShell(container: HTMLElement, props: ShellProps) {
+  disposeSelects();
   disposeSections();
   root ??= createRoot(container);
   flushSync(() =>

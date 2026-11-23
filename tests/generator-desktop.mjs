@@ -68,6 +68,38 @@ async function run() {
   await evaluate(
     'document.querySelector("[name=seed]").value = "UNSAVED-DRAFT"',
   );
+  await click('[data-select-name=difficulty]');
+  await wait('document.activeElement?.getAttribute("role") === "option"');
+  await click('[role=option][data-key=advanced]');
+  await wait('!document.querySelector(".select-menu")');
+  assert.equal(
+    await evaluate(
+      'new FormData(document.querySelector("#generator-form")).get("difficulty")',
+    ),
+    'advanced',
+  );
+  assert.equal(
+    await evaluate('document.querySelector("[name=seed]").value'),
+    'UNSAVED-DRAFT',
+  );
+  await click('[data-select-name=delimiter]');
+  await wait('document.activeElement?.getAttribute("role") === "option"');
+  for (const type of ['keyDown', 'keyUp'])
+    await window.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {
+      type,
+      key: 'Tab',
+      code: 'Tab',
+      windowsVirtualKeyCode: 9,
+    });
+  await wait('!document.querySelector(".select-menu")');
+  await click('[data-select-name=domain]');
+  await wait('!!document.querySelector(".select-menu")');
+  await navigate('home');
+  await wait('!document.querySelector(".select-menu")');
+  await navigate('generator');
+  await evaluate(
+    'document.querySelector("[name=seed]").value = "UNSAVED-DRAFT"',
+  );
   await selectTab('ai');
   await evaluate(`(() => {
     const topic = document.querySelector('#ai-topic');

@@ -119,9 +119,12 @@ async function run() {
         [],
         'Open dropdown stays dark',
       );
-      await js(
-        'document.querySelector("h1").dispatchEvent(new PointerEvent("pointerdown", {bubbles:true}))',
-      );
+      await window.webContents.debugger.sendCommand('Input.dispatchKeyEvent', {
+        type: 'keyDown',
+        key: 'Escape',
+        code: 'Escape',
+      });
+      await wait(window.webContents, '!document.querySelector(".select-menu")');
     }
   }
   await click('.sidebar [data-view=database]');

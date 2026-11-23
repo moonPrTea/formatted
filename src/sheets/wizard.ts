@@ -1,4 +1,5 @@
 import '../ui/theme.js';
+import {enhanceSelects} from '../selects.js';
 import {enhanceControls} from '../ui/controls.js';
 import {query} from '../dom.js';
 import {Workbook, isCellError} from '../spreadsheet/index.js';
@@ -193,6 +194,7 @@ window.addEventListener('message', event => {
   selected = current;
   list(selected);
   readSelection();
+  enhanceSelects(document.body);
   query('main').removeAttribute('inert');
   query('#search').focus();
 });
