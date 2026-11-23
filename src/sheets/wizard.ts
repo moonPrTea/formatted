@@ -1,4 +1,5 @@
 import '../ui/theme.js';
+import {enhanceControls} from '../ui/controls.js';
 import {query} from '../dom.js';
 import {Workbook, isCellError} from '../spreadsheet/index.js';
 import {argumentPicker} from './argument-picker.js';
@@ -114,6 +115,7 @@ function fields() {
       return label;
     }),
   );
+  enhanceControls(query('#arguments'));
 }
 function describe(name: string) {
   const item = catalog.find(entry => entry.en === name)!;
@@ -219,4 +221,5 @@ document.addEventListener('keydown', event => {
     insert.click();
   }
 });
+enhanceControls(document.body);
 window.opener?.postMessage({type: 'ready'}, location.origin);

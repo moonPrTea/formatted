@@ -1,3 +1,4 @@
+import {enhanceControls} from '../ui/controls.js';
 import {query} from '../dom.js';
 import {categories, findFunctions} from './function-catalog.js';
 import {type FormulaLanguage} from '../spreadsheet/index.js';
@@ -42,6 +43,7 @@ export function functionList(
       language === 'ru'
         ? `Найдено: ${matches.length}`
         : `Found: ${matches.length}`;
+    enhanceControls(list);
   };
   search.oninput = category.onchange = render;
   list.onkeydown = event => {

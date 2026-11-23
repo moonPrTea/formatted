@@ -112,6 +112,29 @@ async function run() {
   await closed();
   await click(editor, '[data-cell="I2"]');
   await open();
+  assert.equal(
+    await evaluate(wizard, `(() => {
+      const list = document.querySelector('#functions');
+      const style = getComputedStyle(list);
+      return style.display === 'flex' && style.flexDirection === 'column' &&
+        [...list.querySelectorAll('button')].every(button =>
+          button.classList.contains('button--ghost') &&
+          parseFloat(getComputedStyle(button).fontSize) === 13);
+    })()`),
+    true,
+    'The function catalog uses compact rows and HeroUI buttons',
+  );
+  assert.equal(
+    await evaluate(wizard, `(() => {
+      const fields = ['#search', '#expression', '[data-argument]'];
+      return fields.every(selector =>
+        !getComputedStyle(document.querySelector(selector)).fontFamily.includes('monospace')) &&
+        document.querySelector('#insert').classList.contains('button--primary') &&
+        document.querySelector('[data-argument]').classList.contains('input');
+    })()`),
+    true,
+    'Formula and argument controls use the application typography',
+  );
   assert.equal(wizard.getParentWindow(), editor);
   assert.equal(wizard.isModal(), false);
   assert.equal(await evaluate(editor, 'document.body.inert'), true);
@@ -162,6 +185,17 @@ async function run() {
     await new Promise(resolve => setTimeout(resolve, 100));
     assert.equal(await evaluate(wizard, 'document.documentElement.scrollWidth <= innerWidth'), true);
     assert.equal(await evaluate(wizard, 'document.querySelector("footer").getBoundingClientRect().bottom <= innerHeight'), true);
+    assert.equal(
+      await evaluate(wizard, `(() => {
+        const field = document.querySelector('.argument-field');
+        const input = field.querySelector('input').getBoundingClientRect();
+        const picker = field.querySelector('button').getBoundingClientRect();
+        return Math.abs(input.top - picker.top) < 1 && input.height === picker.height &&
+          picker.width === 36 && field.scrollWidth <= field.clientWidth;
+      })()`),
+      true,
+      `Argument controls align at ${width}px`,
+    );
     await fs.writeFile(path.join(dir, `wizard-${width}.png`), (await wizard.webContents.capturePage()).toPNG());
   }
   wizard.setContentSize(700, 680);
