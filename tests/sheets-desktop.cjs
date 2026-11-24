@@ -86,6 +86,56 @@ async function run() {
   assert.equal(BrowserWindow.getAllWindows().length, 1);
   pass('Isolated native window, real engine, single instance');
 
+  const waitFor = condition =>
+    evaluate(`new Promise((resolve, reject) => {
+    const deadline = Date.now() + 5000;
+    const poll = () => {
+      if (${condition}) return resolve();
+      if (Date.now() > deadline) return reject(new Error('Menu state timed out'));
+      setTimeout(poll, 20);
+    }; poll();
+  })`);
+  const openMenu = async index => {
+    await evaluate(
+      `(() => {const trigger = document.querySelectorAll('.toolbar [data-slot=dropdown-trigger]')[${index}]; trigger.focus(); trigger.click();})()`,
+    );
+    await waitFor('!!document.activeElement?.closest("[role=menu]")');
+  };
+  assert.equal(
+    await evaluate(
+      'getComputedStyle(document.querySelector(".toolbar")).display',
+    ),
+    'flex',
+  );
+  const originalOpenDialog = dialog.showOpenDialog;
+  let openRequests = 0;
+  dialog.showOpenDialog = async () => {
+    openRequests++;
+    return {canceled: true, filePaths: []};
+  };
+  await openMenu(0);
+  await click('[role=menuitem][data-key=command-file-open]');
+  await waitFor('!document.querySelector("[role=menu]")');
+  assert.equal(openRequests, 1);
+  dialog.showOpenDialog = originalOpenDialog;
+  await openMenu(1);
+  await click('[role=menuitem][data-key=command-range-values]');
+  await waitFor('!document.querySelector("[role=menu]")');
+  assert.equal(await value('H2'), '40');
+  assert.equal(
+    await evaluate('document.querySelector("#formula").value'),
+    '40',
+  );
+  await click('#undo');
+  assert.match(
+    await evaluate('document.querySelector("#formula").value'),
+    /^=/,
+  );
+  await openMenu(0);
+  await key('Escape');
+  await waitFor('!document.querySelector("[role=menu]")');
+  pass('HeroUI menus route file and range commands and close with Escape');
+
   for (const [width, height] of [
     [1200, 800],
     [900, 650],
@@ -150,6 +200,21 @@ async function run() {
   await capture('language-menu');
   await click('[data-language="en"]');
   assert.equal(await evaluate('document.documentElement.lang'), 'en');
+
+  await frame();
+  assert.equal(
+    await evaluate(
+      'document.querySelector(".toolbar").getAttribute("aria-label")',
+    ),
+    'Workbook',
+  );
+  assert.equal(
+    await evaluate(
+      'document.querySelector("#formula-bar svg").getBoundingClientRect().width',
+    ),
+    16,
+  );
+
   await click('[data-cell="H2"]');
   assert.match(
     await evaluate('document.querySelector("#formula").value'),

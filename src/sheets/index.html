@@ -5,86 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'sha256-38RhXrc7EdReTKsOm23ZPOCUgniTUUcjky8QOOrQx6o='; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'sha256-38RhXrc7EdReTKsOm23ZPOCUgniTUUcjky8QOOrQx6o='; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <link rel="stylesheet" href="/appearance.css" />
     <script src="/appearance.js"></script>
-    <link rel="stylesheet" href="../ui/palette.css" />
+    <link rel="stylesheet" href="ui-sheets.css" />
     <title>Учебная книга - formatted Sheets</title>
-    <link rel="stylesheet" href="sheets.css" />
-    <script type="module" src="./editor.ts"></script>
   </head>
   <body>
-    <header>
-      <img src="../assets/forma.svg" width="20" height="20" alt="" />
-      <strong id="title"></strong>
-      <button id="undo" data-label="undo" disabled></button>
-      <details id="options">
-        <summary data-label="options"></summary>
-        <div class="options">
-          <span data-label="language"></span>
-          <button data-language="ru" lang="ru">Русский</button>
-          <button data-language="en" lang="en">English</button>
-        </div>
-      </details>
-    </header>
-    <div class="toolbar">
-      <button id="file-open" data-label="open"></button>
-      <button id="file-save" data-label="save"></button>
-      <button id="file-save-as" data-label="saveAs"></button>
-      <button id="range-fill" data-label="fill"></button>
-      <button id="range-values" data-label="values"></button>
-    </div>
-    <form id="formula-bar" autocomplete="off">
-      <input
-        id="address"
-        aria-label="Адрес ячейки"
-        maxlength="10"
-        spellcheck="false"
-      />
-      <button
-        type="button"
-        id="function-wizard"
-        aria-label="Мастер функций"
-        title="Мастер функций"
-      >
-        ƒx
-      </button>
-      <input
-        id="formula"
-        aria-label="Строка формул"
-        maxlength="32767"
-        spellcheck="false"
-      />
-      <button type="submit" data-label="apply"></button>
-      <button type="button" id="cancel" data-label="cancel"></button>
-    </form>
-    <div id="grid-scroll">
-      <table id="grid" role="grid" aria-label="Таблица"></table>
-    </div>
-    <nav id="sheets" aria-label="Листы"></nav>
-    <dialog id="sheet-dialog" aria-labelledby="sheet-dialog-title">
-      <form id="sheet-action">
-        <h2 id="sheet-dialog-title"></h2>
-        <p id="sheet-dialog-detail"></p>
-        <label id="sheet-name-label" for="sheet-name"></label>
-        <input
-          id="sheet-name"
-          maxlength="100"
-          autocomplete="off"
-          aria-describedby="sheet-dialog-error"
-        />
-        <p id="sheet-dialog-error" role="alert"></p>
-        <div class="dialog-actions">
-          <button type="button" id="sheet-dialog-cancel"></button>
-          <button type="submit" id="sheet-dialog-apply"></button>
-        </div>
-      </form>
-    </dialog>
-    <footer hidden>
-      <span id="recovery" role="status"></span>
-      <span id="selection" hidden></span
-      ><output id="status" aria-live="polite"></output>
-    </footer>
+    <div id="tables-root"></div>
+    <script type="module" src="./main.tsx"></script>
   </body>
 </html>

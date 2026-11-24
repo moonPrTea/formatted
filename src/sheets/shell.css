@@ -1,0 +1,121 @@
+#tables-root,
+#sheets-app {
+  height: 100dvh;
+  min-height: 0;
+}
+#sheets-app {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font: 14px/1.5 var(--font-sans);
+}
+#sheets-app > header {
+  min-height: 56px;
+  padding: 8px 20px;
+}
+#sheets-app #title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sheet-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+#sheets-app #undo,
+#sheets-app #options {
+  margin-left: 0;
+}
+#sheets-app .sheet-service {
+  padding-inline: 12px;
+  border-radius: 12px;
+}
+#sheets-app .sheet-service::after {
+  display: none;
+}
+#sheets-app .toolbar {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  gap: 8px;
+  padding: 8px 20px;
+}
+#sheets-app [data-slot='dropdown-trigger'] {
+  display: inline-flex;
+}
+#sheets-app #formula-bar {
+  display: flex;
+  padding: 8px 20px;
+}
+#sheets-app #address {
+  width: calc(10ch + 32px);
+  flex: none;
+  text-align: center;
+}
+#sheets-app #formula {
+  min-width: 0;
+  font: 400 14px/22px var(--font-sans);
+}
+#sheets-app #formula-bar .button {
+  flex: none;
+}
+#sheets-app #grid {
+  font-size: 13px;
+}
+#sheets-app svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+#sheets-app #sheets {
+  align-items: center;
+  min-height: 48px;
+  padding: 6px 20px;
+  gap: 6px;
+}
+#sheets-app #sheets button {
+  min-height: 32px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 9px;
+  box-shadow: none;
+  font-size: 13px;
+  line-height: 20px;
+}
+@media (max-width: 520px) {
+  #sheets-app > header,
+  #sheets-app .toolbar,
+  #sheets-app #formula-bar {
+    padding-inline: 12px;
+  }
+  .sheet-header-actions {
+    gap: 0;
+  }
+}
+@media (max-height: 420px) {
+  #sheets-app > header,
+  #sheets-app .toolbar,
+  #sheets-app #sheets {
+    min-height: 32px;
+    padding: 2px 8px;
+  }
+  #sheets-app #formula-bar {
+    padding: 4px 8px;
+  }
+  #sheets-app .button,
+  #sheets-app .input,
+  #sheets-app .sheet-service {
+    height: 28px;
+    min-height: 28px;
+    min-width: 28px;
+    padding-block: 3px;
+    font-size: 12px;
+  }
+  #sheets-app #sheets button {
+    min-height: 28px;
+    padding-block: 3px;
+  }
+}
