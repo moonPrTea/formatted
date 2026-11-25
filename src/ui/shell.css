@@ -333,27 +333,6 @@ body {
 #app .screen-content > .page-heading {
   margin: 0;
 }
-#app .screen-content .input,
-#app .screen-content .select-trigger {
-  min-width: 0;
-  width: 100%;
-  height: 44px;
-  min-height: 44px;
-  padding: 10px 12px;
-  font: inherit;
-}
-#app .number-control {
-  padding: 0 6px;
-  border: 0;
-  background: var(--soft);
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-#app .number-control:focus-within {
-  box-shadow: inset 0 0 0 1px var(--focus);
-}
-#app .select-trigger {
-  justify-content: space-between;
-}
 #app .multiline-button {
   height: auto;
   white-space: normal;

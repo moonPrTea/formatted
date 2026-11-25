@@ -1,0 +1,93 @@
+#app .screen-content .input,
+#app .screen-content .select-trigger {
+  min-width: 0;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  padding: 10px 12px;
+  font: 400 14px/20px var(--font-sans);
+}
+#app .select-trigger {
+  justify-content: space-between;
+}
+#app textarea {
+  min-width: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--field-radius);
+  background: var(--field-background);
+  color: var(--field-foreground);
+  font: 400 14px/22px var(--font-sans);
+}
+#app textarea:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+#app .number-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 4px;
+  border: 0;
+  border-radius: var(--field-radius);
+  background: var(--field-background);
+  box-shadow: none;
+}
+#app .number-control:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+#app .number-control input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  flex: 1;
+  width: 0;
+  height: 36px;
+  min-height: 0;
+  padding: 4px 8px;
+  border: 0;
+  background: transparent;
+  font-variant-numeric: tabular-nums;
+}
+#app .number-control input[type='number']:focus {
+  outline: none;
+  box-shadow: none;
+}
+#app .number-control input::-webkit-inner-spin-button,
+#app .number-control input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#app .number-step {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+#app .number-step svg {
+  width: 16px;
+  height: 16px;
+}
+#app .number-step:hover:not(:disabled) {
+  background: var(--default);
+  color: var(--foreground);
+}
+#app .number-step:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+#app .number-step:disabled {
+  color: var(--muted);
+  opacity: 0.4;
+  cursor: default;
+}

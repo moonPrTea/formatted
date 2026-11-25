@@ -75,8 +75,8 @@ async function run() {
   let checks = 0;
   const pass = name => console.log(`${++checks}. ${name}`);
 
-  const waitFor = condition =>
-    evaluate(`new Promise((resolve, reject) => {
+  const waitFor = (condition, target = window) =>
+    target.webContents.executeJavaScript(`new Promise((resolve, reject) => {
     const deadline = Date.now() + 5000;
     const poll = () => {
       if (${condition}) return resolve();
@@ -368,6 +368,7 @@ async function run() {
     await new Promise(resolve =>
       blank.webContents.once('did-finish-load', resolve),
     );
+  await waitFor('!!document.querySelector("[data-cell=A1]")', blank);
   assert.equal(
     await blank.webContents.executeJavaScript(
       'document.querySelector("[data-cell=A1]").textContent',

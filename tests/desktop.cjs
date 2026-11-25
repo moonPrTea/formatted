@@ -628,9 +628,16 @@ async function run() {
       ),
       `Generate button visible at ${width}px`,
     );
-    const fieldLayout = await evaluate(
-      'Object.fromEntries(["domain", "size", "difficulty", "seed", "delimiter"].map(name => { const r = document.querySelector(`[data-select-name="${name}"], input[name="${name}"]`).getBoundingClientRect(); return [name, {top:r.top, height:r.height}]; }))',
-    );
+    const fieldLayout = await evaluate(`Object.fromEntries(
+      ['domain', 'size', 'difficulty', 'seed', 'delimiter'].map(name => {
+        const field = document.querySelector(
+          \`[data-select-name="\${name}"], input[name="\${name}"]\`
+        );
+        const control = field.closest('.number-control') ?? field;
+        const {top, height} = control.getBoundingClientRect();
+        return [name, {top, height}];
+      })
+    )`);
     assert.equal(
       fieldLayout.domain.top,
       fieldLayout.size.top,
