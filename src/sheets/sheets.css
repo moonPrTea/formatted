@@ -1,3 +1,6 @@
+@import './grid.css';
+@import './sheet-dialog.css';
+
 :root {
   --cell-selection: color-mix(in srgb, var(--accent) 12%, var(--surface));
   --cell-selection-edge: var(--accent);
@@ -24,22 +27,6 @@ input,
 summary {
   font: inherit;
   color: inherit;
-}
-button,
-summary {
-  border: 1px solid transparent;
-  border-radius: 3px;
-  background: transparent;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-button:hover:not(:disabled),
-summary:hover {
-  background: var(--default);
-}
-button:disabled {
-  color: var(--muted);
-  cursor: default;
 }
 :focus-visible {
   outline: 2px solid var(--focus);
@@ -109,9 +96,6 @@ summary::after {
   gap: 14px;
   padding: 3px 8px;
 }
-#scope {
-  color: var(--muted);
-}
 #formula-bar {
   display: flex;
   align-items: center;
@@ -139,181 +123,6 @@ input {
     italic 18px Georgia,
     serif;
   padding: 0 4px;
-}
-#grid-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-}
-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  table-layout: fixed;
-  width: 1628px;
-}
-th,
-td {
-  position: relative;
-  width: 132px;
-  height: 27px;
-  padding: 3px 6px;
-  border-right: 1px solid var(--separator);
-  border-bottom: 1px solid var(--separator);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 400;
-}
-#cell-editor {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 2px solid var(--cell-selection-edge);
-  border-radius: 0;
-  padding: 1px 4px;
-  text-align: left;
-  z-index: 1;
-}
-#formula-hint {
-  position: fixed;
-  z-index: 6;
-  width: min(380px, calc(100vw - 16px));
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--surface);
-  box-shadow: 0 3px 10px color-mix(in srgb, var(--foreground) 8%, transparent);
-  overflow-wrap: anywhere;
-}
-#formula-hint button {
-  padding: 0 0 6px;
-  font-weight: 600;
-}
-#formula-hint p {
-  margin: 6px 0 0;
-  color: var(--muted);
-}
-th {
-  background: var(--surface-secondary);
-  color: var(--muted);
-  text-align: center;
-}
-thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-th:first-child {
-  width: 44px;
-  position: sticky;
-  left: 0;
-  z-index: 1;
-}
-thead th:first-child {
-  z-index: 3;
-}
-td {
-  background: var(--surface);
-  scroll-margin-top: 27px;
-  scroll-margin-left: 44px;
-}
-td[aria-selected='true'] {
-  box-shadow: inset 0 0 0 2px var(--cell-selection-edge);
-  background: var(--cell-selection);
-  outline: none;
-}
-td.selected-range {
-  background: var(--cell-selection);
-}
-#formula-hint {
-  pointer-events: none;
-}
-#formula-hint button {
-  pointer-events: auto;
-}
-td.number {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-td[data-error]::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  border-top: 5px solid var(--muted);
-  border-left: 5px solid transparent;
-}
-#cell-error-tooltip {
-  position: fixed;
-  z-index: 7;
-  width: min(360px, calc(100vw - 16px));
-  max-height: calc(100vh - 16px);
-  overflow: auto;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: 0 3px 10px color-mix(in srgb, var(--foreground) 8%, transparent);
-  overflow-wrap: anywhere;
-}
-#cell-error-tooltip strong {
-  font-weight: 600;
-}
-#cell-error-tooltip p {
-  margin: 6px 0 0;
-}
-.picking-range {
-  cursor: crosshair;
-  user-select: none;
-}
-.picking-range td[aria-selected='true']:not(.range-cell) {
-  background: var(--surface);
-  box-shadow: none;
-}
-td.range-cell {
-  background: var(--cell-selection);
-  box-shadow: inset 0 0 0 1px var(--cell-selection-edge);
-}
-#sheet-dialog {
-  width: min(420px, calc(100vw - 48px));
-  box-sizing: border-box;
-  padding: 24px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--foreground);
-  background: var(--surface);
-}
-#sheet-dialog::backdrop {
-  background: var(--backdrop);
-}
-#sheet-action {
-  display: grid;
-  gap: 12px;
-}
-#sheet-action h2 {
-  margin: 0;
-  font-size: 18px;
-}
-#sheet-action p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-#sheet-name {
-  width: 100%;
-  box-sizing: border-box;
-}
-#sheet-dialog-error {
-  color: var(--danger);
-}
-#sheet-dialog-error:empty {
-  display: none;
-}
-.dialog-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 8px;
 }
 nav {
   display: flex;
@@ -347,9 +156,6 @@ footer {
   color: var(--muted);
 }
 @media (max-width: 700px) {
-  #scope {
-    font-size: 12px;
-  }
   #formula-bar {
     gap: 4px;
   }
@@ -370,27 +176,6 @@ footer {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-  #formula-bar {
-    display: grid;
-    grid-template-columns: 68px 32px minmax(0, 1fr);
-  }
-  #formula-bar button[type='submit'] {
-    grid-column: 3;
-    justify-self: end;
-  }
-  #cancel {
-    grid-column: 1 / 3;
-    grid-row: 2;
-  }
-}
-@media (max-height: 360px) {
-  nav button,
-  footer {
-    padding: 3px 8px;
-  }
-  .toolbar {
-    display: none;
   }
 }
 @media (max-height: 360px) {
@@ -435,18 +220,4 @@ footer {
 
 [hidden] {
   display: none !important;
-}
-#grid .grid-spacer td {
-  padding: 0;
-  border: 0;
-}
-#grid th:first-child {
-  width: var(--row-header-width, 44px);
-}
-#grid td {
-  text-align: left;
-  scroll-margin-left: var(--row-header-width, 44px);
-}
-#cell-editor {
-  text-align: left;
 }

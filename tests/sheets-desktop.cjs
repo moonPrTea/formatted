@@ -75,6 +75,16 @@ async function run() {
   let checks = 0;
   const pass = name => console.log(`${++checks}. ${name}`);
 
+  const waitFor = condition =>
+    evaluate(`new Promise((resolve, reject) => {
+    const deadline = Date.now() + 5000;
+    const poll = () => {
+      if (${condition}) return resolve();
+      if (Date.now() > deadline) return reject(new Error('Sheets UI state timed out'));
+      setTimeout(poll, 20);
+    }; poll();
+  })`);
+  await waitFor('!!document.querySelector("[data-cell=H2]")');
   assert.equal(await value('H2'), '40');
   assert.equal(
     await evaluate('document.querySelectorAll("[data-cell]").length'),
@@ -86,15 +96,6 @@ async function run() {
   assert.equal(BrowserWindow.getAllWindows().length, 1);
   pass('Isolated native window, real engine, single instance');
 
-  const waitFor = condition =>
-    evaluate(`new Promise((resolve, reject) => {
-    const deadline = Date.now() + 5000;
-    const poll = () => {
-      if (${condition}) return resolve();
-      if (Date.now() > deadline) return reject(new Error('Menu state timed out'));
-      setTimeout(poll, 20);
-    }; poll();
-  })`);
   const openMenu = async index => {
     await evaluate(
       `(() => {const trigger = document.querySelectorAll('.toolbar [data-slot=dropdown-trigger]')[${index}]; trigger.focus(); trigger.click();})()`,
@@ -116,6 +117,10 @@ async function run() {
   await openMenu(0);
   await click('[role=menuitem][data-key=command-file-open]');
   await waitFor('!document.querySelector("[role=menu]")');
+  const openRequestDeadline = Date.now() + 5000;
+  while (openRequests === 0 && Date.now() < openRequestDeadline) {
+    await new Promise(resolve => setTimeout(resolve, 20));
+  }
   assert.equal(openRequests, 1);
   dialog.showOpenDialog = originalOpenDialog;
   await openMenu(1);

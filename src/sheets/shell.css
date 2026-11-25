@@ -62,9 +62,6 @@
 #sheets-app #formula-bar .button {
   flex: none;
 }
-#sheets-app #grid {
-  font-size: 13px;
-}
 #sheets-app svg {
   width: 16px;
   height: 16px;
@@ -84,6 +81,12 @@
   box-shadow: none;
   font-size: 13px;
   line-height: 20px;
+  --button-bg: transparent;
+  --button-fg: var(--muted);
+}
+#sheets-app #sheets button[aria-pressed='true'] {
+  --button-bg: var(--default);
+  --button-fg: var(--foreground);
 }
 @media (max-width: 520px) {
   #sheets-app > header,

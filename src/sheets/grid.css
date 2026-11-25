@@ -1,0 +1,136 @@
+#grid-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+#grid {
+  font: 400 13px/1.4 var(--font-sans);
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 1628px;
+}
+th,
+td {
+  position: relative;
+  width: 132px;
+  height: 27px;
+  padding: 3px 6px;
+  border-right: 1px solid var(--separator);
+  border-bottom: 1px solid var(--separator);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+#cell-editor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--cell-selection-edge);
+  border-radius: 0;
+  padding: 1px 4px;
+  text-align: left;
+  z-index: 1;
+}
+#formula-hint {
+  position: fixed;
+  z-index: 6;
+  width: min(380px, calc(100vw - 16px));
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--foreground) 8%, transparent);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+#formula-hint button {
+  padding: 0 0 6px;
+  font-weight: 600;
+  pointer-events: auto;
+}
+#formula-hint p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+th {
+  background: var(--surface-secondary);
+  color: var(--muted);
+  text-align: center;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+th:first-child {
+  width: var(--row-header-width, 44px);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+thead th:first-child {
+  z-index: 3;
+}
+td {
+  background: var(--surface);
+  scroll-margin-top: 27px;
+  scroll-margin-left: var(--row-header-width, 44px);
+  text-align: left;
+}
+td[aria-selected='true'] {
+  box-shadow: inset 0 0 0 2px var(--cell-selection-edge);
+  background: var(--cell-selection);
+  outline: none;
+}
+td.selected-range {
+  background: var(--cell-selection);
+}
+td.number {
+  font-variant-numeric: tabular-nums;
+}
+td[data-error]::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border-top: 5px solid var(--muted);
+  border-left: 5px solid transparent;
+}
+#cell-error-tooltip {
+  position: fixed;
+  z-index: 7;
+  width: min(360px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--foreground) 8%, transparent);
+  overflow-wrap: anywhere;
+}
+#cell-error-tooltip strong {
+  font-weight: 600;
+}
+#cell-error-tooltip p {
+  margin: 6px 0 0;
+}
+.picking-range {
+  cursor: crosshair;
+  user-select: none;
+}
+.picking-range td[aria-selected='true']:not(.range-cell) {
+  background: var(--surface);
+  box-shadow: none;
+}
+td.range-cell {
+  background: var(--cell-selection);
+  box-shadow: inset 0 0 0 1px var(--cell-selection-edge);
+}
+#grid .grid-spacer td {
+  padding: 0;
+  border: 0;
+}
