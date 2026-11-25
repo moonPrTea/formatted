@@ -1,0 +1,95 @@
+#app .practice-setup {
+  width: 100%;
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+#app #practice-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: 20px;
+}
+#app #practice-form .field-row {
+  display: contents;
+}
+#app #practice-form > .button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  width: auto;
+  min-width: 180px;
+}
+#app .practice-guide {
+  padding: 0;
+  margin: 0;
+}
+#app .practice-guide summary {
+  width: fit-content;
+  padding-block: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+#app .practice-guide ol {
+  gap: 16px;
+  margin: 16px 0 0;
+}
+#app .practice-guide li {
+  padding-block: 0;
+}
+#app .practice-active {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+}
+#app .practice-active > div {
+  display: grid;
+  min-width: 0;
+  gap: 24px;
+}
+#app .practice-active > div > .panel {
+  margin: 0;
+}
+#app .task-inputs {
+  display: grid;
+  margin: 0;
+}
+#app .task-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 16px;
+  padding-block: 16px;
+  font-size: 14px;
+  line-height: 22px;
+}
+#app .task-input input {
+  width: 100%;
+  min-width: 0;
+}
+#app .checklist-panel .check-item {
+  margin: 0;
+  gap: 10px;
+}
+@media (max-width: 1100px) {
+  #app #practice-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #app .practice-active {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #app .checklist-panel {
+    position: static;
+  }
+}
+@media (max-width: 700px) {
+  #app #practice-form,
+  #app .task-input {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #app #practice-form > .button {
+    width: 100%;
+    min-width: 0;
+  }
+  #app .task-input {
+    gap: 8px;
+  }
+}

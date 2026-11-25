@@ -916,13 +916,16 @@ function practice() {
               class="button primary full"
               type="submit"
             >
-              Запустить таймер ${icon('arrow')}
+              Запустить таймер
             </button>
           </form>
+          <p class="small-note">
+            Таймер продолжает идти после закрытия приложения и во время сна.
+            Паузы нет.
+          </p>
         </section>
-        <section class="practice-guide">
-          <span class="pill">КАК ЭТО РАБОТАЕТ</span>
-          <h2>Твоя работа<br />Твои решения</h2>
+        <details class="practice-guide">
+          <summary>Как проходит попытка</summary>
           <ol>
             <li>
               <strong>Забери исходники</strong>
@@ -947,11 +950,7 @@ function practice() {
               </p>
             </li>
           </ol>
-          <div class="notice">
-            Таймер продолжает идти при закрытии приложения и во время сна. Паузы
-            нет. Это учебный лимит, не официальный регламент
-          </div>
-        </section>
+        </details>
       </div>`;
   const data = generateDataset(session.config);
   if (session.status !== 'running') return report(session, data);
@@ -1130,12 +1129,7 @@ function history() {
         </p>
       </div>
     </div>
-    ${historyTable()}
-    <div class="notice">
-      Прогресс хранится локально в этом приложении. В браузерном предпросмотре -
-      отдельно, в текущем браузере. Чек-лист нормализации - самооценка, не
-      автоматический зачёт
-    </div>`;
+    ${historyTable()}`;
 }
 
 let stopObserving: (() => void) | undefined;
