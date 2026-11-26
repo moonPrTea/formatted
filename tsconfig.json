@@ -16,6 +16,9 @@
     "electron/**/*.ts",
     "electron/**/*.cts",
     "scripts/**/*.ts",
-    "scripts/**/*.cts"
+    "scripts/**/*.cts",
+    "sheets/electron/**/*.ts",
+    "sheets/electron/**/*.cts",
+    "sheets/scripts/**/*.ts"
   ]
 }

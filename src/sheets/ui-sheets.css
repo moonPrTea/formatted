@@ -1,4 +1,0 @@
-@layer theme, base, legacy, components, utilities;
-@import './sheets.css' layer(legacy);
-@import '../ui/heroui.css';
-@import './shell.css';

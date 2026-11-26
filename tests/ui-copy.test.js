@@ -15,7 +15,13 @@ async function sourceFiles(directory) {
 }
 
 test('Application text does not contain middle-dot separators', async () => {
-  for (const root of ['src', 'electron']) {
+  for (const root of [
+    'src',
+    'electron',
+    'sheets/app',
+    'sheets/electron',
+    'packages/spreadsheet/src',
+  ]) {
     for (const path of await sourceFiles(root)) {
       assert.doesNotMatch(
         await readFile(path, 'utf8'),

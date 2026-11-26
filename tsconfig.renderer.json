@@ -5,5 +5,11 @@
     "moduleResolution": "Bundler",
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "sheets/app/**/*.ts",
+    "sheets/app/**/*.tsx",
+    "packages/spreadsheet/src/**/*.ts"
+  ]
 }

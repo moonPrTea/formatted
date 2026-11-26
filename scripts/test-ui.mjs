@@ -4,18 +4,24 @@ import {mkdir, readdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 
 const require = createRequire(import.meta.url);
-const available = (await readdir('tests'))
-  .filter(
-    name =>
-      /-desktop\.(cjs|mjs)$/.test(name) ||
-      [
+const suitePaths = new Map();
+for (const directory of ['tests', 'sheets/tests']) {
+  for (const name of await readdir(directory)) {
+    if (
+      !/-desktop\.(cjs|mjs)$/.test(name) &&
+      ![
         'desktop.cjs',
         'startup.cjs',
         'recovery-restart.cjs',
         'app-exit.cjs',
-      ].includes(name),
-  )
-  .sort();
+      ].includes(name)
+    )
+      continue;
+    if (suitePaths.has(name)) throw new Error('Duplicate UI suite: ' + name);
+    suitePaths.set(name, path.resolve(directory, name));
+  }
+}
+const available = [...suitePaths.keys()].sort();
 const selected = process.argv.slice(2);
 const suites = selected.length ? selected : available;
 if (suites.some(name => !available.includes(name)))
@@ -40,7 +46,7 @@ for (const suite of suites) {
       ['recovery-restart.cjs', 'app-exit.cjs'].includes(suite)
         ? process.execPath
         : require('electron'),
-      [path.resolve('tests', suite)],
+      [suitePaths.get(suite)],
       {
         detached: process.platform !== 'win32',
         env: {

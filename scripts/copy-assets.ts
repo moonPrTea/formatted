@@ -1,4 +1,4 @@
-import {cp, readFile, rm, writeFile} from 'node:fs/promises';
+import {cp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
 import {calcLesson} from '../src/core/calc-lesson.js';
 
 for (const name of [
@@ -27,8 +27,19 @@ for (const name of [
 ]) {
   await cp(`src/studio/${name}`, `build/src/studio/${name}`);
 }
-for (const name of ['index.html', 'sheets.css', 'wizard.html', 'wizard.css'])
-  await cp(`src/sheets/${name}`, `build/src/sheets/${name}`);
+await rm('build/src/sheets', {recursive: true, force: true});
+await mkdir('build/src/sheets', {recursive: true});
+await cp('sheets/app/assets', 'build/src/sheets/assets', {recursive: true});
+for (const name of ['index.html', 'wizard.html'])
+  await cp(`sheets/app/${name}`, `build/src/sheets/${name}`);
+for (const name of [
+  'sheet-files.js',
+  'sheet-store.js',
+  'sheets.js',
+  'sheets-preload.cjs',
+  'wizard-preload.cjs',
+])
+  await rm(`build/electron/${name}`, {force: true});
 for (const name of ['appearance.css', 'appearance.js'])
   await cp(`src/public/${name}`, `build/src/${name}`);
 await cp('src/ui/palette.css', 'build/src/ui/palette.css');

@@ -17,7 +17,7 @@ import type {ConfigInput, ExportResult} from '../src/core/types.js';
 import {createOllamaClient} from './ollama.js';
 import type {IpcMainInvokeEvent} from 'electron';
 import {runCalcLesson} from './calc.js';
-import {openSheets, restoreSheets} from './sheets.js';
+import {openSheets, restoreSheets} from '../sheets/electron/sheets.js';
 
 // Keep the existing profile and origin so the rename preserves progress.
 app.setPath(

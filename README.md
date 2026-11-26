@@ -25,7 +25,7 @@ AI suggests names and an assignment description within an existing data model. I
 
 ## Development
 
-TypeScript, Electron, Google gts. Exercise logic lives in `src/core`, the independent table engine in `src/spreadsheet`, desktop integration in `electron`.
+TypeScript, Electron, Google gts. Exercise logic lives in `src/core`. The Sheets editor, its Electron integration and tests live in `sheets`; the shared spreadsheet engine is in `packages/spreadsheet/src`. Main application desktop integration remains in `electron`.
 
 | Command                | Purpose                     |
 | ---------------------- | --------------------------- |

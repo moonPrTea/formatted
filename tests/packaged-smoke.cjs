@@ -18,6 +18,11 @@ async function run() {
     'build/electron/start.js',
     'build/src/index.html',
     'build/src/sheets/index.html',
+    'build/src/sheets/wizard.html',
+    'build/sheets/electron/sheets.js',
+    'build/sheets/electron/sheets-preload.cjs',
+    'build/sheets/electron/wizard-preload.cjs',
+    'build/packages/spreadsheet/src/index.js',
     'build/desktop-tools/calc_lesson.py',
   ]) {
     await fs.access(path.join(resources, file));
