@@ -86,6 +86,25 @@ async function run() {
     ),
     'none',
   );
+  window.setContentSize(1200, 360);
+  await wait('innerWidth === 1200 && innerHeight === 360');
+  await evaluate('document.querySelector(".rail [data-view=history]").focus()');
+  await wait(`(() => {
+    const rail = document.querySelector('.rail');
+    const button = document.querySelector('.rail [data-view=history]');
+    const bounds = button.getBoundingClientRect();
+    const viewport = rail.getBoundingClientRect();
+    return viewport.width === 64 && bounds.width === 40 &&
+      bounds.top >= viewport.top && bounds.bottom <= viewport.bottom &&
+      document.documentElement.scrollHeight <= innerHeight;
+  })()`);
+  await click('.rail [data-view=history]');
+  await wait('document.querySelector("#main").dataset.screen === "history"');
+  await click('.rail [data-view=home]');
+  await wait('document.querySelector("h1")?.textContent === "Главная"');
+  await capture('collapsed-short-window');
+  window.setContentSize(1440, 960);
+  await wait('innerWidth === 1440 && innerHeight === 960');
   await click('[data-action=toggle-sidebar]');
   await click('.nav-group-heading');
   await wait('document.querySelector(".nav-group-items").hidden');
