@@ -5,4 +5,5 @@
 @source '../../components';
 @source '../../services';
 @source '../../../../src';
+@source '../../../../formatted/app';
 @source '../../../../sheets/app';

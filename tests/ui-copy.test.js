@@ -17,6 +17,7 @@ async function sourceFiles(directory) {
 test('Application text does not contain middle-dot separators', async () => {
   for (const root of [
     'src',
+    'formatted',
     'electron',
     'sheets/app',
     'sheets/electron',
@@ -36,7 +37,7 @@ test('Application text does not contain middle-dot separators', async () => {
 });
 
 test('Difficulty choices use only Light, Medium and Hard labels', async () => {
-  const source = await readFile('src/app.ts', 'utf8');
+  const source = await readFile('formatted/app/main.ts', 'utf8');
   const select = source.match(/<select name="difficulty">([\s\S]*?)<\/select>/);
   assert.ok(select, 'difficulty selector exists');
   const options = [

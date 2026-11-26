@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
-const {setup, createWindow} = require('../../build/electron/main.js');
+const {setup, createWindow} = require('../../build/formatted/electron/main.js');
 const {openSheets} = require('../../build/sheets/electron/sheets.js');
 
 async function run() {

@@ -2,7 +2,12 @@ import {spawn} from 'node:child_process';
 import {readdir} from 'node:fs/promises';
 import path from 'node:path';
 
-const directories = ['tests', 'sheets/tests', 'packages/spreadsheet/tests'];
+const directories = [
+  'tests',
+  'formatted/tests',
+  'sheets/tests',
+  'packages/spreadsheet/tests',
+];
 const groups = await Promise.all(
   directories.map(async directory =>
     (await readdir(directory))

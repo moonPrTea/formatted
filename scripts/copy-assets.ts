@@ -1,4 +1,4 @@
-import {cp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
+import {cp, mkdir, rm, writeFile} from 'node:fs/promises';
 import {calcLesson} from '../packages/practice/src/calc-lesson.js';
 
 for (const name of [
@@ -16,13 +16,13 @@ for (const name of [
 }
 
 for (const name of ['styles.css', 'workspace.css']) {
-  await cp(`src/${name}`, `build/src/${name}`, {recursive: true});
+  await cp(`formatted/app/assets/css/${name}`, `build/src/${name}`);
 }
 await mkdir('build/src/assets', {recursive: true});
 for (const name of ['forma.svg', 'forma.png', 'forma.ico', 'forma.icns'])
   await cp(`packages/ui/assets/${name}`, `build/src/assets/${name}`);
 await cp('packages/ui/assets/css/theme.css', 'build/src/theme.css');
-await cp('desktop-tools', 'build/desktop-tools', {recursive: true});
+await cp('formatted/desktop-tools', 'build/desktop-tools', {recursive: true});
 for (const name of [
   'runtime.html',
   'runtime.css',
@@ -42,17 +42,19 @@ for (const name of [
   'sheets.js',
   'sheets-preload.cjs',
   'wizard-preload.cjs',
+  'calc.js',
+  'main.js',
+  'ollama.js',
+  'preload.cjs',
+  'start.js',
 ])
   await rm(`build/electron/${name}`, {force: true});
 for (const name of ['appearance.css', 'appearance.js'])
   await cp(`packages/ui/public/${name}`, `build/src/${name}`);
+await mkdir('build/src/ui', {recursive: true});
 await cp('packages/ui/assets/css/palette.css', 'build/src/ui/palette.css');
 await writeFile(
   'build/desktop-tools/calc-lesson.json',
   JSON.stringify(calcLesson),
 );
-const html = await readFile('src/index.html', 'utf8');
-await writeFile(
-  'build/src/index.html',
-  html.replace('../build/src/app.js', 'app.js'),
-);
+await cp('formatted/app/index.html', 'build/src/index.html');

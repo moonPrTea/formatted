@@ -14,6 +14,8 @@
     "packages/ui/**/*.ts",
     "packages/ui/**/*.tsx",
     "packages/practice/src/**/*.ts",
-    "packages/contracts/**/*.ts"
+    "packages/contracts/**/*.ts",
+    "formatted/app/**/*.ts",
+    "formatted/app/**/*.tsx"
   ]
 }

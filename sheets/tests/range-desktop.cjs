@@ -4,7 +4,7 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const root = process.env.FORMATTED_PACKAGE || path.resolve(__dirname, '../..');
-const {setup} = require(path.join(root, 'build/electron/main.js'));
+const {setup} = require(path.join(root, 'build/formatted/electron/main.js'));
 const {openSheets} = require(
   path.join(root, 'build/sheets/electron/sheets.js'),
 );

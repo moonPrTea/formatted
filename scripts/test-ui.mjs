@@ -5,7 +5,7 @@ import path from 'node:path';
 
 const require = createRequire(import.meta.url);
 const suitePaths = new Map();
-for (const directory of ['tests', 'sheets/tests']) {
+for (const directory of ['tests', 'formatted/tests', 'sheets/tests']) {
   for (const name of await readdir(directory)) {
     if (
       !/-desktop\.(cjs|mjs)$/.test(name) &&

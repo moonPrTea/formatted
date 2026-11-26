@@ -10,7 +10,7 @@ Run from a fresh checkout with Node 22.12+ and Python 3.9+:
 ```sh
 npm ci
 npm run check
-python -m unittest discover -s tests -p '*_test.py'
+python -m unittest discover -s formatted/tests -p '*_test.py'
 npm audit --audit-level=high
 npm run test:ui
 npm run package:preview
@@ -65,8 +65,8 @@ possible user interaction was manually exercised.
 External Calc integration additionally has two real-LibreOffice checks:
 
 ```sh
-python tests/calc_native.py --soffice /path/to/soffice
-python tests/calc_work_native.py --soffice /path/to/soffice
+python formatted/tests/calc_native.py --soffice /path/to/soffice
+python formatted/tests/calc_work_native.py --soffice /path/to/soffice
 ```
 
 ## TypeScript and JavaScript style

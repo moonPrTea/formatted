@@ -19,6 +19,8 @@
     "scripts/**/*.cts",
     "sheets/electron/**/*.ts",
     "sheets/electron/**/*.cts",
-    "sheets/scripts/**/*.ts"
+    "sheets/scripts/**/*.ts",
+    "formatted/electron/**/*.ts",
+    "formatted/electron/**/*.cts"
   ]
 }

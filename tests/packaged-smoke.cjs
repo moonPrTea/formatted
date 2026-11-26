@@ -15,7 +15,8 @@ async function run() {
       : 'resources/app',
   );
   for (const file of [
-    'build/electron/start.js',
+    'build/formatted/electron/start.js',
+    'build/formatted/electron/preload.cjs',
     'build/src/index.html',
     'build/src/sheets/index.html',
     'build/src/sheets/wizard.html',
@@ -32,7 +33,15 @@ async function run() {
   ]) {
     await fs.access(path.join(resources, file));
   }
-  for (const file of ['.git', '.tools', '.nuget', '.env', 'tests', 'src']) {
+  for (const file of [
+    '.git',
+    '.tools',
+    '.nuget',
+    '.env',
+    'tests',
+    'src',
+    'formatted',
+  ]) {
     await assert.rejects(fs.access(path.join(resources, file)), {
       code: 'ENOENT',
     });

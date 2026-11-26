@@ -1,5 +1,5 @@
-import {runCalcLesson} from '../electron/calc.js';
-import {createOllamaClient} from '../electron/ollama.js';
+import {runCalcLesson} from '../formatted/electron/calc.js';
+import {createOllamaClient} from '../formatted/electron/ollama.js';
 
 console.log(
   `formatted: ${process.platform}/${process.arch}, Node ${process.versions.node}`,

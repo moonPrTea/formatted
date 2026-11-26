@@ -9,7 +9,7 @@ for (const mode of ['light', 'dark']) {
       'utf8',
     );
     const shared = readFileSync(
-      new URL('../src/ui.css', import.meta.url),
+      new URL('../formatted/app/assets/css/ui.css', import.meta.url),
       'utf8',
     );
     const parts = text => text.split(":root[data-theme='dark']");

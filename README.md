@@ -25,7 +25,14 @@ AI suggests names and an assignment description within an existing data model. I
 
 ## Development
 
-TypeScript, Electron, Google gts. Application-specific exercise logic lives in `src/core`. Shared data generation and lesson definitions live in `packages/practice`, common types in `packages/contracts`, and reusable controls, themes and assets in `packages/ui`. The Sheets editor, its Electron integration and tests live in `sheets`; the shared spreadsheet engine is in `packages/spreadsheet/src`. Main application desktop integration remains in `electron`.
+TypeScript, Electron, Google gts.
+
+| Folder                                     | Contents                                               |
+| ------------------------------------------ | ------------------------------------------------------ |
+| `formatted`                                | Main app, Electron integration, Calc tools and tests   |
+| `sheets`                                   | Spreadsheet editor, Electron integration and tests     |
+| `packages`                                 | Shared UI, practice data, types and spreadsheet engine |
+| `src/studio`, `electron`, `studio-service` | Studio code awaiting its separate product move         |
 
 | Command                | Purpose                     |
 | ---------------------- | --------------------------- |

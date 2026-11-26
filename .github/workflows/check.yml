@@ -21,7 +21,7 @@ jobs:
           python-version: '3.12'
       - run: npm ci
       - run: npm run check
-      - run: python -m unittest discover -s tests -p '*_test.py'
+      - run: python -m unittest discover -s formatted/tests -p '*_test.py'
       - run: npm audit --audit-level=high
       - run: npm run package:preview
       - if: runner.os == 'Linux'

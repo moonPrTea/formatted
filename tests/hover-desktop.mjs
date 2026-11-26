@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import {setup} from '../build/electron/main.js';
+import {setup} from '../build/formatted/electron/main.js';
 
 async function run() {
   const directory = await fs.mkdtemp(
@@ -17,7 +17,7 @@ async function run() {
     width: 1440,
     height: 960,
     webPreferences: {
-      preload: path.resolve('build/electron/preload.cjs'),
+      preload: path.resolve('build/formatted/electron/preload.cjs'),
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,

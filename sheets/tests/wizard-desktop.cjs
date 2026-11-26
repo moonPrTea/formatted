@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const {setup} = require('../../build/electron/main.js');
+const {setup} = require('../../build/formatted/electron/main.js');
 const {openSheets} = require('../../build/sheets/electron/sheets.js');
 async function run() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'formatted-wizard-'));

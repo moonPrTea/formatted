@@ -26,7 +26,7 @@ if (!process.argv[2]) {
   console.log('Recovery survives a real application restart:', directory);
 } else {
   const {app, BrowserWindow} = require('electron');
-  const {setup} = require('../../build/electron/main.js');
+  const {setup} = require('../../build/formatted/electron/main.js');
   const {
     openSheets,
     restoreSheets,

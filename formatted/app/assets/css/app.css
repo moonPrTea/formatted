@@ -1,0 +1,16 @@
+@layer theme, base, legacy, components, utilities;
+@import '../../../../packages/ui/assets/css/theme.css' layer(legacy);
+@import './styles.css' layer(legacy);
+@import './workspace.css' layer(legacy);
+@import '../../../../packages/ui/assets/css/heroui.css';
+@import './shell.css';
+@import './navigation.css';
+@import '../../../../packages/ui/assets/css/fields.css';
+@import './data-preview.css';
+@import './quiz.css';
+@import './database-workspace.css';
+@import './calc.css';
+@import './generator.css';
+@import './surfaces.css';
+@import '../../../../packages/ui/assets/css/selects.css';
+@import './practice.css';

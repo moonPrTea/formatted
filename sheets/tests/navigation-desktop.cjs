@@ -4,7 +4,7 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const recoverySnapshots = require('./recovery-helper.cjs');
-const {setup} = require('../../build/electron/main.js');
+const {setup} = require('../../build/formatted/electron/main.js');
 const {
   openSheets,
   restoreSheets,

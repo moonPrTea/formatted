@@ -8,7 +8,7 @@ for (const output of ['build/src/ui-assets', 'build/src/sheets/ui-assets'])
   await rm(path.resolve(output), {recursive: true, force: true});
 
 const renderers = [
-  {root: 'src', output: 'build/src', pages: {app: 'index.html'}},
+  {root: 'formatted/app', output: 'build/src', pages: {app: 'index.html'}},
   {
     root: 'sheets/app',
     output: 'build/src/sheets',
