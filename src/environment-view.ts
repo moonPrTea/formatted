@@ -1,4 +1,4 @@
-import {html} from './dom.js';
+import {html} from '../packages/ui/services/dom.js';
 
 export function environmentView() {
   return html`<section class="environment-panel">

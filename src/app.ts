@@ -1,8 +1,13 @@
-import './ui/theme.js';
+import '../packages/ui/services/theme.js';
 import {renderAppShell, showConfirmation} from './ui/shell.js';
-import {observeControls} from './ui/controls.js';
+import {observeControls} from '../packages/ui/services/controls.js';
 import {mountSections, selectWorkspaceSection} from './ui/sections.js';
-import {query, errorMessage, html, escapeHtml as esc} from './dom.js';
+import {
+  query,
+  errorMessage,
+  html,
+  escapeHtml as esc,
+} from '../packages/ui/services/dom.js';
 import {
   progressAchievements,
   recentProgress,
@@ -22,10 +27,13 @@ import type {
   Dataset,
   PracticeSession,
   View,
-} from './core/types.js';
-import {enhanceNumbers} from './numbers.js';
+} from '../packages/contracts/practice.js';
+import {enhanceNumbers} from '../packages/ui/services/numbers.js';
 import {newVariant} from './core/variants.js';
-import {enhanceSelects, closeSelectMenu} from './selects.js';
+import {
+  enhanceSelects,
+  closeSelectMenu,
+} from '../packages/ui/services/select-menu.js';
 import {
   domains,
   generateDataset,
@@ -34,11 +42,11 @@ import {
   gradeTasks,
   checklist,
   sourceFiles,
-} from './core/generator.js';
+} from '../packages/practice/src/generator.js';
 import {FORMULA_SCOPE} from './core/formula-questions.js';
-import {AI_MODEL, validateAiTheme} from './core/ai-theme.js';
-import {calcLesson} from './core/calc-lesson.js';
-import {toCsv} from './core/csv.js';
+import {AI_MODEL, validateAiTheme} from '../packages/practice/src/ai-theme.js';
+import {calcLesson} from '../packages/practice/src/calc-lesson.js';
+import {toCsv} from '../packages/practice/src/csv.js';
 import {questions, topics, makeQuiz} from './core/quiz.js';
 import {
   startSession,

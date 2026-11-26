@@ -1,7 +1,7 @@
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import path from 'node:path';
-import type {CalcResult} from '../src/core/types.js';
+import type {CalcResult} from '../packages/contracts/practice.js';
 
 const execute = promisify(execFile);
 const script = path.resolve(

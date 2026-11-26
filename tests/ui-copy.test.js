@@ -21,6 +21,9 @@ test('Application text does not contain middle-dot separators', async () => {
     'sheets/app',
     'sheets/electron',
     'packages/spreadsheet/src',
+    'packages/practice/src',
+    'packages/contracts',
+    'packages/ui',
   ]) {
     for (const path of await sourceFiles(root)) {
       assert.doesNotMatch(

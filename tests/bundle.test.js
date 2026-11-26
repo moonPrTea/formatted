@@ -5,7 +5,7 @@ import {
   exportFiles as exportCurrent,
   gradeTasks,
   normalizeConfig,
-} from '../build/src/core/generator.js';
+} from '../build/packages/practice/src/generator.js';
 import {validateState} from '../build/src/core/storage.js';
 import {startSession} from '../build/src/core/session.js';
 import {themeFixture} from './ai-fixture.js';

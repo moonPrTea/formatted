@@ -1,4 +1,4 @@
-import type {AiTheme, CsvSource, DomainId} from './types.js';
+import type {AiTheme, CsvSource, DomainId} from '../../contracts/practice.js';
 
 export const AI_MODEL = 'qwen3:4b-instruct';
 export const WINFORMS_LAYOUT_RULE =

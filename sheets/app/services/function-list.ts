@@ -1,5 +1,5 @@
-import {enhanceControls} from '../../../src/ui/controls.js';
-import {query} from '../../../src/dom.js';
+import {enhanceControls} from '../../../packages/ui/services/controls.js';
+import {query} from '../../../packages/ui/services/dom.js';
 import {categories, findFunctions} from './function-catalog.js';
 import {type FormulaLanguage} from '../../../packages/spreadsheet/src/index.js';
 

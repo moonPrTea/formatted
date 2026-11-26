@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+@import '@heroui/styles';
+@import './palette.css';
+@import './components.css';
+@source '../../components';
+@source '../../services';
+@source '../../../../src';
+@source '../../../../sheets/app';

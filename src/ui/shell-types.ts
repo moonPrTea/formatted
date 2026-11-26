@@ -1,4 +1,4 @@
-import type {View} from '../core/types.js';
+import type {View} from '../../packages/contracts/practice.js';
 
 export interface DashboardSummary {
   history: string;

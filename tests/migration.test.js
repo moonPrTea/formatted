@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {generateDataset} from '../build/src/core/generator.js';
-import {html} from '../build/src/dom.js';
+import {generateDataset} from '../build/packages/practice/src/generator.js';
+import {html} from '../build/packages/ui/services/dom.js';
 
 test('TypeScript migration preserves version-1 datasets and assignments', () => {
   const baseline = {

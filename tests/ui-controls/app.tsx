@@ -1,9 +1,9 @@
 import {createRoot} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {House} from 'lucide-react';
-import {ActionButton} from '../../src/ui/components/action-button.js';
-import {SelectControl} from '../../src/ui/components/select-control.js';
-import {ThemePicker} from '../../src/ui/components/theme-picker.js';
+import {ActionButton} from '../../packages/ui/components/action-button.js';
+import {SelectControl} from '../../packages/ui/components/select-control.js';
+import {ThemePicker} from '../../packages/ui/components/theme-picker.js';
 
 const select = document.querySelector<HTMLSelectElement>('#source-select')!;
 let closeMenu = () => {};

@@ -1,6 +1,9 @@
-import type {FormulaSkill, Question} from './types.js';
+import type {
+  FormulaSkill,
+  Question,
+} from '../../packages/contracts/practice.js';
 import {formulaQuestions, FORMULA_TOPIC} from './formula-questions.js';
-import {random, shuffle} from './random.js';
+import {random, shuffle} from '../../packages/practice/src/random.js';
 
 const existingFormulaSkills: Record<string, FormulaSkill> = {
   match: 'meaning',

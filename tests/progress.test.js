@@ -5,7 +5,10 @@ import {
   recentProgress,
   summarizeProgress,
 } from '../build/src/core/progress.js';
-import {generateDataset, normalizeConfig} from '../build/src/core/generator.js';
+import {
+  generateDataset,
+  normalizeConfig,
+} from '../build/packages/practice/src/generator.js';
 import {finishSession, startSession} from '../build/src/core/session.js';
 import {renderHistoryTable} from '../build/src/progress-view.js';
 

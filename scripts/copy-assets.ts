@@ -1,5 +1,5 @@
 import {cp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
-import {calcLesson} from '../src/core/calc-lesson.js';
+import {calcLesson} from '../packages/practice/src/calc-lesson.js';
 
 for (const name of [
   'calc',
@@ -15,9 +15,13 @@ for (const name of [
   await rm(`build/electron/${name}.cjs`, {force: true});
 }
 
-for (const name of ['styles.css', 'theme.css', 'workspace.css', 'assets']) {
+for (const name of ['styles.css', 'workspace.css']) {
   await cp(`src/${name}`, `build/src/${name}`, {recursive: true});
 }
+await mkdir('build/src/assets', {recursive: true});
+for (const name of ['forma.svg', 'forma.png', 'forma.ico', 'forma.icns'])
+  await cp(`packages/ui/assets/${name}`, `build/src/assets/${name}`);
+await cp('packages/ui/assets/css/theme.css', 'build/src/theme.css');
 await cp('desktop-tools', 'build/desktop-tools', {recursive: true});
 for (const name of [
   'runtime.html',
@@ -41,8 +45,8 @@ for (const name of [
 ])
   await rm(`build/electron/${name}`, {force: true});
 for (const name of ['appearance.css', 'appearance.js'])
-  await cp(`src/public/${name}`, `build/src/${name}`);
-await cp('src/ui/palette.css', 'build/src/ui/palette.css');
+  await cp(`packages/ui/public/${name}`, `build/src/${name}`);
+await cp('packages/ui/assets/css/palette.css', 'build/src/ui/palette.css');
 await writeFile(
   'build/desktop-tools/calc-lesson.json',
   JSON.stringify(calcLesson),

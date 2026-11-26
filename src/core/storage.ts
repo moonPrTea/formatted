@@ -1,5 +1,8 @@
-import {normalizeConfig} from './generator.js';
-import type {AppState, PracticeSession} from './types.js';
+import {normalizeConfig} from '../../packages/practice/src/generator.js';
+import type {
+  AppState,
+  PracticeSession,
+} from '../../packages/contracts/practice.js';
 
 const finite = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);

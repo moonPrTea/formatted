@@ -7,7 +7,7 @@ import {
 } from '../build/src/core/formula-questions.js';
 import {questions, makeQuiz} from '../build/src/core/quiz.js';
 import {validateState} from '../build/src/core/storage.js';
-import {normalizeConfig} from '../build/src/core/generator.js';
+import {normalizeConfig} from '../build/packages/practice/src/generator.js';
 
 test('formula curriculum uses only the two functions in formuly.docx', () => {
   assert.deepEqual(FORMULA_FUNCTIONS, ['ИНДЕКС', 'ПОИСКПОЗ']);

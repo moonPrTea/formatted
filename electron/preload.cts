@@ -1,4 +1,4 @@
-import type {DesktopApi} from '../src/core/types.js';
+import type {DesktopApi} from '../packages/contracts/practice.js';
 import {contextBridge, ipcRenderer} from 'electron';
 contextBridge.exposeInMainWorld('windowAppearance', {
   setMode: (mode: 'light' | 'dark') =>

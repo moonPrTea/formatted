@@ -5,7 +5,7 @@ import os from 'node:os';
 import {execFileSync} from 'node:child_process';
 
 async function run() {
-  const assets = path.resolve(__dirname, '../../src/assets');
+  const assets = path.resolve(__dirname, '../../packages/ui/assets');
   const svg = await fs.readFile(path.join(assets, 'forma.svg'), 'utf8');
   await app.whenReady();
   const window = new BrowserWindow({
@@ -71,7 +71,7 @@ async function run() {
       iconset,
     ]);
   }
-  console.log('Desktop icons generated from src/assets/forma.svg');
+  console.log('Desktop icons generated from packages/ui/assets/forma.svg');
   app.quit();
 }
 run().catch(error => {

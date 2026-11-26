@@ -10,6 +10,10 @@
     "src/**/*.tsx",
     "sheets/app/**/*.ts",
     "sheets/app/**/*.tsx",
-    "packages/spreadsheet/src/**/*.ts"
+    "packages/spreadsheet/src/**/*.ts",
+    "packages/ui/**/*.ts",
+    "packages/ui/**/*.tsx",
+    "packages/practice/src/**/*.ts",
+    "packages/contracts/**/*.ts"
   ]
 }

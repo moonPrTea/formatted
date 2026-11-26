@@ -32,7 +32,7 @@ const [directory] = await packager({
   platform: process.platform,
   arch: process.arch,
   appBundleId: 'com.formatted.app',
-  icon: 'src/assets/forma',
+  icon: 'packages/ui/assets/forma',
   // Python must read its scripts as real files, not paths inside ASAR.
   asar: false,
   ignore: file =>

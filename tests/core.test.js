@@ -7,8 +7,8 @@ import {
   exportFiles as exportBundle,
   gradeTasks,
   clean,
-} from '../build/src/core/generator.js';
-import {toCsv} from '../build/src/core/csv.js';
+} from '../build/packages/practice/src/generator.js';
+import {toCsv} from '../build/packages/practice/src/csv.js';
 import {questions, topics, makeQuiz} from '../build/src/core/quiz.js';
 import {
   startSession,

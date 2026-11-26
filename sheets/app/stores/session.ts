@@ -1,4 +1,4 @@
-import {calcLesson} from '../../../src/core/calc-lesson.js';
+import {calcLesson} from '../../../packages/practice/src/calc-lesson.js';
 import {changeSheetInput} from '../../../packages/spreadsheet/src/sheet-references.js';
 import {
   Workbook,

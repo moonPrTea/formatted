@@ -1,5 +1,5 @@
-import '../../../src/ui/theme.js';
-import {query} from '../../../src/dom.js';
+import '../../../packages/ui/services/theme.js';
+import {query} from '../../../packages/ui/services/dom.js';
 import {isCellError} from '../../../packages/spreadsheet/src/index.js';
 import {SheetSession} from '../stores/session.js';
 import {functionDialog} from '../services/function-dialog.js';

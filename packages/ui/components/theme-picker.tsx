@@ -5,7 +5,7 @@ import {
   getThemePreference,
   setThemePreference,
   subscribeTheme,
-} from '../theme.js';
+} from '../services/theme.js';
 
 const modes = [
   {value: 'light', label: 'Светлая', icon: Sun},

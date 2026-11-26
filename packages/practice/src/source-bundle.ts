@@ -8,7 +8,7 @@ import type {
   Random,
   Row,
   Task,
-} from './types.js';
+} from '../../contracts/practice.js';
 
 const names = [
   'Анна Миронова',

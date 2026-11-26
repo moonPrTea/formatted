@@ -1,4 +1,4 @@
-import {query} from '../../../src/dom.js';
+import {query} from '../../../packages/ui/services/dom.js';
 import {type FormulaLanguage} from '../../../packages/spreadsheet/src/index.js';
 
 declare global {

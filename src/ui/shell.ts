@@ -2,7 +2,7 @@ import {createElement} from 'react';
 import {createRoot, type Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {AppShell} from './components/app-shell.js';
-import {disposeSelects} from '../selects.js';
+import {disposeSelects} from '../../packages/ui/services/select-menu.js';
 import {disposeSections} from './sections.js';
 import type {ShellProps} from './shell-types.js';
 

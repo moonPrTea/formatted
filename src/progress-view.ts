@@ -1,4 +1,4 @@
-import {escapeHtml, html} from './dom.js';
+import {escapeHtml, html} from '../packages/ui/services/dom.js';
 import type {ProgressEntry} from './core/progress.js';
 
 interface EmptyHistoryMessage {

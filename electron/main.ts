@@ -13,7 +13,10 @@ import {
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
-import type {ConfigInput, ExportResult} from '../src/core/types.js';
+import type {
+  ConfigInput,
+  ExportResult,
+} from '../packages/contracts/practice.js';
 import {createOllamaClient} from './ollama.js';
 import type {IpcMainInvokeEvent} from 'electron';
 import {runCalcLesson} from './calc.js';
@@ -162,7 +165,8 @@ async function setup() {
         event.senderFrame !== event.sender.mainFrame
       )
         throw new Error('Untrusted request');
-      const {exportFiles} = await import('../src/core/generator.js');
+      const {exportFiles} =
+        await import('../packages/practice/src/generator.js');
       const files = exportFiles(config, delimiter);
       const parent = BrowserWindow.fromWebContents(event.sender);
       if (!parent) throw new Error('Window unavailable');

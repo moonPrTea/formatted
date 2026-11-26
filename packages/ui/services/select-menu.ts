@@ -1,7 +1,7 @@
 import {createElement} from 'react';
 import {createRoot, type Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
-import {SelectControl} from './ui/components/select-control.js';
+import {SelectControl} from '../components/select-control.js';
 
 interface Control {
   host: HTMLElement;

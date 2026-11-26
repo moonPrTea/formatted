@@ -15,10 +15,10 @@ import {
   Table2,
   Zap,
 } from 'lucide-react';
-import {ActionButton} from './action-button.js';
+import {ActionButton} from '../../../packages/ui/components/action-button.js';
 import {Dashboard} from './dashboard.js';
 import {DatabaseWorkspace} from './database-workspace.js';
-import {ThemePicker} from './theme-picker.js';
+import {ThemePicker} from '../../../packages/ui/components/theme-picker.js';
 import type {ShellProps} from '../shell-types.js';
 
 const navigation = [

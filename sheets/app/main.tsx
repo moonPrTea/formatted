@@ -1,8 +1,8 @@
-import '../../src/ui/theme.js';
+import '../../packages/ui/services/theme.js';
 import {createRoot} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {SheetsShell} from './components/sheets-shell.js';
-import {observeControls} from '../../src/ui/controls.js';
+import {observeControls} from '../../packages/ui/services/controls.js';
 
 const container = document.getElementById('tables-root')!;
 flushSync(() =>

@@ -1,6 +1,6 @@
 @layer theme, base, legacy, components, utilities;
 @import './sheets.css' layer(legacy);
 @import './wizard.css' layer(legacy);
-@import '../../../../src/ui/heroui.css';
+@import '../../../../packages/ui/assets/css/heroui.css';
 @import './wizard-controls.css';
-@import '../../../../src/ui/selects.css';
+@import '../../../../packages/ui/assets/css/selects.css';

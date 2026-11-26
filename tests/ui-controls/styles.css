@@ -1,4 +1,4 @@
-@import '../../src/ui/heroui.css';
+@import '../../packages/ui/assets/css/heroui.css';
 @source './app.tsx';
 
 body {

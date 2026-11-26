@@ -1,7 +1,7 @@
-import '../../../src/ui/theme.js';
-import {enhanceSelects} from '../../../src/selects.js';
-import {enhanceControls} from '../../../src/ui/controls.js';
-import {query} from '../../../src/dom.js';
+import '../../../packages/ui/services/theme.js';
+import {enhanceSelects} from '../../../packages/ui/services/select-menu.js';
+import {enhanceControls} from '../../../packages/ui/services/controls.js';
+import {query} from '../../../packages/ui/services/dom.js';
 import {
   Workbook,
   isCellError,

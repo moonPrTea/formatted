@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {generateDataset} from '../build/src/core/generator.js';
+import {generateDataset} from '../build/packages/practice/src/generator.js';
 import {normalizationModel} from '../build/src/core/normalization-model.js';
 import {
   checkNormalization,
   parseSchema,
 } from '../build/src/core/normalization.js';
 import {readCsv} from '../build/src/core/read-csv.js';
-import {toCsv} from '../build/src/core/csv.js';
+import {toCsv} from '../build/packages/practice/src/csv.js';
 import {themeFixture} from './ai-fixture.js';
 
 function submission(data, delimiter = ';') {

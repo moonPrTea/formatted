@@ -1,4 +1,4 @@
-import type {CsvSource, Dataset, Row} from './types.js';
+import type {CsvSource, Dataset, Row} from '../../contracts/practice.js';
 
 const source = (name: string, grain: string, rows: Row[]): CsvSource => ({
   name,

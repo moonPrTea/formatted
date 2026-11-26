@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 for (const mode of ['light', 'dark']) {
   test(`${mode} theme uses readable text, syntax and tags`, () => {
     const source = readFileSync(
-      new URL('../src/theme.css', import.meta.url),
+      new URL('../packages/ui/assets/css/theme.css', import.meta.url),
       'utf8',
     );
     const shared = readFileSync(

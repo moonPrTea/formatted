@@ -3,8 +3,8 @@ import {createRoot, type Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {SectionTabs} from './components/section-tabs.js';
 import type {WorkspaceSection} from './shell-types.js';
-import type {View} from '../core/types.js';
-import {closeSelectMenu} from '../selects.js';
+import type {View} from '../../packages/contracts/practice.js';
+import {closeSelectMenu} from '../../packages/ui/services/select-menu.js';
 
 const selectedSectionByWorkspace = new Map<string, string>();
 const mountedWorkspaces = new Set<{host: HTMLElement; root: Root}>();

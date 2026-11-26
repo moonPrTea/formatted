@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newVariant} from '../build/src/core/variants.js';
-import {generateDataset} from '../build/src/core/generator.js';
+import {generateDataset} from '../build/packages/practice/src/generator.js';
 
 test('new variants change every selection condition without changing seeded replay', () => {
   for (const domain of ['retail', 'library', 'courses']) {

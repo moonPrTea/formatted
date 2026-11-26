@@ -1,5 +1,8 @@
-import type {Config, ConfigInput} from './types.js';
-import {generateDataset, normalizeConfig} from './generator.js';
+import type {Config, ConfigInput} from '../../packages/contracts/practice.js';
+import {
+  generateDataset,
+  normalizeConfig,
+} from '../../packages/practice/src/generator.js';
 
 // Keep the seeded generator stable so old saved attempts remain reproducible.
 export function newVariant(

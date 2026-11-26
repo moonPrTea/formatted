@@ -14,7 +14,8 @@ async function run() {
   await app.whenReady();
   nativeTheme.themeSource = 'light';
   const {modelReply, themeFixture} = await import('./ai-fixture.js');
-  const {AI_MODEL} = await import('../build/src/core/ai-theme.js');
+  const {normalizationFiles} = await import('./normalization-fixture.js');
+  const {AI_MODEL} = await import('../build/packages/practice/src/ai-theme.js');
   const aiRequests = [];
   globalThis.fetch = async (url, options) => {
     assert.ok(url.startsWith('http://127.0.0.1:11434/api/'));
@@ -342,19 +343,13 @@ async function run() {
   }
   window.setContentSize(1440, 960);
   assert.equal(await text('[data-file-summary]'), 'Файлы не выбраны');
-  await evaluate(`(async () => {
-    const {normalizationModel} = await import('./core/normalization-model.js');
-    const {generateDataset} = await import('./core/generator.js');
-    const {toCsv} = await import('./core/csv.js');
-    const data = generateDataset(JSON.parse(localStorage.getItem('forma.v1')).config);
-    const model = normalizationModel(data);
+  const schemaFiles = normalizationFiles(
+    await evaluate("JSON.parse(localStorage.getItem('forma.v1')).config"),
+  );
+  await evaluate(`(() => {
     const transfer = new DataTransfer();
-    const schema = model.map(table => {
-      const primaryKey = table.name === 'lines' ? ['order_id', 'line_no'] : table.name === 'bookAuthors' ? ['book_code', 'author_code'] : [table.fields[0]];
-      transfer.items.add(new File([toCsv(table.fields, table.rows)], table.name + '.csv', {type: 'text/csv'}));
-      return {entity: table.name, file: table.name + '.csv', primaryKey, columns: Object.fromEntries(table.fields.map(f => [f,f])), references: table.parents.map(name => ({table: name, columns: [table.name === 'cohorts' && name === 'users' ? 'teacher_code' : model.find(t => t.name === name).fields[0]]}))};
-    });
-    transfer.items.add(new File([JSON.stringify(schema)], 'schema.json', {type: 'application/json'}));
+    for (const file of ${JSON.stringify(schemaFiles)})
+      transfer.items.add(new File([file.content], file.name, {type: file.type}));
     const form = document.querySelector('#normalization-form');
     form.elements.namedItem('files').files = transfer.files;
     form.elements.namedItem('files').dispatchEvent(new Event('change', {bubbles: true}));

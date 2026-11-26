@@ -1,4 +1,7 @@
-import {AI_MODEL, themeFields} from '../build/src/core/ai-theme.js';
+import {
+  AI_MODEL,
+  themeFields,
+} from '../build/packages/practice/src/ai-theme.js';
 
 export function themeFixture(domain = 'retail') {
   return {

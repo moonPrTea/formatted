@@ -1,4 +1,7 @@
-import type {FormulaSkill, Question} from './types.js';
+import type {
+  FormulaSkill,
+  Question,
+} from '../../packages/contracts/practice.js';
 
 export const FORMULA_TOPIC = 'Формулы Calc';
 export const FORMULA_FUNCTIONS = ['ИНДЕКС', 'ПОИСКПОЗ'] as const;

@@ -1,4 +1,4 @@
-import type {Quiz} from './types.js';
+import type {Quiz} from '../../packages/contracts/practice.js';
 
 export function summarizeQuiz(quiz: Pick<Quiz, 'questions' | 'answers'>) {
   const topics = new Map<

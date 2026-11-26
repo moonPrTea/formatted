@@ -4,7 +4,7 @@ import {
   generateDataset,
   sourceFiles,
   exportFiles,
-} from '../build/src/core/generator.js';
+} from '../build/packages/practice/src/generator.js';
 import {normalizationModel} from '../build/src/core/normalization-model.js';
 
 for (const domain of ['retail', 'library', 'courses']) {

@@ -1,7 +1,7 @@
-import {html, errorMessage} from './dom.js';
+import {html, errorMessage} from '../packages/ui/services/dom.js';
 import {normalizationModel} from './core/normalization-model.js';
 import {checkNormalization, parseSchema} from './core/normalization.js';
-import type {Dataset} from './core/types.js';
+import type {Dataset} from '../packages/contracts/practice.js';
 
 const esc = (value: string) =>
   value.replace(

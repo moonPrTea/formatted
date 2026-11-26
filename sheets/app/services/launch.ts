@@ -2,7 +2,7 @@ import {
   generateDataset,
   normalizeConfig,
   sourceFiles,
-} from '../../../src/core/generator.js';
+} from '../../../packages/practice/src/generator.js';
 import {Workbook} from '../../../packages/spreadsheet/src/index.js';
 import {
   columnName,

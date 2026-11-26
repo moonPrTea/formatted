@@ -25,7 +25,7 @@ AI предлагает названия и описание задания вн
 
 ## Разработка
 
-TypeScript, Electron, Google gts. Логика заданий находится в `src/core`. Редактор Sheets, его Electron-часть и тесты находятся в `sheets`, общий табличный движок — в `packages/spreadsheet/src`. Electron-часть основного приложения остаётся в `electron`.
+TypeScript, Electron, Google gts. Логика заданий основного приложения находится в `src/core`. Общий генератор данных и описание урока находятся в `packages/practice`, типы — в `packages/contracts`, общие элементы интерфейса, темы и ресурсы — в `packages/ui`. Редактор Sheets, его Electron-часть и тесты находятся в `sheets`, общий табличный движок — в `packages/spreadsheet/src`. Electron-часть основного приложения остаётся в `electron`.
 
 | Команда                | Назначение                  |
 | ---------------------- | --------------------------- |

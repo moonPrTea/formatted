@@ -6,7 +6,7 @@ import type {
   Random,
   Row,
   SourceData,
-} from './types.js';
+} from '../../contracts/practice.js';
 import {random, integer, pick, shuffle} from './random.js';
 import {toCsv} from './csv.js';
 import {generateBundle} from './source-bundle.js';

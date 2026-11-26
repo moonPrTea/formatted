@@ -14,7 +14,7 @@ import {
   generateDataset,
   sourceFiles,
   normalizeConfig,
-} from '../../build/src/core/generator.js';
+} from '../../build/packages/practice/src/generator.js';
 
 test('Blank and lesson launches are explicit and malformed requests are rejected', () => {
   assert.deepEqual(launchSnapshot({kind: 'blank'}).document.cells, []);

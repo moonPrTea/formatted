@@ -1,4 +1,4 @@
-import type {Dataset, Row} from './types.js';
+import type {Dataset, Row} from '../../packages/contracts/practice.js';
 
 interface Relation {
   name: string;

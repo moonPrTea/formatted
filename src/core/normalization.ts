@@ -1,6 +1,6 @@
 import {readCsv} from './read-csv.js';
 import {normalizationModel} from './normalization-model.js';
-import type {Dataset} from './types.js';
+import type {Dataset} from '../../packages/contracts/practice.js';
 
 export interface TableSchema {
   entity: string;

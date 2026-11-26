@@ -23,6 +23,11 @@ async function run() {
     'build/sheets/electron/sheets-preload.cjs',
     'build/sheets/electron/wizard-preload.cjs',
     'build/packages/spreadsheet/src/index.js',
+    'build/packages/practice/src/generator.js',
+    'build/packages/contracts/practice.js',
+    'build/packages/ui/services/theme.js',
+    'build/src/appearance.js',
+    'build/src/assets/forma.svg',
     'build/desktop-tools/calc_lesson.py',
   ]) {
     await fs.access(path.join(resources, file));

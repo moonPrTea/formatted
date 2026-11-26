@@ -1,4 +1,8 @@
-import type {AiStatus, AiTheme, ConfigInput} from '../src/core/types.js';
+import type {
+  AiStatus,
+  AiTheme,
+  ConfigInput,
+} from '../packages/contracts/practice.js';
 
 const endpoint = 'http://127.0.0.1:11434';
 const model = 'qwen3:4b-instruct';
@@ -78,9 +82,9 @@ export function createOllamaClient(fetcher = globalThis.fetch) {
     ]);
     try {
       const {normalizeConfig, generateDataset, sourceFiles} =
-        await import('../src/core/generator.js');
+        await import('../packages/practice/src/generator.js');
       const {validateAiTheme, themePrompt, themeSchema} =
-        await import('../src/core/ai-theme.js');
+        await import('../packages/practice/src/ai-theme.js');
       const config = normalizeConfig({
         ...input,
         aiTheme: undefined,

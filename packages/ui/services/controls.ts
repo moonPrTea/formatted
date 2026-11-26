@@ -1,5 +1,5 @@
 import {buttonVariants, inputVariants} from '@heroui/styles';
-import {enhanceSelects} from '../selects.js';
+import {enhanceSelects} from './select-menu.js';
 
 export function enhanceControls(root: ParentNode) {
   for (const button of root.querySelectorAll<HTMLButtonElement>(

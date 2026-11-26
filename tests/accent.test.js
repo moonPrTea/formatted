@@ -5,7 +5,7 @@ import {
   readAccent,
   accentTokens,
   contrast,
-} from '../build/src/accent.js';
+} from '../build/packages/ui/services/accent.js';
 
 test('Accent preferences reject injected CSS and retain valid custom colors', () => {
   for (const value of [null, {}, '#fff', 'red;display:none', '#ffffff;'])

@@ -1,7 +1,7 @@
-import {domains} from '../../core/generator.js';
+import {domains} from '../../../packages/practice/src/generator.js';
 import {Card} from '@heroui/react';
 import {BookOpen, Code2, Database, Table2, Zap} from 'lucide-react';
-import {ActionButton} from './action-button.js';
+import {ActionButton} from '../../../packages/ui/components/action-button.js';
 import type {DashboardSummary} from '../shell-types.js';
 
 export function Dashboard({

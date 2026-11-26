@@ -7,13 +7,13 @@ import {
   themeFields,
   validateAiTheme,
   themePrompt,
-} from '../build/src/core/ai-theme.js';
+} from '../build/packages/practice/src/ai-theme.js';
 import {
   generateDataset,
   normalizeConfig,
   exportFiles,
   assignment,
-} from '../build/src/core/generator.js';
+} from '../build/packages/practice/src/generator.js';
 import {themeFixture, modelReply} from './ai-fixture.js';
 
 const installed = {models: [{name: AI_MODEL}]};

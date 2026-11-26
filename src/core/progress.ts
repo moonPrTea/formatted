@@ -1,5 +1,12 @@
-import {domains, generateDataset, gradeTasks} from './generator.js';
-import type {PracticeSession, QuizResult} from './types.js';
+import {
+  domains,
+  generateDataset,
+  gradeTasks,
+} from '../../packages/practice/src/generator.js';
+import type {
+  PracticeSession,
+  QuizResult,
+} from '../../packages/contracts/practice.js';
 
 /** Validated saved history; practice attempts already have a finishedAt value. */
 export interface ProgressHistory {

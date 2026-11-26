@@ -4,6 +4,7 @@ import {mkdtempSync} from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {setup} from '../build/electron/main.js';
+import {normalizationFiles} from './normalization-fixture.js';
 
 const directory = mkdtempSync(path.join(os.tmpdir(), 'formatted-generator-'));
 app.setPath('userData', directory);
@@ -106,18 +107,13 @@ async function run() {
     topic.value = 'Учебная мастерская'; topic.dispatchEvent(new Event('input', {bubbles: true}));
   })()`);
   await selectTab('schema');
-  await evaluate(`(async () => {
-    const {normalizationModel} = await import('./core/normalization-model.js');
-    const {generateDataset} = await import('./core/generator.js');
-    const {toCsv} = await import('./core/csv.js');
-    const tables = normalizationModel(generateDataset(JSON.parse(localStorage.getItem('forma.v1')).config));
+  const schemaFiles = normalizationFiles(
+    await evaluate("JSON.parse(localStorage.getItem('forma.v1')).config"),
+  );
+  await evaluate(`(() => {
     const transfer = new DataTransfer();
-    const schema = tables.map(table => {
-      const primaryKey = table.name === 'lines' ? ['order_id', 'line_no'] : table.name === 'bookAuthors' ? ['book_code', 'author_code'] : [table.fields[0]];
-      transfer.items.add(new File([toCsv(table.fields, table.rows)], table.name + '.csv', {type: 'text/csv'}));
-      return {entity: table.name, file: table.name + '.csv', primaryKey, columns: Object.fromEntries(table.fields.map(field => [field, field])), references: table.parents.map(name => ({table: name, columns: [table.name === 'cohorts' && name === 'users' ? 'teacher_code' : tables.find(parent => parent.name === name).fields[0]]}))};
-    });
-    transfer.items.add(new File([JSON.stringify(schema)], 'schema.json', {type: 'application/json'}));
+    for (const file of ${JSON.stringify(schemaFiles)})
+      transfer.items.add(new File([file.content], file.name, {type: file.type}));
     const input = document.querySelector('#normalization-form [name=files]');
     input.files = transfer.files; input.dispatchEvent(new Event('change', {bubbles: true}));
   })()`);

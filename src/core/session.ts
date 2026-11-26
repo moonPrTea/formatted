@@ -1,4 +1,7 @@
-import type {Config, PracticeSession} from './types.js';
+import type {
+  Config,
+  PracticeSession,
+} from '../../packages/contracts/practice.js';
 export function startSession(
   config: Config,
   minutes: number,

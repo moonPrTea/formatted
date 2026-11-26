@@ -1,4 +1,4 @@
-import type {Random} from './types.js';
+import type {Random} from '../../contracts/practice.js';
 export function random(seed: string | number) {
   let value = 2166136261;
   for (const char of String(seed))
