@@ -27,6 +27,17 @@ AI suggests names and an assignment description within an existing data model. I
 
 TypeScript, Electron, Google gts.
 
+The repository has seven private npm workspaces. Run `npm ci` at the root to
+install them together. Product commands delegate to the shared build; this does
+not create separate application installers.
+
+```sh
+npm run typecheck --workspace=@formatted/practice
+npm test --workspace=@formatted/sheets
+npm test --workspace=@formatted/studio
+npm run test:python
+```
+
 | Folder      | Contents                                                        |
 | ----------- | --------------------------------------------------------------- |
 | `formatted` | Main app, Electron integration, Calc tools and tests            |

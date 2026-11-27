@@ -11,3 +11,5 @@ Source code for the C# service and Studio interface modules.
 Run `npm run build`, `npm run studio:service` and `npm run check` from the
 repository root. The current build includes the form runtime; the complete
 standalone Studio editor and installer still require separate integration.
+
+To run this product's unit tests from the root, use `npm test --workspace=@formatted/studio`.

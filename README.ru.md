@@ -27,6 +27,17 @@ AI предлагает названия и описание задания вн
 
 TypeScript, Electron, Google gts.
 
+В репозитории семь приватных npm workspaces. Команда `npm ci` в корне
+устанавливает их вместе. Команды продуктов используют общую сборку; отдельные
+установщики приложений будут собираться отдельным этапом.
+
+```sh
+npm run typecheck --workspace=@formatted/practice
+npm test --workspace=@formatted/sheets
+npm test --workspace=@formatted/studio
+npm run test:python
+```
+
 | Папка       | Содержимое                                               |
 | ----------- | -------------------------------------------------------- |
 | `formatted` | Основное приложение, Electron, инструменты Calc и тесты  |

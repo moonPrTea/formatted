@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {initialProject} from '../../build/studio/app/services/model.js';
@@ -24,20 +25,33 @@ test(
       !existsSync(executable) && process.env.STUDIO_SERVICE_REQUIRED !== '1',
   },
   async t => {
+    const directory = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'studio-native-runtime-'),
+    );
+    let service;
+    t.after(async () => {
+      service?.stop();
+      await fs.rm(directory, {
+        recursive: true,
+        force: true,
+        maxRetries: 10,
+        retryDelay: 100,
+      });
+    });
+    await fs.cp(path.dirname(executable), directory, {recursive: true});
+    const testExecutable = path.join(directory, path.basename(executable));
     const runtime = selectStudioRuntime(
-      execFileSync(executable, ['--list-runtimes'], {encoding: 'utf8'}),
+      execFileSync(testExecutable, ['--list-runtimes'], {encoding: 'utf8'}),
     );
     const nativeFile = path.join(
       runtime.directory,
       runtime.version,
       'Studio.NativeFixture.dll',
     );
-    await fs.copyFile(executable, nativeFile);
-    t.after(() => fs.rm(nativeFile, {force: true}));
-    const service = new StudioService(executable, [
+    await fs.copyFile(testExecutable, nativeFile);
+    service = new StudioService(testExecutable, [
       path.resolve('build/studio-backend/Studio.Service.dll'),
     ]);
-    t.after(() => service.stop());
     const result = await service.request({
       operation: 'analyze',
       files: initialProject.files,

@@ -1,0 +1,15 @@
+{
+  "name": "@formatted/studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix .. run build",
+    "typecheck": "npm --prefix .. run typecheck",
+    "test": "npm --prefix .. run test:studio",
+    "service": "npm --prefix .. run studio:service"
+  },
+  "dependencies": {
+    "@formatted/ui": "*"
+  }
+}

@@ -9,3 +9,5 @@ Main application for CSV normalization, SQL lessons, quizzes and timed practice.
 
 Run `npm run check` and `npm run test:ui` from the repository root. The build keeps
 the existing `forma://app/index.html` address and application profile.
+
+To run this product's unit tests from the root, use `npm test --workspace=@formatted/practice`.

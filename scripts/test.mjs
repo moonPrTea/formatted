@@ -1,24 +1,19 @@
 import {spawn} from 'node:child_process';
-import {readdir} from 'node:fs/promises';
 import path from 'node:path';
+import {discoverTests} from './test-paths.mjs';
 
-const directories = [
-  'tests',
-  'formatted/tests',
-  'sheets/tests',
-  'studio/tests',
-  'packages/spreadsheet/tests',
-];
-const groups = await Promise.all(
-  directories.map(async directory =>
-    (await readdir(directory))
-      .filter(name => name.endsWith('.test.js'))
-      .map(name => path.join(directory, name)),
-  ),
+const product = process.argv[2];
+if (product && !['formatted', 'sheets', 'studio'].includes(product)) {
+  throw new Error('Unknown product');
+}
+const files = (await discoverTests(name => name.endsWith('.test.js'))).filter(
+  file => !product || file.startsWith(product + path.sep),
 );
-const files = groups.flat().sort();
 if (!files.length) throw new Error('No tests found');
-const child = spawn(process.execPath, ['--test', ...files], {stdio: 'inherit'});
+const child = spawn(process.execPath, ['--test', ...files], {
+  stdio: 'inherit',
+  env: process.env,
+});
 child.on('error', error => {
   console.error(error);
   process.exitCode = 1;

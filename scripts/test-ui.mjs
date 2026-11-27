@@ -1,31 +1,25 @@
 import {spawn} from 'node:child_process';
 import {createRequire} from 'node:module';
-import {mkdir, readdir, writeFile} from 'node:fs/promises';
+import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
+import {discoverTests} from './test-paths.mjs';
 
 const require = createRequire(import.meta.url);
-const suitePaths = new Map();
-for (const directory of [
-  'tests',
-  'formatted/tests',
-  'sheets/tests',
-  'studio/tests',
-]) {
-  for (const name of await readdir(directory)) {
-    if (
-      !/-desktop\.(cjs|mjs)$/.test(name) &&
-      ![
-        'desktop.cjs',
-        'startup.cjs',
-        'recovery-restart.cjs',
-        'app-exit.cjs',
-      ].includes(name)
-    )
-      continue;
-    if (suitePaths.has(name)) throw new Error('Duplicate UI suite: ' + name);
-    suitePaths.set(name, path.resolve(directory, name));
-  }
-}
+const testFiles = await discoverTests(
+  name =>
+    /-desktop\.(cjs|mjs)$/.test(name) ||
+    [
+      'desktop.cjs',
+      'startup.cjs',
+      'recovery-restart.cjs',
+      'app-exit.cjs',
+    ].includes(name),
+);
+const suitePaths = new Map(
+  testFiles.map(file => [path.basename(file), path.resolve(file)]),
+);
+if (suitePaths.size !== testFiles.length)
+  throw new Error('Duplicate UI suite name');
 const available = [...suitePaths.keys()].sort();
 const selected = process.argv.slice(2);
 const suites = selected.length ? selected : available;

@@ -1,0 +1,22 @@
+{
+  "name": "@formatted/practice",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix .. run build",
+    "typecheck": "npm --prefix .. run typecheck",
+    "test": "npm --prefix .. run test:formatted",
+    "start": "npm --prefix .. start"
+  },
+  "dependencies": {
+    "@formatted/practice-core": "*",
+    "@formatted/contracts": "*",
+    "@formatted/ui": "*",
+    "@formatted/sheets": "*",
+    "@heroui/react": "^3.2.7",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "lucide-react": "^1.73.0"
+  }
+}

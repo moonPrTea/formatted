@@ -12,15 +12,6 @@ if (!['darwin', 'win32', 'linux'].includes(process.platform)) {
 if (!['arm64', 'x64'].includes(process.arch)) {
   throw new Error('Unsupported packaging architecture');
 }
-const standalone = await access('electron/launch-studio.cts').then(
-  () => true,
-  () => false,
-);
-if (standalone) {
-  throw new Error(
-    'Standalone Studio/Sheets need suite packaging; this preview packages the committed core app only.',
-  );
-}
 const manifest = JSON.parse(await readFile('package.json', 'utf8'));
 await access(manifest.main);
 const output = path.resolve('release', `preview-${Date.now()}`);

@@ -9,7 +9,7 @@
   "scripts": {
     "predoctor": "npm run build",
     "doctor": "node build/scripts/doctor.js",
-    "build": "tsc && tsc -p tsconfig.renderer.json && node build/scripts/copy-assets.js && node scripts/build-ui.mjs",
+    "build": "node scripts/clean-build.mjs && tsc && tsc -p tsconfig.renderer.json && node build/scripts/copy-assets.js && node scripts/build-ui.mjs",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.renderer.json --noEmit",
     "lint": "gts lint \"scripts/**/*.{ts,cts}\" \"sheets/**/*.{ts,tsx,cts}\" \"packages/spreadsheet/src/**/*.ts\" \"packages/ui/**/*.{ts,tsx}\" \"packages/practice/src/**/*.ts\" \"packages/contracts/**/*.ts\" \"formatted/**/*.{ts,tsx,cts}\" \"studio/**/*.{ts,tsx,cts}\" eslint.config.js",
     "fix": "gts fix \"scripts/**/*.{ts,cts}\" \"sheets/**/*.{ts,tsx,cts}\" \"packages/spreadsheet/src/**/*.ts\" \"packages/ui/**/*.{ts,tsx}\" \"packages/practice/src/**/*.ts\" \"packages/contracts/**/*.ts\" \"formatted/**/*.{ts,tsx,cts}\" \"studio/**/*.{ts,tsx,cts}\" eslint.config.js",
@@ -38,8 +38,16 @@
     "prepackage": "npm run build",
     "prepackage:preview": "npm run build",
     "package:preview": "node scripts/package-preview.mjs",
-    "package": "electron-packager . formatted --out=release --icon=packages/ui/assets/forma --ignore=\"^/(tests|scripts|src|formatted|sheets|packages|studio|release|desktop-tools|source-package|\\.analysis|\\.git|\\.idea)(/|$)\"",
-    "studio:service": "node studio/scripts/build-service.mjs"
+    "package": "npm run package:preview",
+    "studio:service": "node studio/scripts/build-service.mjs",
+    "pretest:formatted": "npm run build",
+    "test:formatted": "node scripts/test.mjs formatted",
+    "pretest:sheets:unit": "npm run build",
+    "test:sheets:unit": "node scripts/test.mjs sheets",
+    "pretest:studio": "npm run build",
+    "test:studio": "node scripts/test.mjs studio",
+    "pretest:python": "npm run build",
+    "test:python": "node scripts/test-python.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -66,5 +74,11 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.5"
-  }
+  },
+  "workspaces": [
+    "formatted",
+    "sheets",
+    "studio",
+    "packages/*"
+  ]
 }

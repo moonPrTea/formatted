@@ -47,6 +47,15 @@ async function run() {
     'src',
     'formatted',
     'studio',
+    'sheets',
+    'packages',
+    'node_modules/@formatted/practice',
+    'node_modules/@formatted/sheets',
+    'node_modules/@formatted/studio',
+    'node_modules/@formatted/contracts',
+    'node_modules/@formatted/practice-core',
+    'node_modules/@formatted/spreadsheet',
+    'node_modules/@formatted/ui',
   ]) {
     await assert.rejects(fs.access(path.join(resources, file)), {
       code: 'ENOENT',
