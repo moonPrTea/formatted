@@ -6,6 +6,7 @@ const directories = [
   'tests',
   'formatted/tests',
   'sheets/tests',
+  'studio/tests',
   'packages/spreadsheet/tests',
 ];
 const groups = await Promise.all(

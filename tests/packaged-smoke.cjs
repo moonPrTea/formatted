@@ -17,6 +17,11 @@ async function run() {
   for (const file of [
     'build/formatted/electron/start.js',
     'build/formatted/electron/preload.cjs',
+    'build/studio/electron/studio-service.js',
+    'build/studio/electron/studio-runtime-preload.cjs',
+    'build/src/studio/runtime.html',
+    'build/src/studio/pages/runtime.js',
+    'build/src/studio/components/runtime-grid.js',
     'build/src/index.html',
     'build/src/sheets/index.html',
     'build/src/sheets/wizard.html',
@@ -41,6 +46,7 @@ async function run() {
     'tests',
     'src',
     'formatted',
+    'studio',
   ]) {
     await assert.rejects(fs.access(path.join(resources, file)), {
       code: 'ENOENT',

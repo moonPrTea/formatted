@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import path from 'node:path';
 import {createRequire} from 'node:module';
-import {initialProject} from '../build/src/studio/model.js';
+import {initialProject} from '../../build/studio/app/services/model.js';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.js');
+const {
+  StudioService,
+} = require('../../build/studio/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime/dotnet' + (process.platform === 'win32' ? '.exe' : ''),
 );

@@ -8,6 +8,8 @@ npm run build
 npm run studio:service
 ```
 
+Sources live in `studio/service`; build scripts live in `studio/scripts`.
+
 The service build uses `STUDIO_DOTNET` if set, otherwise the local
 `.tools/dotnet/dotnet` (`dotnet.exe` on Windows), otherwise `dotnet` on PATH.
 `STUDIO_DOTNET` names the executable, not the SDK directory.
@@ -23,7 +25,7 @@ Do not run a build while a service is using these directories.
 Run the service tests without permitting missing-runtime skips:
 
 ```sh
-STUDIO_SERVICE_REQUIRED=1 node --test tests/studio.test.js tests/studio-delete.test.js tests/studio-runtime-files.test.js tests/studio-nuget.test.js
+STUDIO_SERVICE_REQUIRED=1 node --test studio/tests/studio.test.js studio/tests/studio-delete.test.js studio/tests/studio-runtime-files.test.js studio/tests/studio-nuget.test.js
 ```
 
 In PowerShell, set `$env:STUDIO_SERVICE_REQUIRED = '1'` before the Node command.
@@ -40,5 +42,3 @@ references exclude native DLLs that Windows stores beside managed assemblies.
   dependencies in buildable steps, then add a clean-checkout Studio UI test.
 - NuGet now restores managed dependencies and removes backups after successful
   replacement. See [NuGet restore](nuget-restore.md) for limits and tests.
-- The current local asset deletions (`src/assets/forma.png` and `forma.svg`)
-  need reconciliation with UI/build references before publishing that UI diff.

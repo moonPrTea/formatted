@@ -16,9 +16,8 @@ async function sourceFiles(directory) {
 
 test('Application text does not contain middle-dot separators', async () => {
   for (const root of [
-    'src',
+    'studio',
     'formatted',
-    'electron',
     'sheets/app',
     'sheets/electron',
     'packages/spreadsheet/src',

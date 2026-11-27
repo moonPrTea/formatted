@@ -1,7 +1,7 @@
 import {spawn, type ChildProcessWithoutNullStreams} from 'node:child_process';
 import {createInterface} from 'node:readline';
 import {setTimeout, clearTimeout} from 'node:timers';
-import type {StudioRequest} from '../src/studio/model.js';
+import type {StudioRequest} from '../app/services/model.js';
 
 export class StudioService {
   private child?: ChildProcessWithoutNullStreams;

@@ -4,6 +4,6 @@
 @import './components.css';
 @source '../../components';
 @source '../../services';
-@source '../../../../src';
+@source '../../../../studio/app';
 @source '../../../../formatted/app';
 @source '../../../../sheets/app';

@@ -5,11 +5,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
-import {initialProject} from '../build/src/studio/model.js';
-import {selectStudioRuntime} from '../scripts/studio-runtime.mjs';
+import {initialProject} from '../../build/studio/app/services/model.js';
+import {selectStudioRuntime} from '../scripts/runtime.mjs';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.js');
+const {
+  StudioService,
+} = require('../../build/studio/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime',
   process.platform === 'win32' ? 'dotnet.exe' : 'dotnet',

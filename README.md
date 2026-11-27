@@ -27,12 +27,12 @@ AI suggests names and an assignment description within an existing data model. I
 
 TypeScript, Electron, Google gts.
 
-| Folder                                     | Contents                                               |
-| ------------------------------------------ | ------------------------------------------------------ |
-| `formatted`                                | Main app, Electron integration, Calc tools and tests   |
-| `sheets`                                   | Spreadsheet editor, Electron integration and tests     |
-| `packages`                                 | Shared UI, practice data, types and spreadsheet engine |
-| `src/studio`, `electron`, `studio-service` | Studio code awaiting its separate product move         |
+| Folder      | Contents                                                        |
+| ----------- | --------------------------------------------------------------- |
+| `formatted` | Main app, Electron integration, Calc tools and tests            |
+| `sheets`    | Spreadsheet editor, Electron integration and tests              |
+| `packages`  | Shared UI, practice data, types and spreadsheet engine          |
+| `studio`    | Studio interface modules, Electron bridge, C# service and tests |
 
 | Command                | Purpose                     |
 | ---------------------- | --------------------------- |

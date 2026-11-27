@@ -1,4 +1,4 @@
-import type {RuntimeGrid} from './runtime-model.js';
+import type {RuntimeGrid} from '../services/runtime-model.js';
 
 const signatures = new WeakMap<HTMLElement, string>();
 const blockedGrids = new WeakMap<HTMLElement, boolean>();

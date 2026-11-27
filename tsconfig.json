@@ -13,14 +13,14 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "electron/**/*.ts",
-    "electron/**/*.cts",
     "scripts/**/*.ts",
     "scripts/**/*.cts",
     "sheets/electron/**/*.ts",
     "sheets/electron/**/*.cts",
     "sheets/scripts/**/*.ts",
     "formatted/electron/**/*.ts",
-    "formatted/electron/**/*.cts"
+    "formatted/electron/**/*.cts",
+    "studio/electron/**/*.ts",
+    "studio/electron/**/*.cts"
   ]
 }

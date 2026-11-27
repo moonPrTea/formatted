@@ -133,7 +133,7 @@ async function run() {
   await evaluate(`(async () => {
     document.body.insertAdjacentHTML('beforeend', '<main id="form"></main>');
     window.formRuntime = {event: value => events.push(value), onSnapshot: callback => window.snapshot = callback};
-    await import('../build/src/studio/runtime.js');
+    await import('../../build/studio/app/pages/runtime.js');
     window.control = {id:7,type:'TextBox',name:'entry',text:'initial',enabled:true,visible:true,children:[],maxLength:100};
     window.form = {enabled:true,backColor:'#ffffff',children:[control]};
     snapshot({form,ack:0});
@@ -159,7 +159,7 @@ async function run() {
     'winforms.css',
     'runtime-grid.css',
   ]) {
-    await fs.access(path.join(__dirname, '../build/src/studio', name));
+    await fs.access(path.join(__dirname, '../../build/src/studio', name));
   }
   assert.deepEqual(errors, []);
   console.log(

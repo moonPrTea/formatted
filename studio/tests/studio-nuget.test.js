@@ -9,7 +9,9 @@ import {spawn} from 'node:child_process';
 import {packageArchive} from './nuget-fixture.js';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.js');
+const {
+  StudioService,
+} = require('../../build/studio/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime',
   process.platform === 'win32' ? 'dotnet.exe' : 'dotnet',
@@ -36,7 +38,7 @@ test(
     };
     let packageApi;
     try {
-      packageApi = require('../build/electron/studio-packages.cjs');
+      packageApi = require('../../build/studio/electron/studio-packages.cjs');
     } finally {
       Module._load = originalLoad;
     }

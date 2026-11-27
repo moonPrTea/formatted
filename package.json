@@ -11,9 +11,9 @@
     "doctor": "node build/scripts/doctor.js",
     "build": "tsc && tsc -p tsconfig.renderer.json && node build/scripts/copy-assets.js && node scripts/build-ui.mjs",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.renderer.json --noEmit",
-    "lint": "gts lint \"src/**/*.{ts,tsx}\" \"electron/**/*.{ts,cts}\" \"scripts/**/*.{ts,cts}\" \"sheets/**/*.{ts,tsx,cts}\" \"packages/spreadsheet/src/**/*.ts\" \"packages/ui/**/*.{ts,tsx}\" \"packages/practice/src/**/*.ts\" \"packages/contracts/**/*.ts\" \"formatted/**/*.{ts,tsx,cts}\" eslint.config.js",
-    "fix": "gts fix \"src/**/*.{ts,tsx}\" \"electron/**/*.{ts,cts}\" \"scripts/**/*.{ts,cts}\" \"sheets/**/*.{ts,tsx,cts}\" \"packages/spreadsheet/src/**/*.ts\" \"packages/ui/**/*.{ts,tsx}\" \"packages/practice/src/**/*.ts\" \"packages/contracts/**/*.ts\" \"formatted/**/*.{ts,tsx,cts}\" eslint.config.js",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,html}\" \"electron/**/*.{ts,cts}\" \"scripts/**/*.{ts,cts}\" \"tests/**/*.{js,cjs}\" \"sheets/**/*.{ts,tsx,cts,css,html,js,cjs,mjs}\" \"packages/spreadsheet/**/*.{ts,js,md}\" \"packages/ui/**/*.{ts,tsx,js,css,md}\" \"packages/practice/**/*.{ts,md}\" \"packages/contracts/**/*.{ts,md}\" \"formatted/**/*.{ts,tsx,cts,css,html,js,cjs,mjs}\" *.json eslint.config.js",
+    "lint": "gts lint \"scripts/**/*.{ts,cts}\" \"sheets/**/*.{ts,tsx,cts}\" \"packages/spreadsheet/src/**/*.ts\" \"packages/ui/**/*.{ts,tsx}\" \"packages/practice/src/**/*.ts\" \"packages/contracts/**/*.ts\" \"formatted/**/*.{ts,tsx,cts}\" \"studio/**/*.{ts,tsx,cts}\" eslint.config.js",
+    "fix": "gts fix \"scripts/**/*.{ts,cts}\" \"sheets/**/*.{ts,tsx,cts}\" \"packages/spreadsheet/src/**/*.ts\" \"packages/ui/**/*.{ts,tsx}\" \"packages/practice/src/**/*.ts\" \"packages/contracts/**/*.ts\" \"formatted/**/*.{ts,tsx,cts}\" \"studio/**/*.{ts,tsx,cts}\" eslint.config.js",
+    "format": "prettier --write \"scripts/**/*.{ts,cts}\" \"tests/**/*.{js,cjs}\" \"sheets/**/*.{ts,tsx,cts,css,html,js,cjs,mjs}\" \"packages/spreadsheet/**/*.{ts,js,md}\" \"packages/ui/**/*.{ts,tsx,js,css,md}\" \"packages/practice/**/*.{ts,md}\" \"packages/contracts/**/*.{ts,md}\" \"formatted/**/*.{ts,tsx,cts,css,html,js,cjs,mjs}\" \"studio/**/*.{ts,tsx,cts,js,cjs,mjs,css,html}\" *.json eslint.config.js",
     "check": "npm run typecheck && npm run lint && npm test",
     "prestart": "npm run build",
     "start": "electron .",
@@ -38,8 +38,8 @@
     "prepackage": "npm run build",
     "prepackage:preview": "npm run build",
     "package:preview": "node scripts/package-preview.mjs",
-    "package": "electron-packager . formatted --out=release --icon=packages/ui/assets/forma --ignore=\"^/(tests|scripts|src|formatted|sheets|packages|release|desktop-tools|source-package|\\.analysis|\\.git|\\.idea)(/|$)\"",
-    "studio:service": "node scripts/build-studio-service.mjs"
+    "package": "electron-packager . formatted --out=release --icon=packages/ui/assets/forma --ignore=\"^/(tests|scripts|src|formatted|sheets|packages|studio|release|desktop-tools|source-package|\\.analysis|\\.git|\\.idea)(/|$)\"",
+    "studio:service": "node studio/scripts/build-service.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

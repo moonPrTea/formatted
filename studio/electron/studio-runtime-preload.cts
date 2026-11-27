@@ -2,7 +2,7 @@ import {contextBridge, ipcRenderer} from 'electron';
 import type {
   RuntimeEvent,
   RuntimeSnapshot,
-} from '../src/studio/runtime-model.js';
+} from '../app/services/runtime-model.js';
 contextBridge.exposeInMainWorld('formRuntime', {
   event: (value: RuntimeEvent) =>
     ipcRenderer.send('studio-runtime-event', value),

@@ -1,10 +1,10 @@
 import type {StudioApi, PackageReference, PackageResult} from './model.js';
-import {icon} from './icons.js';
+import {icon} from '../components/icons.js';
 import {packageIconUrl} from './model.js';
 import {
   enhanceSelects,
   closeSelectMenu,
-} from '../../packages/ui/services/select-menu.js';
+} from '../../../packages/ui/services/select-menu.js';
 export function mountPackages(
   api: StudioApi,
   get: () => PackageReference[],

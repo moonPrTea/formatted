@@ -2,7 +2,7 @@ import {execFileSync} from 'node:child_process';
 import {existsSync} from 'node:fs';
 import {cp, mkdir, mkdtemp, readdir, rename, rm} from 'node:fs/promises';
 import path from 'node:path';
-import {selectStudioRuntime} from './studio-runtime.mjs';
+import {selectStudioRuntime} from './runtime.mjs';
 
 const platforms = {darwin: 'osx', win32: 'win', linux: 'linux'};
 if (!platforms[process.platform] || !['arm64', 'x64'].includes(process.arch)) {
@@ -51,7 +51,7 @@ try {
     sdk,
     [
       'publish',
-      'studio-service/Studio.Service.csproj',
+      'studio/service/Studio.Service.csproj',
       '-c',
       'Release',
       '--self-contained',

@@ -2,7 +2,7 @@ import {app} from 'electron';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import type {PackageReference, PackageResult} from '../src/studio/model.js';
+import type {PackageReference, PackageResult} from '../app/services/model.js';
 import type {StudioService} from './studio-service.js';
 import {publishPackageCache} from './package-cache.js';
 
@@ -10,7 +10,7 @@ const cacheRoot = () => path.join(app.getPath('userData'), 'studio-nuget');
 const folder = (p: PackageReference) =>
   path.join(cacheRoot(), p.id.toLowerCase(), p.version.toLowerCase());
 async function validate(value: unknown) {
-  return (await import('../src/studio/model.js')).readPackages(value);
+  return (await import('../app/services/model.js')).readPackages(value);
 }
 async function download(url: string, limit: number) {
   const parsed = new URL(url);
@@ -37,7 +37,7 @@ async function download(url: string, limit: number) {
   return Buffer.concat(chunks);
 }
 export async function searchPackages(query: string): Promise<PackageResult[]> {
-  const {packageIconUrl} = await import('../src/studio/model.js');
+  const {packageIconUrl} = await import('../app/services/model.js');
   if (typeof query !== 'string' || query.length > 100)
     throw new Error('Слишком длинный запрос');
   const index = JSON.parse(

@@ -2,9 +2,9 @@ import type {
   RuntimeNode,
   RuntimeEvent,
   RuntimeSnapshot,
-} from './runtime-model.js';
-import {renderGrid} from './runtime-grid.js';
-import {makeList, updateList} from './runtime-list.js';
+} from '../services/runtime-model.js';
+import {renderGrid} from '../components/runtime-grid.js';
+import {makeList, updateList} from '../components/runtime-list.js';
 declare global {
   interface Window {
     formRuntime: {

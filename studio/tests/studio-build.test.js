@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {selectStudioRuntime} from '../scripts/studio-runtime.mjs';
+import {selectStudioRuntime} from '../scripts/runtime.mjs';
 
 test('Studio runtime selection ignores previews and other framework versions', () => {
   const selected = selectStudioRuntime(

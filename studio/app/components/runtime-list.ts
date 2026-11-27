@@ -1,4 +1,4 @@
-import type {RuntimeNode, RuntimeEvent} from './runtime-model.js';
+import type {RuntimeNode, RuntimeEvent} from '../services/runtime-model.js';
 
 type Send = (kind: RuntimeEvent['kind'], value: string | number) => void;
 const models = new WeakMap<HTMLElement, RuntimeNode>();

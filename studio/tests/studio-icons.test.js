@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {packageIconUrl} from '../build/src/studio/model.js';
+import {packageIconUrl} from '../../build/studio/app/services/model.js';
 
 test('NuGet icons accept only HTTPS hosted package icons', () => {
   const valid =

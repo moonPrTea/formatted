@@ -15,6 +15,7 @@ for (const name of [
   await rm(`build/electron/${name}.cjs`, {force: true});
 }
 
+await mkdir('build/src', {recursive: true});
 for (const name of ['styles.css', 'workspace.css']) {
   await cp(`formatted/app/assets/css/${name}`, `build/src/${name}`);
 }
@@ -23,14 +24,12 @@ for (const name of ['forma.svg', 'forma.png', 'forma.ico', 'forma.icns'])
   await cp(`packages/ui/assets/${name}`, `build/src/assets/${name}`);
 await cp('packages/ui/assets/css/theme.css', 'build/src/theme.css');
 await cp('formatted/desktop-tools', 'build/desktop-tools', {recursive: true});
-for (const name of [
-  'runtime.html',
-  'runtime.css',
-  'winforms.css',
-  'runtime-grid.css',
-]) {
-  await cp(`src/studio/${name}`, `build/src/studio/${name}`);
-}
+await rm('build/src/studio', {recursive: true, force: true});
+await cp('build/studio/app', 'build/src/studio', {recursive: true});
+await cp('studio/app/assets', 'build/src/studio/assets', {recursive: true});
+await cp('studio/app/runtime.html', 'build/src/studio/runtime.html');
+for (const name of ['runtime.css', 'winforms.css', 'runtime-grid.css'])
+  await cp(`studio/app/assets/css/${name}`, `build/src/studio/${name}`);
 await rm('build/src/sheets', {recursive: true, force: true});
 await mkdir('build/src/sheets', {recursive: true});
 await cp('sheets/app/assets', 'build/src/sheets/assets', {recursive: true});
@@ -47,6 +46,10 @@ for (const name of [
   'ollama.js',
   'preload.cjs',
   'start.js',
+  'package-cache.js',
+  'studio-service.js',
+  'studio-packages.cjs',
+  'studio-runtime-preload.cjs',
 ])
   await rm(`build/electron/${name}`, {force: true});
 for (const name of ['appearance.css', 'appearance.js'])

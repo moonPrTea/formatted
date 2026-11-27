@@ -6,7 +6,9 @@ import os from 'node:os';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
-const {publishPackageCache} = require('../build/electron/package-cache.js');
+const {
+  publishPackageCache,
+} = require('../../build/studio/electron/package-cache.js');
 
 async function fixture(t) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'studio-cache-'));

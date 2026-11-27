@@ -7,10 +7,15 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import {spawn} from 'node:child_process';
 import {createInterface} from 'node:readline';
-import {initialProject, readProject} from '../build/src/studio/model.js';
+import {
+  initialProject,
+  readProject,
+} from '../../build/studio/app/services/model.js';
 
 const require = createRequire(import.meta.url);
-const {StudioService} = require('../build/electron/studio-service.js');
+const {
+  StudioService,
+} = require('../../build/studio/electron/studio-service.js');
 const executable = path.resolve(
   'build/studio-runtime/dotnet' + (process.platform === 'win32' ? '.exe' : ''),
 );

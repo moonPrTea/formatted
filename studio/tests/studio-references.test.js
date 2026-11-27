@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import path from 'node:path';
-import {StudioService} from '../build/electron/studio-service.js';
-import {initialProject} from '../build/src/studio/model.js';
+import {StudioService} from '../../build/studio/electron/studio-service.js';
+import {initialProject} from '../../build/studio/app/services/model.js';
 
 const executable = path.resolve(
   'build/studio-runtime',
